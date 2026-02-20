@@ -23,6 +23,22 @@ position: relative;
 touch-action: manipulation;
 }
 /* ============================================ */
+/* IMAGEN DE FONDO */
+/* ============================================ */
+.background-image {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -2;
+background-image: url('img/fondo.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+pointer-events: none;
+}
+/* ============================================ */
 /* CUADRÍCULA DE FONDO EN MOVIMIENTO */
 /* ============================================ */
 .background-grid {
@@ -1596,6 +1612,8 @@ footer { padding: 0.2rem; min-height: 70px; }
 </style>
 </head>
 <body>
+<!-- IMAGEN DE FONDO -->
+<div class="background-image"></div>
 <!-- CUADRÍCULA DE FONDO -->
 <div class="background-grid"></div>
 <!-- Script del widget -->
