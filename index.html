@@ -207,7 +207,7 @@ background: linear-gradient(90deg, #00ff41, #bd00ff, #00ff41);
 opacity: 0.8;
 }
 /* ============================================ */
-/* AGUJEROS/TORNILLOS EN LAS 4 ESQUINAS (RESTAURADOS) */
+/* AGUJEROS/TORNILLOS EN LAS 4 ESQUINAS */
 /* ============================================ */
 .cassette-screw {
 position: absolute;
@@ -419,6 +419,9 @@ inset 0 0 15px rgba(0, 0, 0, 0.3),
 margin-left: auto;
 margin-right: auto;
 max-width: 420px;
+/* PREVENIR DESBORDAMIENTO */
+overflow: hidden;
+flex-wrap: nowrap;
 }
 .tape-reel {
 width: 85px;
@@ -442,6 +445,9 @@ inset 0 0 10px rgba(0, 0, 0, 0.8),
 animation: subtleSpin 15s linear infinite;
 flex-shrink: 0;
 aspect-ratio: 1 / 1;
+/* PREVENIR DESBORDAMIENTO */
+min-width: 85px;
+max-width: 85px;
 }
 @keyframes subtleSpin {
 0% { transform: rotate(0deg); }
@@ -593,6 +599,9 @@ box-shadow:
 inset 0 0 15px rgba(0, 0, 0, 0.7),
 0 0 8px rgba(139, 139, 139, 0.4);
 overflow: hidden;
+/* PREVENIR DESBORDAMIENTO */
+min-width: 170px;
+max-width: 170px;
 }
 .cassette-center::before {
 content: '';
@@ -1179,7 +1188,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 2.2rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1.2rem; }
 .cassette-player { max-width: 560px; min-height: 330px; padding: 1.3rem; }
 .cassette-tapes { height: 135px; gap: 23px; padding: 0 9px; }
-.tape-reel { width: 82px; height: 82px; }
+.tape-reel { width: 82px; height: 82px; min-width: 82px; max-width: 82px; }
 .tape-reel::before { width: 58px; height: 58px; }
 .tape-reel::after { width: 27px; height: 27px; }
 .tape-reel span { width: 7.5px; height: 24px; }
@@ -1187,7 +1196,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 2.2rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(22px, -5px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(22px, -5px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(22px, -5px); }
-.cassette-center { width: 165px; height: 115px; }
+.cassette-center { width: 165px; height: 115px; min-width: 165px; max-width: 165px; }
 .play-btn { width: 82px; height: 32px; font-size: 1.25rem; }
 .equalizer-container { height: 27px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 29px; }
@@ -1211,7 +1220,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 2rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1.1rem; }
 .cassette-player { max-width: 530px; min-height: 320px; padding: 1.2rem; }
 .cassette-tapes { height: 130px; gap: 22px; padding: 0 9px; }
-.tape-reel { width: 80px; height: 80px; }
+.tape-reel { width: 80px; height: 80px; min-width: 80px; max-width: 80px; }
 .tape-reel::before { width: 56px; height: 56px; }
 .tape-reel::after { width: 26px; height: 26px; }
 .tape-reel span { width: 7px; height: 23px; }
@@ -1219,7 +1228,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 2rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(21px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(21px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(21px, -4px); }
-.cassette-center { width: 160px; height: 112px; }
+.cassette-center { width: 160px; height: 112px; min-width: 160px; max-width: 160px; }
 .play-btn { width: 80px; height: 31px; font-size: 1.2rem; }
 .equalizer-container { height: 26px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 28px; }
@@ -1243,7 +1252,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.9rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1.1rem; }
 .cassette-player { max-width: 515px; min-height: 315px; padding: 1.1rem; }
 .cassette-tapes { height: 128px; gap: 21px; padding: 0 8px; }
-.tape-reel { width: 78px; height: 78px; }
+.tape-reel { width: 78px; height: 78px; min-width: 78px; max-width: 78px; }
 .tape-reel::before { width: 55px; height: 55px; }
 .tape-reel::after { width: 25px; height: 25px; }
 .tape-reel span { width: 7px; height: 23px; }
@@ -1251,7 +1260,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.9rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(21px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(21px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(21px, -4px); }
-.cassette-center { width: 158px; height: 110px; }
+.cassette-center { width: 158px; height: 110px; min-width: 158px; max-width: 158px; }
 .play-btn { width: 78px; height: 31px; font-size: 1.2rem; }
 .equalizer-container { height: 26px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 28px; }
@@ -1275,7 +1284,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1rem; }
 .cassette-player { max-width: 510px; min-height: 310px; padding: 1.1rem; }
 .cassette-tapes { height: 125px; gap: 21px; padding: 0 8px; }
-.tape-reel { width: 77px; height: 77px; }
+.tape-reel { width: 77px; height: 77px; min-width: 77px; max-width: 77px; }
 .tape-reel::before { width: 54px; height: 54px; }
 .tape-reel::after { width: 25px; height: 25px; }
 .tape-reel span { width: 7px; height: 22px; }
@@ -1283,7 +1292,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(20px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(20px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(20px, -4px); }
-.cassette-center { width: 155px; height: 108px; }
+.cassette-center { width: 155px; height: 108px; min-width: 155px; max-width: 155px; }
 .play-btn { width: 77px; height: 30px; font-size: 1.18rem; }
 .equalizer-container { height: 25px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 27px; }
@@ -1307,7 +1316,7 @@ h1 { font-size: clamp(1.1rem, 2.8vw, 1.7rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1rem; }
 .cassette-player { max-width: 500px; min-height: 300px; padding: 1rem; }
 .cassette-tapes { height: 120px; margin-top: 3px; gap: 20px; padding: 0 8px; }
-.tape-reel { width: 75px; height: 75px; }
+.tape-reel { width: 75px; height: 75px; min-width: 75px; max-width: 75px; }
 .tape-reel::before { width: 52px; height: 52px; }
 .tape-reel::after { width: 24px; height: 24px; }
 .tape-reel span { width: 7px; height: 22px; }
@@ -1315,7 +1324,7 @@ h1 { font-size: clamp(1.1rem, 2.8vw, 1.7rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(20px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(20px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(20px, -4px); }
-.cassette-center { width: 150px; height: 105px; }
+.cassette-center { width: 150px; height: 105px; min-width: 150px; max-width: 150px; }
 .play-btn { width: 75px; height: 30px; font-size: 1.2rem; }
 .equalizer-container { height: 24px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 26px; }
@@ -1339,7 +1348,7 @@ h1 { font-size: clamp(1.1rem, 2.8vw, 1.6rem); }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 0.9rem; }
 .cassette-player { max-width: 480px; min-height: 290px; padding: 0.9rem; }
 .cassette-tapes { height: 115px; margin-top: 2px; gap: 18px; padding: 0 7px; }
-.tape-reel { width: 72px; height: 72px; }
+.tape-reel { width: 72px; height: 72px; min-width: 72px; max-width: 72px; }
 .tape-reel::before { width: 50px; height: 50px; }
 .tape-reel::after { width: 23px; height: 23px; }
 .tape-reel span { width: 6.5px; height: 21px; }
@@ -1347,7 +1356,7 @@ h1 { font-size: clamp(1.1rem, 2.8vw, 1.6rem); }
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(19px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(19px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(19px, -4px); }
-.cassette-center { width: 145px; height: 102px; }
+.cassette-center { width: 145px; height: 102px; min-width: 145px; max-width: 145px; }
 .play-btn { width: 72px; height: 29px; font-size: 1.15rem; }
 .equalizer-container { height: 23px; }
 .song-info { font-size: clamp(1rem, 1.8vw, 1.4rem); min-height: 25px; }
@@ -1373,8 +1382,8 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.9rem); }
 .cassette-player { max-width: 450px; min-height: 280px; }
 #dj_profile { max-width: 300px; }
 .section-title { font-size: clamp(1rem, 1.8vw, 1.4rem); }
-.tape-reel { width: 70px; height: 70px; }
-.cassette-center { width: 140px; height: 100px; }
+.tape-reel { width: 70px; height: 70px; min-width: 70px; max-width: 70px; }
+.cassette-center { width: 140px; height: 100px; min-width: 140px; max-width: 140px; }
 .play-btn { width: 70px; height: 28px; font-size: 1.1rem; }
 .cassette-screw { width: 17px; height: 17px; }
 }
@@ -1408,7 +1417,9 @@ gap: 10px;
 width: 72px;
 height: 72px;
 min-width: 72px;
+max-width: 72px;
 min-height: 72px;
+max-height: 72px;
 }
 .tape-reel::before { width: 50px; height: 50px; }
 .tape-reel::after { width: 23px; height: 23px; }
@@ -1417,7 +1428,7 @@ min-height: 72px;
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(19px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(19px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(19px, -4px); }
-.cassette-center { width: 145px; height: 100px; }
+.cassette-center { width: 145px; height: 100px; min-width: 145px; max-width: 145px; }
 .play-btn { width: 70px; height: 28px; font-size: 1.15rem; border-width: 2.5px; }
 .equalizer-container { height: 23px; }
 .bar { width: 5px; }
@@ -1485,7 +1496,9 @@ gap: 10px;
 width: 72px;
 height: 72px;
 min-width: 72px;
+max-width: 72px;
 min-height: 72px;
+max-height: 72px;
 }
 .tape-reel::before { width: 50px; height: 50px; }
 .tape-reel::after { width: 23px; height: 23px; }
@@ -1494,7 +1507,7 @@ min-height: 72px;
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(19px, -4px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(19px, -4px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(19px, -4px); }
-.cassette-center { width: 145px; height: 100px; }
+.cassette-center { width: 145px; height: 100px; min-width: 145px; max-width: 145px; }
 .play-btn { width: 70px; height: 28px; font-size: 1.15rem; border-width: 2.5px; }
 .equalizer-container { height: 23px; }
 .bar { width: 5px; }
@@ -1557,7 +1570,9 @@ gap: 8px;
 width: 65px;
 height: 65px;
 min-width: 65px;
+max-width: 65px;
 min-height: 65px;
+max-height: 65px;
 }
 .tape-reel::before { width: 44px; height: 44px; }
 .tape-reel::after { width: 20px; height: 20px; }
@@ -1566,7 +1581,7 @@ min-height: 65px;
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(17px, -3px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(17px, -3px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(17px, -3px); }
-.cassette-center { width: 130px; height: 90px; }
+.cassette-center { width: 130px; height: 90px; min-width: 130px; max-width: 130px; }
 .play-btn { width: 62px; height: 25px; font-size: 1rem; border-width: 2px; }
 .equalizer-container { height: 20px; }
 .bar { width: 4.5px; }
@@ -1593,6 +1608,37 @@ padding: 0.8rem;
 }
 .cassette-screw { width: 16px; height: 16px; }
 }
+@media (max-width: 400px) {
+.cassette-player {
+padding: 0.9rem 0.7rem;
+}
+.cassette-tapes {
+height: auto;
+min-height: 95px;
+margin-top: 1px;
+padding: 0 4px;
+gap: 6px;
+}
+.tape-reel {
+width: 60px;
+height: 60px;
+min-width: 60px;
+max-width: 60px;
+min-height: 60px;
+max-height: 60px;
+}
+.tape-reel::before { width: 40px; height: 40px; }
+.tape-reel::after { width: 18px; height: 18px; }
+.tape-reel span { width: 4.5px; height: 16px; }
+.tape-reel span:nth-child(1) { transform: rotate(45deg) translate(16px, -3px); }
+.tape-reel span:nth-child(2) { transform: rotate(135deg) translate(16px, -3px); }
+.tape-reel span:nth-child(3) { transform: rotate(225deg) translate(16px, -3px); }
+.tape-reel span:nth-child(4) { transform: rotate(315deg) translate(16px, -3px); }
+.cassette-center { width: 120px; height: 85px; min-width: 120px; max-width: 120px; }
+.play-btn { width: 58px; height: 24px; font-size: 0.95rem; border-width: 2px; }
+.equalizer-container { height: 18px; }
+.cassette-screw { width: 15px; height: 15px; }
+}
 @media (max-width: 320px) {
 header { padding: 0.5rem 0.6rem; }
 h1 { font-size: clamp(0.95rem, 2.3vw, 1.3rem); }
@@ -1615,7 +1661,9 @@ gap: 6px;
 width: 58px;
 height: 58px;
 min-width: 58px;
+max-width: 58px;
 min-height: 58px;
+max-height: 58px;
 }
 .tape-reel::before { width: 38px; height: 38px; }
 .tape-reel::after { width: 17px; height: 17px; }
@@ -1624,7 +1672,7 @@ min-height: 58px;
 .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(15px, -2px); }
 .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(15px, -2px); }
 .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(15px, -2px); }
-.cassette-center { width: 110px; height: 80px; }
+.cassette-center { width: 110px; height: 80px; min-width: 110px; max-width: 110px; }
 .play-btn { width: 52px; height: 21px; font-size: 0.9rem; border-width: 1.5px; }
 .equalizer-container { height: 17px; }
 .bar { width: 4px; }
@@ -1662,7 +1710,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <section class="player-section">
 <h2 class="section-title player-title"></h2>
 <div class="cassette-player">
-<!-- AGUJEROS/TORNILLOS EN LAS 4 ESQUINAS (RESTAURADOS) -->
+<!-- AGUJEROS/TORNILLOS EN LAS 4 ESQUINAS -->
 <div class="cassette-screw top-left"></div>
 <div class="cassette-screw top-right"></div>
 <div class="cassette-screw bottom-left"></div>
