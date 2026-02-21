@@ -250,7 +250,6 @@ left: 12px;
 bottom: 12px;
 right: 12px;
 }
-
 /* Fondo difuminado de la portada */
 .album-art-bg {
 position: absolute;
@@ -855,6 +854,7 @@ font-size: clamp(1rem, 1.8vw, 1.4rem);
 margin-left: 10px;
 display: inline-block;
 vertical-align: middle;
+text-transform: none !important;
 }
 /* Pie de página */
 footer {
@@ -1715,7 +1715,6 @@ footer { padding: 0.2rem; min-height: 70px; }
 <div class="cassette-screw top-right"></div>
 <div class="cassette-screw bottom-left"></div>
 <div class="cassette-screw bottom-right"></div>
-
 <div class="album-art-bg" id="album-art-bg"></div>
 <div class="cassette-content">
 <div class="song-info">
@@ -1995,6 +1994,15 @@ return djName.toLowerCase()
 .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 .replace(/[^a-z0-9]/g, '_');
 }
+function formatDjNameForDisplay(filename) {
+// Convierte el nombre del archivo en un formato legible respetando mayúsculas y minúsculas
+// Ejemplo: "dj_maria_lopez" -> "Dj Maria Lopez"
+// Ejemplo: "autodj" -> "AutoDJ"
+let name = filename.replace(/_/g, ' ').trim();
+// Capitalizar primera letra de cada palabra
+name = name.replace(/\b\w/g, char => char.toUpperCase());
+return name;
+}
 function replaceDjImageWithLocal(djName = 'autodj') {
 const djProfile = document.getElementById('dj_profile');
 if (djProfile) {
@@ -2016,6 +2024,12 @@ newImg.style.objectFit = 'cover';
 djProfile.innerHTML = '';
 djProfile.appendChild(newImg);
 }
+}
+// Actualizar el texto del DJ con el formato correcto del nombre
+if (sonicDj) {
+const displayName = formatDjNameForDisplay(sanitizedName);
+sonicDj.textContent = displayName;
+updateGlitchDataText(sonicDj);
 }
 }
 function checkAndReplaceNoDJ() {
