@@ -250,7 +250,6 @@ left: 12px;
 bottom: 12px;
 right: 12px;
 }
-
 /* Fondo difuminado de la portada */
 .album-art-bg {
 position: absolute;
@@ -855,6 +854,7 @@ font-size: clamp(1rem, 1.8vw, 1.4rem);
 margin-left: 10px;
 display: inline-block;
 vertical-align: middle;
+text-transform: none !important;
 }
 /* Pie de página */
 footer {
@@ -977,6 +977,9 @@ transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 display: flex;
 flex-direction: column;
 font-family: 'Orbitron', sans-serif;
+}
+.chat-panel.hidden {
+display: none;
 }
 .chat-panel.visible {
 right: 0;
@@ -1715,7 +1718,6 @@ footer { padding: 0.2rem; min-height: 70px; }
 <div class="cassette-screw top-right"></div>
 <div class="cassette-screw bottom-left"></div>
 <div class="cassette-screw bottom-right"></div>
-
 <div class="album-art-bg" id="album-art-bg"></div>
 <div class="cassette-content">
 <div class="song-info">
@@ -1771,16 +1773,16 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 <div class="led-strip-bottom" id="led-bottom"></div>
 <footer>
 <div class="social-links">
-<a href="#" class="social-link" title="Telegram">
+<a href="javascript:void(0);" class="social-link" title="Telegram">
 <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
 </a>
-<a href="#" class="social-link" title="Tiktok">
+<a href="javascript:void(0);" class="social-link" title="Tiktok">
 <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg>
 </a>
-<a href="#" class="social-link" id="staff-btn" title="Staff">
+<a href="javascript:void(0);" class="social-link" id="staff-btn" title="Staff">
 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
 </a>
-<a href="#" class="social-link" id="chat-btn" title="Chat">
+<a href="javascript:void(0);" class="social-link" id="chat-btn" title="Chat">
 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
 </a>
 </div>
@@ -1995,6 +1997,11 @@ return djName.toLowerCase()
 .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 .replace(/[^a-z0-9]/g, '_');
 }
+function formatDjNameForDisplay(filename) {
+let name = filename.replace(/_/g, ' ').trim();
+name = name.replace(/\b\w/g, char => char.toUpperCase());
+return name;
+}
 function replaceDjImageWithLocal(djName = 'autodj') {
 const djProfile = document.getElementById('dj_profile');
 if (djProfile) {
@@ -2016,6 +2023,11 @@ newImg.style.objectFit = 'cover';
 djProfile.innerHTML = '';
 djProfile.appendChild(newImg);
 }
+}
+if (sonicDj) {
+const displayName = formatDjNameForDisplay(sanitizedName);
+sonicDj.textContent = displayName;
+updateGlitchDataText(sonicDj);
 }
 }
 function checkAndReplaceNoDJ() {
