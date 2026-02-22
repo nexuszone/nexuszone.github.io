@@ -250,6 +250,7 @@ left: 12px;
 bottom: 12px;
 right: 12px;
 }
+
 /* Fondo difuminado de la portada */
 .album-art-bg {
 position: absolute;
@@ -854,7 +855,6 @@ font-size: clamp(1rem, 1.8vw, 1.4rem);
 margin-left: 10px;
 display: inline-block;
 vertical-align: middle;
-text-transform: none !important;
 }
 /* Pie de página */
 footer {
@@ -977,9 +977,6 @@ transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 display: flex;
 flex-direction: column;
 font-family: 'Orbitron', sans-serif;
-}
-.chat-panel.hidden {
-display: none;
 }
 .chat-panel.visible {
 right: 0;
@@ -1718,6 +1715,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <div class="cassette-screw top-right"></div>
 <div class="cassette-screw bottom-left"></div>
 <div class="cassette-screw bottom-right"></div>
+
 <div class="album-art-bg" id="album-art-bg"></div>
 <div class="cassette-content">
 <div class="song-info">
@@ -1773,16 +1771,16 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 <div class="led-strip-bottom" id="led-bottom"></div>
 <footer>
 <div class="social-links">
-<a href="javascript:void(0);" class="social-link" title="Telegram">
+<a href="#" class="social-link" title="Telegram">
 <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
 </a>
-<a href="javascript:void(0);" class="social-link" title="Tiktok">
+<a href="#" class="social-link" title="Tiktok">
 <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg>
 </a>
-<a href="javascript:void(0);" class="social-link" id="staff-btn" title="Staff">
+<a href="#" class="social-link" id="staff-btn" title="Staff">
 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
 </a>
-<a href="javascript:void(0);" class="social-link" id="chat-btn" title="Chat">
+<a href="#" class="social-link" id="chat-btn" title="Chat">
 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
 </a>
 </div>
@@ -1820,20 +1818,37 @@ document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_use
 <div class="staff-overlay" id="staff-overlay"></div>
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
-// ============================================
-// VARIABLES GLOBALES
-// ============================================
-let audio, playPauseBtn, tapeLeft, tapeRight, albumArtBg, volumeSlider, volumePercentage;
-let equalizer, bars, streamUrl, sonicTitle, sonicDj, ledTop, ledBottom;
-let chatPanel, chatClose, chatBtn, chatOverlay, chatIframeContainer;
-let staffPanel, staffClose, staffBtn, staffOverlay, staffGrid;
+const audio = document.getElementById('radio-player');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const tapeLeft = document.getElementById('tape-left');
+const tapeRight = document.getElementById('tape-right');
+const albumArtBg = document.getElementById('album-art-bg');
+const volumeSlider = document.getElementById('volume');
+const volumePercentage = document.getElementById('volume-percentage');
+const equalizer = document.getElementById('equalizer');
+const bars = document.querySelectorAll('.bar');
+const streamUrl = 'https://sonic.sistemahost.es/8008/stream';
+const sonicTitle = document.getElementById('sonic_title');
+const sonicDj = document.getElementById('sonic_dj');
+const ledTop = document.getElementById('led-top');
+const ledBottom = document.getElementById('led-bottom');
+const chatPanel = document.getElementById('chat-panel');
+const chatClose = document.getElementById('chat-close');
+const chatBtn = document.getElementById('chat-btn');
+const chatOverlay = document.getElementById('chat-overlay');
+const chatIframeContainer = document.querySelector('.chat-iframe-container');
+const staffPanel = document.getElementById('staff-panel');
+const staffClose = document.getElementById('staff-close');
+const staffBtn = document.getElementById('staff-btn');
+const staffOverlay = document.getElementById('staff-overlay');
+const staffGrid = document.getElementById('staff-grid');
 let isPlaying = false;
 let audioContext = null;
 let analyzer = null;
 let dataArray = null;
 let animationId = null;
 let isVisualizing = false;
-let barCount;
+const barCount = bars.length;
 let audioGraphSetup = false;
 let isChatVisible = false;
 let isStaffVisible = false;
@@ -1844,568 +1859,475 @@ let lastBeatTime = 0;
 const beatThreshold = 180;
 const colorChangeThreshold = 3;
 let beatCount = 0;
-
-// ============================================
-// INICIALIZACIÓN DESPUÉS DE CARGAR EL DOM
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar todas las variables
-    audio = document.getElementById('radio-player');
-    playPauseBtn = document.getElementById('play-pause-btn');
-    tapeLeft = document.getElementById('tape-left');
-    tapeRight = document.getElementById('tape-right');
-    albumArtBg = document.getElementById('album-art-bg');
-    volumeSlider = document.getElementById('volume');
-    volumePercentage = document.getElementById('volume-percentage');
-    equalizer = document.getElementById('equalizer');
-    bars = document.querySelectorAll('.bar');
-    streamUrl = 'https://sonic.sistemahost.es/8008/stream';
-    sonicTitle = document.getElementById('sonic_title');
-    sonicDj = document.getElementById('sonic_dj');
-    ledTop = document.getElementById('led-top');
-    ledBottom = document.getElementById('led-bottom');
-    chatPanel = document.getElementById('chat-panel');
-    chatClose = document.getElementById('chat-close');
-    chatBtn = document.getElementById('chat-btn');
-    chatOverlay = document.getElementById('chat-overlay');
-    chatIframeContainer = document.querySelector('.chat-iframe-container');
-    staffPanel = document.getElementById('staff-panel');
-    staffClose = document.getElementById('staff-close');
-    staffBtn = document.getElementById('staff-btn');
-    staffOverlay = document.getElementById('staff-overlay');
-    staffGrid = document.getElementById('staff-grid');
-    barCount = bars.length;
-
-    // Configurar audio
-    audio.volume = 1.0;
-    volumeSlider.value = 1.0;
-    audio.crossOrigin = 'anonymous';
-
-    // Inicializar todo
-    updateVolumeDisplay();
-    initChatListeners();
-    initStaffListeners();
-    setupGlitchObservers();
-    updateAlbumArtBackground();
-
-    // Event listeners del reproductor
-    if (playPauseBtn) {
-        playPauseBtn.addEventListener('click', togglePlayPause);
-    }
-    if (volumeSlider) {
-        volumeSlider.addEventListener('input', changeVolume);
-    }
-
-    // Event listeners del audio
-    if (audio) {
-        audio.addEventListener('ended', () => {
-            isPlaying = false;
-            playPauseBtn.innerHTML = '▶';
-            playPauseBtn.classList.remove('playing');
-            stopTapeAnimation();
-            stopVisualizer();
-        });
-
-        audio.addEventListener('pause', () => {
-            if (isPlaying) {
-                isPlaying = false;
-                playPauseBtn.innerHTML = '▶';
-                playPauseBtn.classList.remove('playing');
-                stopTapeAnimation();
-                stopVisualizer();
-            }
-        });
-
-        audio.addEventListener('error', (e) => {
-            console.error("✗ Error de audio:", e);
-            stopVisualizer();
-            if (isPlaying) {
-                isPlaying = false;
-                playPauseBtn.innerHTML = '▶';
-                playPauseBtn.classList.remove('playing');
-                stopTapeAnimation();
-            }
-        });
-    }
-
-    // Ajustes para móvil
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', adjustChatIframeForMobile);
-        window.visualViewport.addEventListener('scroll', adjustChatIframeForMobile);
-    }
-    window.addEventListener('resize', () => {
-        clearTimeout(window.chatResizeTimer);
-        window.chatResizeTimer = setTimeout(adjustChatIframeForMobile, 150);
-    });
-
-    // Touch para móvil
-    document.body.addEventListener('touchstart', function initMobile() {
-        if (!audioContext && typeof window.AudioContext !== 'undefined') {
-            audioContext = new AudioContext();
-            audioContext.suspend();
-        }
-        document.body.removeEventListener('touchstart', initMobile);
-    }, { once: true });
-
-    // Actualización periódica del widget
-    setInterval(function() {
-        const script = document.getElementById('sonic_js');
-        if (script) {
-            const newScript = document.createElement('script');
-            newScript.id = 'sonic_js';
-            newScript.setAttribute('data-port', '8008');
-            newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
-            script.parentNode.replaceChild(newScript, script);
-            updateAlbumArtBackground();
-            setTimeout(() => {
-                checkAndReplaceNoDJ();
-            }, 600);
-        }
-    }, 10000);
-
-    console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
-    console.log("🔘 Chat btn:", chatBtn);
-    console.log("🔘 Staff btn:", staffBtn);
-});
-
-// ============================================
-// FUNCIONES DE VOLUMEN
-// ============================================
+audio.volume = 1.0;
+volumeSlider.value = 1.0;
+audio.crossOrigin = 'anonymous';
 function updateVolumeDisplay() {
-    if (!volumeSlider || !volumePercentage || !audio) return;
-    const percent = Math.round(audio.volume * 100);
-    volumePercentage.textContent = percent + '%';
-    volumeSlider.style.background = `linear-gradient(to right, #00ff41 0%, #00ff41 ${percent}%, #333 ${percent}%, #333 100%)`;
+const percent = Math.round(audio.volume * 100);
+volumePercentage.textContent = percent + '%';
+volumeSlider.style.background = `linear-gradient(to right, #00ff41 0%, #00ff41 ${percent}%, #333 ${percent}%, #333 100%)`;
 }
-
-function changeVolume() {
-    if (!audio || !volumeSlider) return;
-    audio.volume = parseFloat(volumeSlider.value);
-    updateVolumeDisplay();
-}
-
-// ============================================
-// FUNCIONES DEL CHAT
-// ============================================
 function adjustChatIframeForMobile() {
-    if (window.innerWidth <= 768 && isChatVisible) {
-        if (window.visualViewport) {
-            const viewportHeight = window.visualViewport.height;
-            chatPanel.style.height = viewportHeight + 'px';
-        } else {
-            chatPanel.style.height = window.innerHeight + 'px';
-        }
-        if (chatIframeContainer) {
-            const keyboardSpace = window.innerWidth < 480 ? 55 : 60;
-            chatIframeContainer.style.paddingBottom = keyboardSpace + 'px';
-        }
-    }
+if (window.innerWidth <= 768 && isChatVisible) {
+if (window.visualViewport) {
+const viewportHeight = window.visualViewport.height;
+chatPanel.style.height = viewportHeight + 'px';
+} else {
+chatPanel.style.height = window.innerHeight + 'px';
 }
-
+if (chatIframeContainer) {
+const keyboardSpace = window.innerWidth < 480 ? 55 : 60;
+chatIframeContainer.style.paddingBottom = keyboardSpace + 'px';
+}
+}
+}
+if (window.visualViewport) {
+window.visualViewport.addEventListener('resize', adjustChatIframeForMobile);
+window.visualViewport.addEventListener('scroll', adjustChatIframeForMobile);
+}
+window.addEventListener('resize', () => {
+clearTimeout(window.chatResizeTimer);
+window.chatResizeTimer = setTimeout(adjustChatIframeForMobile, 150);
+});
 function toggleChat() {
-    isChatVisible = !isChatVisible;
-    if (isChatVisible) {
-        chatPanel.classList.remove('hidden');
-        chatPanel.classList.add('visible');
-        chatOverlay.classList.add('active');
-        setTimeout(adjustChatIframeForMobile, 300);
-    } else {
-        chatPanel.classList.remove('visible');
-        chatPanel.classList.add('hidden');
-        chatOverlay.classList.remove('active');
-        chatPanel.style.height = '';
-    }
+isChatVisible = !isChatVisible;
+if (isChatVisible) {
+chatPanel.classList.remove('hidden');
+chatPanel.classList.add('visible');
+chatOverlay.classList.add('active');
+setTimeout(adjustChatIframeForMobile, 300);
+} else {
+chatPanel.classList.remove('visible');
+chatPanel.classList.add('hidden');
+chatOverlay.classList.remove('active');
+chatPanel.style.height = '';
 }
-
+}
 function initChatListeners() {
-    if (chatBtn) {
-        chatBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleChat();
-            return false;
-        });
-    }
-    if (chatClose) {
-        chatClose.addEventListener('click', toggleChat);
-    }
-    if (chatOverlay) {
-        chatOverlay.addEventListener('click', toggleChat);
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isChatVisible) {
-            toggleChat();
-        }
-    });
+chatBtn.addEventListener('click', (e) => {
+e.preventDefault();
+toggleChat();
+});
+chatClose.addEventListener('click', toggleChat);
+chatOverlay.addEventListener('click', toggleChat);
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && isChatVisible) {
+toggleChat();
 }
-
-// ============================================
-// FUNCIONES DEL STAFF
-// ============================================
+});
+}
 function loadStaffImages() {
-    const maxImages = 20;
-    let loadedCount = 0;
-    let attemptedCount = 0;
-    const maxAttempts = 50;
-    staffGrid.innerHTML = '';
-    for (let i = 1; i <= maxAttempts && loadedCount < maxImages; i++) {
-        const img = document.createElement('img');
-        img.src = `staff/dj${i}.png`;
-        img.alt = `Staff member ${i}`;
-        img.classList.add('staff-photo');
-        img.dataset.index = i;
-        img.onload = function() {
-            loadedCount++;
-            this.classList.add('loaded');
-            this.style.display = 'block';
-        };
-        img.onerror = function() {
-            attemptedCount++;
-            this.style.display = 'none';
-        };
-        staffGrid.appendChild(img);
-    }
+const maxImages = 20;
+let loadedCount = 0;
+let attemptedCount = 0;
+const maxAttempts = 50;
+staffGrid.innerHTML = '';
+for (let i = 1; i <= maxAttempts && loadedCount < maxImages; i++) {
+const img = document.createElement('img');
+img.src = `staff/dj${i}.png`;
+img.alt = `Staff member ${i}`;
+img.classList.add('staff-photo');
+img.dataset.index = i;
+img.onload = function() {
+loadedCount++;
+this.classList.add('loaded');
+this.style.display = 'block';
+console.log(`✓ Cargada: staff/dj${i}.png`);
+};
+img.onerror = function() {
+attemptedCount++;
+this.style.display = 'none';
+if (attemptedCount >= 10 && loadedCount === 0) {
+console.warn('⚠ No se encontraron imágenes en la carpeta staff/');
 }
-
+};
+staffGrid.appendChild(img);
+}
+console.log(`Staff panel inicializado. Buscando hasta ${maxAttempts} imágenes...`);
+}
 function toggleStaffPanel() {
-    isStaffVisible = !isStaffVisible;
-    if (isStaffVisible) {
-        staffPanel.classList.remove('hidden');
-        staffPanel.classList.add('visible');
-        staffOverlay.classList.add('active');
-        if (!staffLoaded) {
-            loadStaffImages();
-            staffLoaded = true;
-        }
-    } else {
-        staffPanel.classList.remove('visible');
-        staffPanel.classList.add('hidden');
-        staffOverlay.classList.remove('active');
-    }
+isStaffVisible = !isStaffVisible;
+if (isStaffVisible) {
+staffPanel.classList.remove('hidden');
+staffPanel.classList.add('visible');
+staffOverlay.classList.add('active');
+if (!staffLoaded) {
+loadStaffImages();
+staffLoaded = true;
 }
-
+} else {
+staffPanel.classList.remove('visible');
+staffPanel.classList.add('hidden');
+staffOverlay.classList.remove('active');
+}
+}
 function initStaffListeners() {
-    if (staffBtn) {
-        staffBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleStaffPanel();
-            return false;
-        });
-    }
-    if (staffClose) {
-        staffClose.addEventListener('click', toggleStaffPanel);
-    }
-    if (staffOverlay) {
-        staffOverlay.addEventListener('click', toggleStaffPanel);
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isStaffVisible) {
-            toggleStaffPanel();
-        }
-    });
+staffBtn.addEventListener('click', (e) => {
+e.preventDefault();
+toggleStaffPanel();
+});
+staffClose.addEventListener('click', toggleStaffPanel);
+staffOverlay.addEventListener('click', toggleStaffPanel);
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && isStaffVisible) {
+toggleStaffPanel();
 }
-
-// ============================================
-// FUNCIONES DEL DJ Y GLITCH
-// ============================================
+});
+}
 function updateGlitchDataText(element) {
-    if (element && element.classList.contains('cyber-glitch')) {
-        element.setAttribute('data-text', element.textContent.trim());
-    }
+if (element && element.classList.contains('cyber-glitch')) {
+element.setAttribute('data-text', element.textContent.trim());
 }
-
+}
 function triggerRandomGlitch(element) {
-    if (!element || !element.classList.contains('cyber-glitch')) return;
-    const effects = ['flash', 'pulse', 'chaos'];
-    const randomEffect = effects[Math.floor(Math.random() * effects.length)];
-    element.classList.remove('flash', 'pulse', 'chaos');
-    void element.offsetWidth;
-    element.classList.add(randomEffect);
-    setTimeout(() => {
-        element.classList.remove(randomEffect);
-    }, 1000);
+if (!element || !element.classList.contains('cyber-glitch')) return;
+const effects = ['flash', 'pulse', 'chaos'];
+const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+element.classList.remove('flash', 'pulse', 'chaos');
+void element.offsetWidth;
+element.classList.add(randomEffect);
+setTimeout(() => {
+element.classList.remove(randomEffect);
+}, 1000);
 }
-
 function sanitizeDjName(djName) {
-    return djName.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]/g, '_');
+return djName.toLowerCase()
+.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+.replace(/[^a-z0-9]/g, '_');
 }
-
-function formatDjNameForDisplay(filename) {
-    let name = filename.replace(/_/g, ' ').trim();
-    name = name.replace(/\b\w/g, char => char.toUpperCase());
-    return name;
-}
-
 function replaceDjImageWithLocal(djName = 'autodj') {
-    const djProfile = document.getElementById('dj_profile');
-    if (djProfile) {
-        const existingImg = djProfile.querySelector('img');
-        const sanitizedName = sanitizeDjName(djName);
-        const imagePath = `portadasdjs/${sanitizedName}.png`;
-        if (existingImg) {
-            if (!existingImg.src.includes(imagePath)) {
-                existingImg.src = imagePath;
-                existingImg.alt = djName;
-            }
-        } else {
-            const newImg = document.createElement('img');
-            newImg.src = imagePath;
-            newImg.alt = djName;
-            newImg.style.borderRadius = '50%';
-            newImg.style.border = '3px solid #8b8b8b';
-            newImg.style.objectFit = 'cover';
-            djProfile.innerHTML = '';
-            djProfile.appendChild(newImg);
-        }
-    }
-    if (sonicDj) {
-        const displayName = formatDjNameForDisplay(sanitizedName);
-        sonicDj.textContent = displayName;
-        updateGlitchDataText(sonicDj);
-    }
+const djProfile = document.getElementById('dj_profile');
+if (djProfile) {
+const existingImg = djProfile.querySelector('img');
+const sanitizedName = sanitizeDjName(djName);
+const imagePath = `portadasdjs/${sanitizedName}.png`;
+if (existingImg) {
+if (!existingImg.src.includes(imagePath)) {
+existingImg.src = imagePath;
+existingImg.alt = djName;
 }
-
+} else {
+const newImg = document.createElement('img');
+newImg.src = imagePath;
+newImg.alt = djName;
+newImg.style.borderRadius = '50%';
+newImg.style.border = '3px solid #8b8b8b';
+newImg.style.objectFit = 'cover';
+djProfile.innerHTML = '';
+djProfile.appendChild(newImg);
+}
+}
+}
 function checkAndReplaceNoDJ() {
-    if (sonicDj) {
-        const currentText = sonicDj.textContent.trim();
-        if (currentText.toUpperCase().includes('NO DJ') || currentText === '') {
-            sonicDj.textContent = 'Nexus DJ';
-            updateGlitchDataText(sonicDj);
-            replaceDjImageWithLocal('autodj');
-            return true;
-        } else if (currentText && currentText.toUpperCase() !== 'NEXUS DJ') {
-            replaceDjImageWithLocal(currentText);
-        }
-    }
-    return false;
+if (sonicDj) {
+const currentText = sonicDj.textContent.trim();
+if (currentText.toUpperCase().includes('NO DJ') || currentText === '') {
+sonicDj.textContent = 'Nexus DJ';
+updateGlitchDataText(sonicDj);
+replaceDjImageWithLocal('autodj');
+return true;
+} else if (currentText && currentText.toUpperCase() !== 'NEXUS DJ') {
+replaceDjImageWithLocal(currentText);
 }
-
+}
+return false;
+}
 function setupGlitchObservers() {
-    if (sonicTitle) {
-        const titleObserver = new MutationObserver(() => {
-            updateGlitchDataText(sonicTitle);
-            if (Math.random() < 0.3) {
-                triggerRandomGlitch(sonicTitle);
-            }
-        });
-        titleObserver.observe(sonicTitle, { childList: true, characterData: true, subtree: true });
-        updateGlitchDataText(sonicTitle);
-    }
-    if (sonicDj) {
-        const djObserver = new MutationObserver(() => {
-            updateGlitchDataText(sonicDj);
-            checkAndReplaceNoDJ();
-            if (Math.random() < 0.3) {
-                triggerRandomGlitch(sonicDj);
-            }
-        });
-        djObserver.observe(sonicDj, { childList: true, characterData: true, subtree: true });
-        updateGlitchDataText(sonicDj);
-        checkAndReplaceNoDJ();
-    }
+if (sonicTitle) {
+const titleObserver = new MutationObserver(() => {
+updateGlitchDataText(sonicTitle);
+if (Math.random() < 0.3) {
+triggerRandomGlitch(sonicTitle);
 }
-
+});
+titleObserver.observe(sonicTitle, { childList: true, characterData: true, subtree: true });
+updateGlitchDataText(sonicTitle);
+}
+if (sonicDj) {
+const djObserver = new MutationObserver(() => {
+updateGlitchDataText(sonicDj);
+checkAndReplaceNoDJ();
+if (Math.random() < 0.3) {
+triggerRandomGlitch(sonicDj);
+}
+});
+djObserver.observe(sonicDj, { childList: true, characterData: true, subtree: true });
+updateGlitchDataText(sonicDj);
+checkAndReplaceNoDJ();
+}
+const djProfile = document.getElementById('dj_profile');
+if (djProfile) {
+const profileObserver = new MutationObserver(() => {
+if (sonicDj && sonicDj.textContent.trim().toUpperCase().includes('NO DJ')) {
+replaceDjImageWithLocal('autodj');
+}
+});
+profileObserver.observe(djProfile, { childList: true, subtree: true });
+}
+}
 function updateAlbumArtBackground() {
-    setTimeout(() => {
-        const artContainer = document.getElementById('sonic_art_full');
-        if (artContainer && artContainer.querySelector('img')) {
-            const img = artContainer.querySelector('img');
-            const imgSrc = img.src;
-            if (imgSrc && imgSrc !== '') {
-                albumArtBg.style.backgroundImage = `url('${imgSrc}')`;
-                albumArtBg.style.opacity = '0.4';
-            }
-        }
-    }, 500);
+setTimeout(() => {
+const artContainer = document.getElementById('sonic_art_full');
+if (artContainer && artContainer.querySelector('img')) {
+const img = artContainer.querySelector('img');
+const imgSrc = img.src;
+if (imgSrc && imgSrc !== '') {
+albumArtBg.style.backgroundImage = `url('${imgSrc}')`;
+albumArtBg.style.opacity = '0.4';
 }
-
-// ============================================
-// FUNCIONES DE AUDIO Y VISUALIZADOR
-// ============================================
+}
+}, 500);
+}
 function getBassIntensity() {
-    if (!analyzer || !dataArray) return 0;
-    let bassSum = 0;
-    for (let i = 0; i < 4; i++) {
-        bassSum += dataArray[i];
-    }
-    return bassSum / 4;
+if (!analyzer || !dataArray) return 0;
+let bassSum = 0;
+for (let i = 0; i < 4; i++) {
+bassSum += dataArray[i];
 }
-
+return bassSum / 4;
+}
 function updateLedStrips() {
-    if (!isPlaying || !analyzer) {
-        ledTop.style.background = '#8b8b8b';
-        ledTop.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
-        ledBottom.style.background = '#8b8b8b';
-        ledBottom.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
-        return;
-    }
-    const bassIntensity = getBassIntensity();
-    const now = Date.now();
-    if (bassIntensity > beatThreshold && (now - lastBeatTime) > 150) {
-        lastBeatTime = now;
-        beatCount++;
-        if (beatCount >= colorChangeThreshold) {
-            ledColorIndex = (ledColorIndex + 1) % ledColors.length;
-            beatCount = 0;
-        }
-        const currentColor = ledColors[ledColorIndex];
-        const intensity = Math.min(bassIntensity / 255, 1);
-        [ledTop, ledBottom].forEach(led => {
-            led.style.background = currentColor;
-            led.style.boxShadow = `
-                0 0 ${8 + intensity * 12}px ${currentColor},
-                0 0 ${15 + intensity * 20}px ${currentColor}80,
-                inset 0 0 ${5 + intensity * 8}px rgba(255,255,255,${0.3 + intensity * 0.4})
-            `;
-        });
-    } else {
-        [ledTop, ledBottom].forEach(led => {
-            const currentShadow = led.style.boxShadow;
-            if (currentShadow && currentShadow.includes('px')) {
-                led.style.boxShadow = currentShadow.replace(/[\d.]+px/g, match => {
-                    const val = parseFloat(match);
-                    return `${Math.max(val * 0.85, 0)}px`;
-                });
-            }
-        });
-    }
+if (!isPlaying || !analyzer) {
+ledTop.style.background = '#8b8b8b';
+ledTop.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
+ledBottom.style.background = '#8b8b8b';
+ledBottom.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
+return;
 }
-
+const bassIntensity = getBassIntensity();
+const now = Date.now();
+if (bassIntensity > beatThreshold && (now - lastBeatTime) > 150) {
+lastBeatTime = now;
+beatCount++;
+if (beatCount >= colorChangeThreshold) {
+ledColorIndex = (ledColorIndex + 1) % ledColors.length;
+beatCount = 0;
+}
+const currentColor = ledColors[ledColorIndex];
+const intensity = Math.min(bassIntensity / 255, 1);
+[ledTop, ledBottom].forEach(led => {
+led.style.background = currentColor;
+led.style.boxShadow = `
+0 0 ${8 + intensity * 12}px ${currentColor},
+0 0 ${15 + intensity * 20}px ${currentColor}80,
+inset 0 0 ${5 + intensity * 8}px rgba(255,255,255,${0.3 + intensity * 0.4})
+`;
+});
+} else {
+[ledTop, ledBottom].forEach(led => {
+const currentShadow = led.style.boxShadow;
+if (currentShadow && currentShadow.includes('px')) {
+led.style.boxShadow = currentShadow.replace(/[\d.]+px/g, match => {
+const val = parseFloat(match);
+return `${Math.max(val * 0.85, 0)}px`;
+});
+}
+});
+}
+}
 function setupAudioGraph() {
-    if (audioGraphSetup || !audioContext) return;
-    try {
-        analyzer = audioContext.createAnalyser();
-        analyzer.fftSize = 512;
-        analyzer.smoothingTimeConstant = 0.7;
-        const bufferLength = analyzer.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-        const source = audioContext.createMediaElementSource(audio);
-        source.connect(analyzer);
-        analyzer.connect(audioContext.destination);
-        audioGraphSetup = true;
-    } catch (e) {
-        console.error("✗ Error configurando el grafo de audio:", e);
-    }
+if (audioGraphSetup || !audioContext) return;
+try {
+analyzer = audioContext.createAnalyser();
+analyzer.fftSize = 512;
+analyzer.smoothingTimeConstant = 0.7;
+const bufferLength = analyzer.frequencyBinCount;
+dataArray = new Uint8Array(bufferLength);
+const source = audioContext.createMediaElementSource(audio);
+source.connect(analyzer);
+analyzer.connect(audioContext.destination);
+audioGraphSetup = true;
+console.log("✓ Grafo de audio configurado correctamente");
+} catch (e) {
+console.error("✗ Error configurando el grafo de audio:", e);
+alert("Error al inicializar el reproductor de audio. Por favor recarga la página.");
 }
-
+}
 function startVisualizer() {
-    if (isVisualizing || !analyzer) return;
-    isVisualizing = true;
-    visualize();
+if (isVisualizing || !analyzer) return;
+isVisualizing = true;
+visualize();
 }
-
 function stopVisualizer() {
-    isVisualizing = false;
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-    }
-    bars.forEach(bar => {
-        bar.style.height = '2px';
-        bar.style.boxShadow = '0 0 5px rgba(0, 255, 65, 0.5)';
-        bar.style.background = 'linear-gradient(to top, #00ff41, #bd00ff)';
-    });
-    ledTop.style.background = '#8b8b8b';
-    ledTop.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
-    ledBottom.style.background = '#8b8b8b';
-    ledBottom.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
+isVisualizing = false;
+if (animationId) {
+cancelAnimationFrame(animationId);
+animationId = null;
 }
-
+bars.forEach(bar => {
+bar.style.height = '2px';
+bar.style.boxShadow = '0 0 5px rgba(0, 255, 65, 0.5)';
+bar.style.background = 'linear-gradient(to top, #00ff41, #bd00ff)';
+});
+ledTop.style.background = '#8b8b8b';
+ledTop.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
+ledBottom.style.background = '#8b8b8b';
+ledBottom.style.boxShadow = '0 0 0 rgba(139, 139, 139, 0)';
+}
 function visualize() {
-    if (!isVisualizing || !analyzer || !isPlaying) {
-        stopVisualizer();
-        return;
-    }
-    analyzer.getByteFrequencyData(dataArray);
-    const totalBins = dataArray.length;
-    const binsPerBar = totalBins / barCount;
-    for (let i = 0; i < barCount; i++) {
-        const startBin = Math.floor(i * binsPerBar);
-        const endBin = Math.floor((i + 1) * binsPerBar);
-        let sum = 0;
-        let count = 0;
-        for (let j = startBin; j < endBin && j < totalBins; j++) {
-            const weight = (i < 4) ? 1.4 : (i >= 8 ? 1.5 : 1.15);
-            sum += dataArray[j] * weight;
-            count++;
-        }
-        const avg = count > 0 ? sum / count : 0;
-        let height = Math.sqrt(avg) * 2.0;
-        height = Math.min(height, 28);
-        height = Math.max(height, 2);
-        bars[i].style.height = `${height}px`;
-        const glowFactor = Math.min(height / 28, 1);
-        bars[i].style.boxShadow = `
-            0 0 ${8 * glowFactor}px rgba(0, 255, 65, ${0.4 + glowFactor * 0.6}),
-            0 0 ${12 * glowFactor}px rgba(189, 0, 255, ${0.4 * glowFactor})
-        `;
-        if (height > 20) {
-            bars[i].style.background = 'linear-gradient(to top, #00ff41, #bd00ff)';
-        } else if (height > 10) {
-            bars[i].style.background = 'linear-gradient(to top, #00cc33, #9900ff)';
-        } else {
-            bars[i].style.background = 'linear-gradient(to top, #008822, #7a00cc)';
-        }
-    }
-    updateLedStrips();
-    animationId = requestAnimationFrame(visualize);
+if (!isVisualizing || !analyzer || !isPlaying) {
+stopVisualizer();
+return;
 }
-
+analyzer.getByteFrequencyData(dataArray);
+const totalBins = dataArray.length;
+const binsPerBar = totalBins / barCount;
+for (let i = 0; i < barCount; i++) {
+const startBin = Math.floor(i * binsPerBar);
+const endBin = Math.floor((i + 1) * binsPerBar);
+let sum = 0;
+let count = 0;
+for (let j = startBin; j < endBin && j < totalBins; j++) {
+const weight = (i < 4) ? 1.4 : (i >= 8 ? 1.5 : 1.15);
+sum += dataArray[j] * weight;
+count++;
+}
+const avg = count > 0 ? sum / count : 0;
+let height = Math.sqrt(avg) * 2.0;
+height = Math.min(height, 28);
+height = Math.max(height, 2);
+bars[i].style.height = `${height}px`;
+const glowFactor = Math.min(height / 28, 1);
+bars[i].style.boxShadow = `
+0 0 ${8 * glowFactor}px rgba(0, 255, 65, ${0.4 + glowFactor * 0.6}),
+0 0 ${12 * glowFactor}px rgba(189, 0, 255, ${0.4 * glowFactor})
+`;
+if (height > 20) {
+bars[i].style.background = 'linear-gradient(to top, #00ff41, #bd00ff)';
+} else if (height > 10) {
+bars[i].style.background = 'linear-gradient(to top, #00cc33, #9900ff)';
+} else {
+bars[i].style.background = 'linear-gradient(to top, #008822, #7a00cc)';
+}
+}
+updateLedStrips();
+animationId = requestAnimationFrame(visualize);
+}
 function togglePlayPause() {
-    if (!isPlaying) {
-        if (audio.src !== streamUrl) {
-            audio.src = streamUrl;
-        }
-        if (!audioContext) {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (window.AudioContext) {
-                audioContext = new AudioContext();
-            } else {
-                alert("Tu navegador no soporta Web Audio API. Actualiza tu navegador.");
-                return;
-            }
-        }
-        if (audioContext.state === 'suspended') {
-            audioContext.resume().then(() => {
-                console.log("✓ AudioContext reanudado");
-            }).catch(e => console.error("✗ Error al reanudar AudioContext:", e));
-        }
-        if (!audioGraphSetup) {
-            setupAudioGraph();
-        }
-        audio.play().then(() => {
-            isPlaying = true;
-            playPauseBtn.innerHTML = '❚❚';
-            playPauseBtn.classList.add('playing');
-            startTapeAnimation();
-            if (analyzer) {
-                startVisualizer();
-            }
-        }).catch(error => {
-            console.error("✗ Error de reproducción:", error);
-        });
-    } else {
-        audio.pause();
-        isPlaying = false;
-        playPauseBtn.innerHTML = '▶';
-        playPauseBtn.classList.remove('playing');
-        stopTapeAnimation();
-        stopVisualizer();
-    }
+if (!isPlaying) {
+if (audio.src !== streamUrl) {
+audio.src = streamUrl;
 }
-
+if (!audioContext) {
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+if (window.AudioContext) {
+audioContext = new AudioContext();
+console.log("✓ AudioContext creado");
+} else {
+alert("Tu navegador no soporta Web Audio API. Actualiza tu navegador.");
+return;
+}
+}
+if (audioContext.state === 'suspended') {
+audioContext.resume().then(() => {
+console.log("✓ AudioContext reanudado");
+}).catch(e => console.error("✗ Error al reanudar AudioContext:", e));
+}
+if (!audioGraphSetup) {
+setupAudioGraph();
+}
+audio.play().then(() => {
+isPlaying = true;
+playPauseBtn.innerHTML = '❚❚';
+playPauseBtn.classList.add('playing');
+startTapeAnimation();
+if (analyzer) {
+startVisualizer();
+console.log("✓ Visualizador iniciado - Ecualizador activo");
+}
+}).catch(error => {
+console.error("✗ Error de reproducción:", error);
+let errorMsg = 'Error al reproducir: ';
+if (error.name === 'NotAllowedError') {
+errorMsg += 'Haz clic nuevamente en el botón de play para permitir el audio.';
+} else if (error.name === 'NetworkError') {
+errorMsg += 'Error de conexión. Verifica tu internet.';
+} else {
+errorMsg += error.message;
+}
+alert(errorMsg);
+});
+} else {
+audio.pause();
+isPlaying = false;
+playPauseBtn.innerHTML = '▶';
+playPauseBtn.classList.remove('playing');
+stopTapeAnimation();
+stopVisualizer();
+console.log("⏸ Reproducción pausada");
+}
+}
+function changeVolume() {
+audio.volume = parseFloat(volumeSlider.value);
+updateVolumeDisplay();
+}
 function startTapeAnimation() {
-    tapeLeft.classList.add('animated');
-    tapeRight.classList.add('animated');
+tapeLeft.classList.add('animated');
+tapeRight.classList.add('animated');
 }
-
 function stopTapeAnimation() {
-    tapeLeft.classList.remove('animated');
-    tapeRight.classList.remove('animated');
+tapeLeft.classList.remove('animated');
+tapeRight.classList.remove('animated');
 }
+playPauseBtn.addEventListener('click', togglePlayPause);
+volumeSlider.addEventListener('input', changeVolume);
+updateVolumeDisplay();
+setInterval(function() {
+const script = document.getElementById('sonic_js');
+const newScript = document.createElement('script');
+newScript.id = 'sonic_js';
+newScript.setAttribute('data-port', '8008');
+newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
+script.parentNode.replaceChild(newScript, script);
+updateAlbumArtBackground();
+setTimeout(() => {
+checkAndReplaceNoDJ();
+}, 600);
+}, 10000);
+window.addEventListener('load', function() {
+updateAlbumArtBackground();
+setupGlitchObservers();
+initChatListeners();
+initStaffListeners();
+adjustChatIframeForMobile();
+console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
+});
+audio.addEventListener('ended', () => {
+isPlaying = false;
+playPauseBtn.innerHTML = '▶';
+playPauseBtn.classList.remove('playing');
+stopTapeAnimation();
+stopVisualizer();
+console.log("⏹ Reproducción finalizada");
+});
+audio.addEventListener('pause', () => {
+if (isPlaying) {
+isPlaying = false;
+playPauseBtn.innerHTML = '▶';
+playPauseBtn.classList.remove('playing');
+stopTapeAnimation();
+stopVisualizer();
+}
+});
+audio.addEventListener('error', (e) => {
+console.error("✗ Error de audio:", e);
+stopVisualizer();
+if (isPlaying) {
+isPlaying = false;
+playPauseBtn.innerHTML = '▶';
+playPauseBtn.classList.remove('playing');
+stopTapeAnimation();
+alert('Error crítico en el stream. Verifica tu conexión o intenta más tarde.');
+}
+});
+document.body.addEventListener('touchstart', function initMobile() {
+if (!audioContext && typeof window.AudioContext !== 'undefined') {
+audioContext = new AudioContext();
+audioContext.suspend();
+console.log("✓ AudioContext inicializado para móvil");
+}
+document.body.removeEventListener('touchstart', initMobile);
+}, { once: true });
 </script>
 </body>
 </html>
