@@ -1734,7 +1734,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <!-- CUADRÍCULA DE FONDO -->
 <div class="background-grid"></div>
 <!-- Script del widget -->
-<script id='sonic_js' data-port='8008' src='https://sonic.sistemahost.es/cp/widgets.js?r=122'></script>
+<script id='sonic_js' data-port='8434' src='https://mars.streamerr.co/cp/widgets.js?r=213'></script>
 <header>
 <div class="header-content">
 <img src="img/logo.png" alt="Nexus Zone Logo" class="header-logo">
@@ -1863,7 +1863,7 @@ const volumeSlider = document.getElementById('volume');
 const volumePercentage = document.getElementById('volume-percentage');
 const equalizer = document.getElementById('equalizer');
 const bars = document.querySelectorAll('.bar');
-const streamUrl = 'https://sonic.sistemahost.es/8008/stream';
+const streamUrl = 'https://mars.streamerr.co/8434/stream';
 const sonicTitle = document.getElementById('sonic_title');
 const sonicDj = document.getElementById('sonic_dj');
 const ledTop = document.getElementById('led-top');
@@ -2312,7 +2312,7 @@ setInterval(function() {
 const script = document.getElementById('sonic_js');
 const newScript = document.createElement('script');
 newScript.id = 'sonic_js';
-newScript.setAttribute('data-port', '8008');
+newScript.setAttribute('data-port', '8434');
 newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
 script.parentNode.replaceChild(newScript, script);
 updateAlbumArtBackground();
