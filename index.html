@@ -1888,12 +1888,44 @@ document.addEventListener('DOMContentLoaded', function() {
     setupGlitchObservers();
     updateAlbumArtBackground();
 
-    // Event listeners principales
+    // Event listeners del reproductor
     if (playPauseBtn) {
         playPauseBtn.addEventListener('click', togglePlayPause);
     }
     if (volumeSlider) {
         volumeSlider.addEventListener('input', changeVolume);
+    }
+
+    // Event listeners del audio
+    if (audio) {
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '▶';
+            playPauseBtn.classList.remove('playing');
+            stopTapeAnimation();
+            stopVisualizer();
+        });
+
+        audio.addEventListener('pause', () => {
+            if (isPlaying) {
+                isPlaying = false;
+                playPauseBtn.innerHTML = '▶';
+                playPauseBtn.classList.remove('playing');
+                stopTapeAnimation();
+                stopVisualizer();
+            }
+        });
+
+        audio.addEventListener('error', (e) => {
+            console.error("✗ Error de audio:", e);
+            stopVisualizer();
+            if (isPlaying) {
+                isPlaying = false;
+                playPauseBtn.innerHTML = '▶';
+                playPauseBtn.classList.remove('playing');
+                stopTapeAnimation();
+            }
+        });
     }
 
     // Ajustes para móvil
@@ -1915,6 +1947,22 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.removeEventListener('touchstart', initMobile);
     }, { once: true });
 
+    // Actualización periódica del widget
+    setInterval(function() {
+        const script = document.getElementById('sonic_js');
+        if (script) {
+            const newScript = document.createElement('script');
+            newScript.id = 'sonic_js';
+            newScript.setAttribute('data-port', '8008');
+            newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
+            script.parentNode.replaceChild(newScript, script);
+            updateAlbumArtBackground();
+            setTimeout(() => {
+                checkAndReplaceNoDJ();
+            }, 600);
+        }
+    }, 10000);
+
     console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
 });
 
@@ -1922,13 +1970,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // FUNCIONES DE VOLUMEN
 // ============================================
 function updateVolumeDisplay() {
-    if (!volumeSlider || !volumePercentage) return;
+    if (!volumeSlider || !volumePercentage || !audio) return;
     const percent = Math.round(audio.volume * 100);
     volumePercentage.textContent = percent + '%';
     volumeSlider.style.background = `linear-gradient(to right, #00ff41 0%, #00ff41 ${percent}%, #333 ${percent}%, #333 100%)`;
 }
 
 function changeVolume() {
+    if (!audio || !volumeSlider) return;
     audio.volume = parseFloat(volumeSlider.value);
     updateVolumeDisplay();
 }
@@ -2354,58 +2403,6 @@ function startTapeAnimation() {
 function stopTapeAnimation() {
     tapeLeft.classList.remove('animated');
     tapeRight.classList.remove('animated');
-}
-
-// ============================================
-// ACTUALIZACIÓN PERIÓDICA DEL WIDGET
-// ============================================
-setInterval(function() {
-    const script = document.getElementById('sonic_js');
-    if (script) {
-        const newScript = document.createElement('script');
-        newScript.id = 'sonic_js';
-        newScript.setAttribute('data-port', '8008');
-        newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
-        script.parentNode.replaceChild(newScript, script);
-        updateAlbumArtBackground();
-        setTimeout(() => {
-            checkAndReplaceNoDJ();
-        }, 600);
-    }
-}, 10000);
-
-// ============================================
-// EVENTOS DE AUDIO
-// ============================================
-if (audio) {
-    audio.addEventListener('ended', () => {
-        isPlaying = false;
-        playPauseBtn.innerHTML = '▶';
-        playPauseBtn.classList.remove('playing');
-        stopTapeAnimation();
-        stopVisualizer();
-    });
-
-    audio.addEventListener('pause', () => {
-        if (isPlaying) {
-            isPlaying = false;
-            playPauseBtn.innerHTML = '▶';
-            playPauseBtn.classList.remove('playing');
-            stopTapeAnimation();
-            stopVisualizer();
-        }
-    });
-
-    audio.addEventListener('error', (e) => {
-        console.error("✗ Error de audio:", e);
-        stopVisualizer();
-        if (isPlaying) {
-            isPlaying = false;
-            playPauseBtn.innerHTML = '▶';
-            playPauseBtn.classList.remove('playing');
-            stopTapeAnimation();
-        }
-    });
 }
 </script>
 </body>
