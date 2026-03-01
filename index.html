@@ -2252,18 +2252,17 @@ tapeRight.classList.remove('animated');
 playPauseBtn.addEventListener('click', togglePlayPause);
 volumeSlider.addEventListener('input', changeVolume);
 updateVolumeDisplay();
+
+/* ===================================================== */
+/* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
+/* ===================================================== */
 setInterval(function() {
-const script = document.getElementById('sonic_js');
-const newScript = document.createElement('script');
-newScript.id = 'sonic_js';
-newScript.setAttribute('data-port', '8434');
-newScript.src = `https://sonic.sistemahost.es/cp/widgets.js?r=622=${new Date().getTime()}`;
-script.parentNode.replaceChild(newScript, script);
-updateAlbumArtBackground();
-setTimeout(() => {
-checkAndUpdateDjImage();
-}, 600);
+    // Solo actualizamos la portada y la imagen del DJ
+    updateAlbumArtBackground();
+    checkAndUpdateDjImage();
+    // Ya NO se recarga el script sonic_js
 }, 10000);
+
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
 setupGlitchObservers();
