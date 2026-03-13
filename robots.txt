@@ -1,0 +1,15 @@
+# robots.txt para Nexus Zone - https://nexuszone.github.io/
+# Permite el rastreo de todos los motores de búsqueda
+
+User-agent: *
+Allow: /
+
+# Bloquear rutas innecesarias (opcional)
+Disallow: /node_modules/
+Disallow: /.git/
+
+# Ubicación del sitemap
+Sitemap: https://nexuszone.github.io/sitemap.xml
+
+# Tiempo de espera entre solicitudes (cortesía)
+Crawl-delay: 10
