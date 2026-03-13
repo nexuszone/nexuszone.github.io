@@ -3,7 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nexus Zone</title>
+<!-- SEO OPTIMIZADO PARA GITHUB PAGES -->
+<title>Nexus Zone - Música sin Límites | Radio Online</title>
+<meta name="description" content="Escucha Nexus Zone, radio online con música sin límites. DJs en vivo, chat en vivo, peticiones de tus canciones favoritas, éxitos actuales y del pasado. ¡Conéctate ahora!">
+<meta name="keywords" content="Nexus Zone, radio online, música, streaming, DJ, radio en vivo, música sin límites, nexuszone.github.io">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Dobby">
+<link rel="canonical" href="https://nexuszone.github.io/">
+<!-- Open Graph / Facebook / WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nexuszone.github.io/">
+<meta property="og:title" content="Nexus Zone - Música sin Límites">
+<meta property="og:description" content="Escucha Nexus Zone, radio online con música sin límites. DJs en vivo, chat en vivo, peticiones de tus canciones favoritas, éxitos actuales y del pasado. ¡Conéctate ahora!">
+<meta property="og:image" content="https://nexuszone.github.io/img/logo.png">
+<!-- Twitter Cards -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://nexuszone.github.io/">
+<meta property="twitter:title" content="Nexus Zone - Música sin Límites">
+<meta property="twitter:description" content="Escucha Nexus Zone, radio online con música sin límites. DJs en vivo, chat en vivo, peticiones de tus canciones favoritas, éxitos actuales y del pasado. ¡Conéctate ahora!">
+<meta property="twitter:image" content="https://nexuszone.github.io/img/logo.png">
+<!-- FIN SEO OPTIMIZADO -->
 <link rel="icon" type="image/png" href="img/favicon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -1679,6 +1698,24 @@ footer { padding: 0.2rem; min-height: 70px; }
 .header-logo { max-height: 45px; max-width: 100px; left: 0.6rem; }
 }
 </style>
+<!-- DATOS ESTRUCTURADOS PARA GOOGLE (SCHEMA.ORG) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RadioStation",
+  "name": "Nexus Zone",
+  "url": "https://nexuszone.github.io/",
+  "logo": "https://nexuszone.github.io/img/logo.png",
+  "description": "Nexus Zone es una radio online que transmite música sin límites con los mejores DJs.",
+  "frequency": "Online Streaming",
+  "genre": ["Electronic", "Dance", "Pop"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "ES"
+  }
+}
+</script>
+<!-- FIN DATOS ESTRUCTURADOS -->
 </head>
 <body>
 <!-- IMAGEN DE FONDO -->
@@ -1697,7 +1734,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <div class="led-strip-top" id="led-top"></div>
 <div class="main-container">
 <section class="player-section">
-<h2 class="section-title player-title"></h2>
+<h2 class="section-title player-title">Reproductor</h2>
 <div class="cassette-player">
 <!-- AGUJEROS/TORNILLOS EN LAS 4 ESQUINAS -->
 <div class="cassette-screw top-left"></div>
@@ -1715,7 +1752,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 </div>
 <div class="cassette-center">
 <div class="button-compartment">
-<button class="play-btn" id="play-pause-btn">▶</button>
+<button class="play-btn" id="play-pause-btn" aria-label="Reproducir o Pausar">▶</button>
 </div>
 <div class="equalizer-compartment">
 <div class="equalizer-container" id="equalizer">
@@ -1743,7 +1780,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <span>Volumen:</span>
 <span id="volume-percentage">100%</span>
 </div>
-<input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.1" value="1">
+<input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.1" value="1" aria-label="Control de volumen">
 </div>
 </div>
 </div>
@@ -1754,7 +1791,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff41; display: inline; margin-left: 10px; font-weight: 900;"></div>
 </h2>
 <!-- IMAGEN DEL DJ - CARGA DINÁMICA -->
-<img id='dj-profile-img' src='portadasdjs/autodj.png' alt='DJ Profile'>
+<img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
 </section>
 </div>
 <div class="led-strip-bottom" id="led-bottom"></div>
@@ -2252,17 +2289,15 @@ tapeRight.classList.remove('animated');
 playPauseBtn.addEventListener('click', togglePlayPause);
 volumeSlider.addEventListener('input', changeVolume);
 updateVolumeDisplay();
-
 /* ===================================================== */
 /* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
 /* ===================================================== */
 setInterval(function() {
-    // Solo actualizamos la portada y la imagen del DJ
-    updateAlbumArtBackground();
-    checkAndUpdateDjImage();
-    // Ya NO se recarga el script sonic_js
+// Solo actualizamos la portada y la imagen del DJ
+updateAlbumArtBackground();
+checkAndUpdateDjImage();
+// Ya NO se recarga el script sonic_js
 }, 10000);
-
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
 setupGlitchObservers();
