@@ -2031,8 +2031,18 @@ return djName.toLowerCase()
 }
 function updateDjImage(djName = 'autodj') {
 if (djProfileImg) {
-const sanitizedName = sanitizeDjName(djName);
-const imagePath = `portadasdjs/${sanitizedName}.png`;
+// CASO ESPECIAL: Si el DJ es |Lu5|0n, usar ilusion.png
+const normalizedDjName = djName.toLowerCase().replace(/\s/g, '');
+let imageName;
+
+if (normalizedDjName.includes('|lu5|0n') || normalizedDjName.includes('lu50n') || normalizedDjName === '|lu5|0n') {
+imageName = 'ilusion';
+console.log(`🎭 DJ especial detectado: ${djName} -> Usando imagen: ilusion.png`);
+} else {
+imageName = sanitizeDjName(djName);
+}
+
+const imagePath = `portadasdjs/${imageName}.png`;
 djProfileImg.src = imagePath;
 djProfileImg.alt = djName;
 console.log(`🖼 Imagen del DJ actualizada: ${imagePath}`);
