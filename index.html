@@ -196,6 +196,7 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+position: relative;
 }
 .section-title {
 font-family: 'Orbitron', sans-serif;
@@ -814,7 +815,7 @@ inset 0 0 5px rgba(0, 0, 0, 0.5);
 border: 2px solid #000;
 }
 /* ============================================ */
-/* IMAGEN DEL DJ - NUEVO ESTILO */
+/* IMAGEN DEL DJ */
 /* ============================================ */
 #dj-profile-img {
 width: 100%;
@@ -856,11 +857,14 @@ vertical-align: middle;
 }
 
 /* ============================================ */
-/* AD OVERLAY - PUBLICIDAD (CORREGIDO) */
+/* AD OVERLAY - PUBLICIDAD (CORREGIDA: cuadrada con bordes redondeados) */
 /* ============================================ */
 .ad-overlay {
-  position: fixed;
-  z-index: 9999 !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100 !important;
   display: none;
   pointer-events: auto;
   filter: none !important;
@@ -877,7 +881,8 @@ vertical-align: middle;
   width: 100%;
   height: auto;
   aspect-ratio: 1 / 1;
-  border-radius: 50%;
+  /* CUADRADA CON BORDES REDONDEADOS */
+  border-radius: 20px;
   border: 3px solid #bd00ff;
   object-fit: cover;
   box-shadow:
@@ -910,7 +915,7 @@ vertical-align: middle;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: 101;
   padding: 0;
   line-height: 1;
 }
@@ -921,22 +926,79 @@ vertical-align: middle;
   box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
 }
 
-/* Desktop: posicionar sobre la imagen del DJ */
+/* ============================================ */
+/* TAMANOS DE PUBLICIDAD = MISMO QUE IMAGEN DEL DJ */
+/* ============================================ */
+
+/* Desktop general */
 @media (min-width: 769px) {
-  .ad-overlay {
-    top: 50%;
-    right: 18%;
-    transform: translateY(-50%);
-  }
   .ad-overlay img.ad-image {
+    max-width: 412.125px !important;
     width: 412.125px !important;
     height: 412.125px !important;
   }
 }
 
-/* Mobile: centrar en la página */
+@media (max-width: 1920px) and (min-width: 1601px) and (max-height: 1080px) {
+  .ad-overlay img.ad-image {
+    max-width: 380px !important;
+    width: 380px !important;
+    height: 380px !important;
+  }
+}
+
+@media (max-width: 1600px) and (min-width: 1441px) and (max-height: 900px) {
+  .ad-overlay img.ad-image {
+    max-width: 350px !important;
+    width: 350px !important;
+    height: 350px !important;
+  }
+}
+
+@media (max-width: 1536px) and (min-width: 1401px) and (max-height: 864px) {
+  .ad-overlay img.ad-image {
+    max-width: 340px !important;
+    width: 340px !important;
+    height: 340px !important;
+  }
+}
+
+@media (max-width: 1440px) and (min-width: 1367px) and (max-height: 900px) {
+  .ad-overlay img.ad-image {
+    max-width: 330px !important;
+    width: 330px !important;
+    height: 330px !important;
+  }
+}
+
+@media (max-width: 1366px) and (min-width: 1281px) and (max-height: 768px) {
+  .ad-overlay img.ad-image {
+    max-width: 280px !important;
+    width: 280px !important;
+    height: 280px !important;
+  }
+}
+
+@media (max-width: 1280px) and (min-width: 1025px) and (max-height: 720px) {
+  .ad-overlay img.ad-image {
+    max-width: 260px !important;
+    width: 260px !important;
+    height: 260px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .ad-overlay img.ad-image {
+    max-width: 300px !important;
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
+
+/* Mobile: centrado en pantalla */
 @media (max-width: 768px) {
   .ad-overlay {
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -1894,15 +1956,13 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 </h2>
 <!-- IMAGEN DEL DJ - CARGA DINÁMICA -->
 <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
-</section>
-</div>
-
-<!-- AD OVERLAY - PUBLICIDAD -->
+<!-- AD OVERLAY - PUBLICIDAD (dentro de dj-section para posicionamiento exacto sobre la imagen del DJ) -->
 <div class="ad-overlay" id="ad-overlay">
   <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
   <img src="img/publicidad.png" alt="Publicidad" class="ad-image" id="ad-image">
 </div>
-
+</section>
+</div>
 <div class="led-strip-bottom" id="led-bottom"></div>
 <footer>
 <div class="social-links">
