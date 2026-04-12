@@ -1916,37 +1916,33 @@ window.addEventListener('resize', () => {
 clearTimeout(window.chatResizeTimer);
 window.chatResizeTimer = setTimeout(adjustChatIframeForMobile, 150);
 });
-// ✅ FUNCIÓN PARA CREAR EL IFRAME DEL CHAT CON NICK ALEATORIO
 function createChatIframe() {
-// Limpiar contenido previo
 chatIframeContainer.innerHTML = '';
-// Generar número aleatorio entre 1000-9999 para mayor variedad
 const randomNum = Math.floor(Math.random() * 9000) + 1000;
 const nick = `Nexus_User${randomNum}`;
 const chatUrl = `https://chat.chatzona.org/index.html#nick=${encodeURIComponent(nick)}&channel=Nexus_Zone`;
-// Crear iframe dinámicamente
+console.log(`🔗 URL del chat: ${chatUrl}`);
+console.log(`💬 Nick generado: ${nick}`);
 const iframe = document.createElement('iframe');
 iframe.id = 'chat-iframe';
 iframe.src = chatUrl;
 iframe.width = '100%';
 iframe.height = '100%';
 iframe.frameBorder = '0';
-iframe.loading = 'lazy';
+iframe.loading = 'eager';
 iframe.allow = 'microphone';
-iframe.style.background = 'transparent';
-iframe.style.border = 'none';
-iframe.style.display = 'block';
-iframe.style.touchAction = 'auto';
-iframe.style.position = 'relative';
-iframe.style.zIndex = '0';
-// Añadir al contenedor
+iframe.style.cssText = 'width:100%;height:100%;border:none;background:transparent;position:relative;z-index:0;display:block;touch-action:auto;';
+iframe.onload = function() {
+console.log('✅ Iframe del chat cargado correctamente');
+};
+iframe.onerror = function() {
+console.error('❌ Error al cargar el iframe del chat');
+};
 chatIframeContainer.appendChild(iframe);
-console.log(`💬 Chat cargado con nick: ${nick}`);
 }
 function toggleChat() {
 isChatVisible = !isChatVisible;
 if (isChatVisible) {
-// ✅ CREAR IFRAME CON NICK NUEVO CADA VEZ QUE SE ABRE
 createChatIframe();
 chatPanel.classList.remove('hidden');
 chatPanel.classList.add('visible');
@@ -1958,7 +1954,6 @@ chatPanel.classList.remove('visible');
 chatPanel.classList.add('hidden');
 chatOverlay.classList.remove('active');
 chatPanel.style.height = '';
-// ✅ LIMPIAR IFRAME AL CERRAR PARA LIBERAR MEMORIA
 chatIframeContainer.innerHTML = '';
 document.body.style.overflow = '';
 }
@@ -2059,17 +2054,14 @@ return djName.toLowerCase()
 }
 function updateDjImage(djName = 'autodj') {
 if (djProfileImg) {
-// CASO ESPECIAL: Si el DJ es |Lu5|0n, usar ilusion.png
 const normalizedDjName = djName.toLowerCase().replace(/\s/g, '');
 let imageName;
-
 if (normalizedDjName.includes('|lu5|0n') || normalizedDjName.includes('lu50n') || normalizedDjName === '|lu5|0n') {
 imageName = 'ilusion';
 console.log(`🎭 DJ especial detectado: ${djName} -> Usando imagen: ilusion.png`);
 } else {
 imageName = sanitizeDjName(djName);
 }
-
 const imagePath = `portadasdjs/${imageName}.png`;
 djProfileImg.src = imagePath;
 djProfileImg.alt = djName;
@@ -2328,14 +2320,9 @@ tapeRight.classList.remove('animated');
 playPauseBtn.addEventListener('click', togglePlayPause);
 volumeSlider.addEventListener('input', changeVolume);
 updateVolumeDisplay();
-/* ===================================================== */
-/* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
-/* ===================================================== */
 setInterval(function() {
-// Solo actualizamos la portada y la imagen del DJ
 updateAlbumArtBackground();
 checkAndUpdateDjImage();
-// Ya NO se recarga el script sonic_js
 }, 10000);
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
