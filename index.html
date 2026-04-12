@@ -854,6 +854,111 @@ margin-left: 10px;
 display: inline-block;
 vertical-align: middle;
 }
+
+/* ============================================ */
+/* AD OVERLAY - PUBLICIDAD */
+/* ============================================ */
+.ad-overlay {
+  position: fixed;
+  z-index: 2000;
+  display: none;
+  pointer-events: auto;
+}
+
+.ad-overlay.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ad-overlay img.ad-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 3px solid #bd00ff;
+  object-fit: cover;
+  box-shadow:
+    -15px 0 25px rgba(189, 0, 255, 0.6),
+    15px 0 25px rgba(0, 255, 65, 0.6),
+    0 0 30px rgba(139, 139, 139, 0.4);
+  /* SIN FILTROS DE DESENFOQUE - explícitamente none */
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+.ad-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #0a0a0a;
+  border: 2px solid #bd00ff;
+  color: #bd00ff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2001;
+  padding: 0;
+  line-height: 1;
+}
+
+.ad-close-btn:hover {
+  background: #bd00ff;
+  color: #0a0a0a;
+  box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
+}
+
+/* Desktop: posicionar sobre la imagen del DJ */
+@media (min-width: 769px) {
+  .ad-overlay {
+    top: 50%;
+    right: 18%;
+    transform: translateY(-50%);
+  }
+  
+  .ad-overlay img.ad-image {
+    max-width: 412.125px;
+    width: 412.125px;
+    height: 412.125px;
+  }
+}
+
+/* Mobile: centrar en la página */
+@media (max-width: 768px) {
+  .ad-overlay {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .ad-overlay img.ad-image {
+    width: 349.6125px !important;
+    height: 349.6125px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ad-overlay img.ad-image {
+    width: 235.125px !important;
+    height: 235.125px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .ad-overlay img.ad-image {
+    width: 177.5625px !important;
+    height: 177.5625px !important;
+  }
+}
+
 /* Pie de página */
 footer {
 background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
@@ -1795,6 +1900,13 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
 </section>
 </div>
+
+<!-- AD OVERLAY - PUBLICIDAD -->
+<div class="ad-overlay" id="ad-overlay">
+  <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
+  <img src="img/publicidad.png" alt="Publicidad" class="ad-image" id="ad-image">
+</div>
+
 <div class="led-strip-bottom" id="led-bottom"></div>
 <footer>
 <div class="social-links">
@@ -1845,6 +1957,11 @@ document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_use
 <div class="staff-overlay" id="staff-overlay"></div>
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
+/* ===================================================== */
+/* CONFIGURACIÓN DE PUBLICIDAD */
+/* ===================================================== */
+const AD_ENABLED = true; // 🔧 Cambia a false para desactivar la publicidad
+
 const audio = document.getElementById('radio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const tapeLeft = document.getElementById('tape-left');
@@ -1870,6 +1987,8 @@ const staffClose = document.getElementById('staff-close');
 const staffBtn = document.getElementById('staff-btn');
 const staffOverlay = document.getElementById('staff-overlay');
 const staffGrid = document.getElementById('staff-grid');
+const adOverlay = document.getElementById('ad-overlay');
+const adCloseBtn = document.getElementById('ad-close-btn');
 let isPlaying = false;
 let audioContext = null;
 let analyzer = null;
@@ -1892,6 +2011,47 @@ const isMobile = window.innerWidth <= 768;
 audio.volume = 1.0;
 volumeSlider.value = 1.0;
 audio.crossOrigin = 'anonymous';
+
+/* ===================================================== */
+/* FUNCIONES DE PUBLICIDAD */
+/* ===================================================== */
+function showAdOverlay() {
+  if (!AD_ENABLED) return;
+  
+  adOverlay.classList.add('active');
+  
+  // Auto-ocultar después de 5 segundos
+  const adTimer = setTimeout(() => {
+    hideAdOverlay();
+  }, 5000);
+  
+  // Guardar referencia para poder cancelar si se cierra manualmente
+  adOverlay.dataset.timer = adTimer;
+}
+
+function hideAdOverlay() {
+  adOverlay.classList.remove('active');
+  if (adOverlay.dataset.timer) {
+    clearTimeout(parseInt(adOverlay.dataset.timer));
+    delete adOverlay.dataset.timer;
+  }
+}
+
+function initAdListeners() {
+  if (!AD_ENABLED) return;
+  
+  // Cerrar con botón
+  adCloseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hideAdOverlay();
+  });
+  
+  // Mostrar al cargar la página
+  window.addEventListener('load', () => {
+    setTimeout(showAdOverlay, 1000); // Pequeño delay para mejor experiencia
+  });
+}
+
 function updateVolumeDisplay() {
 const percent = Math.round(audio.volume * 100);
 volumePercentage.textContent = percent + '%';
@@ -2314,6 +2474,7 @@ updateAlbumArtBackground();
 setupGlitchObservers();
 initChatListeners();
 initStaffListeners();
+initAdListeners(); // ✅ Inicializar listeners de publicidad
 adjustChatIframeForMobile();
 console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
 });
