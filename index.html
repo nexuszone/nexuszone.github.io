@@ -857,7 +857,7 @@ vertical-align: middle;
 }
 
 /* ============================================ */
-/* DJ IMAGE CONTAINER - Contenedor exclusivo para la imagen del DJ */
+/* DJ IMAGE CONTAINER */
 /* ============================================ */
 .dj-image-container {
   position: relative;
@@ -939,75 +939,75 @@ vertical-align: middle;
 }
 
 /* ============================================ */
-/* TAMANOS DE PUBLICIDAD = MISMO QUE IMAGEN DEL DJ */
+/* TAMANOS DE PUBLICIDAD - PC (+5%) | MÓVIL (+10%) */
 /* ============================================ */
 
-/* Desktop general */
+/* Desktop general (+5%) */
 @media (min-width: 769px) {
   .ad-overlay img.ad-image {
-    max-width: 412.125px !important;
-    width: 412.125px !important;
-    height: 412.125px !important;
+    max-width: 432.73px !important;
+    width: 432.73px !important;
+    height: 432.73px !important;
   }
 }
 
 @media (max-width: 1920px) and (min-width: 1601px) and (max-height: 1080px) {
   .ad-overlay img.ad-image {
-    max-width: 380px !important;
-    width: 380px !important;
-    height: 380px !important;
+    max-width: 399px !important;
+    width: 399px !important;
+    height: 399px !important;
   }
 }
 
 @media (max-width: 1600px) and (min-width: 1441px) and (max-height: 900px) {
   .ad-overlay img.ad-image {
-    max-width: 350px !important;
-    width: 350px !important;
-    height: 350px !important;
+    max-width: 367.5px !important;
+    width: 367.5px !important;
+    height: 367.5px !important;
   }
 }
 
 @media (max-width: 1536px) and (min-width: 1401px) and (max-height: 864px) {
   .ad-overlay img.ad-image {
-    max-width: 340px !important;
-    width: 340px !important;
-    height: 340px !important;
+    max-width: 357px !important;
+    width: 357px !important;
+    height: 357px !important;
   }
 }
 
 @media (max-width: 1440px) and (min-width: 1367px) and (max-height: 900px) {
   .ad-overlay img.ad-image {
-    max-width: 330px !important;
-    width: 330px !important;
-    height: 330px !important;
+    max-width: 346.5px !important;
+    width: 346.5px !important;
+    height: 346.5px !important;
   }
 }
 
 @media (max-width: 1366px) and (min-width: 1281px) and (max-height: 768px) {
   .ad-overlay img.ad-image {
-    max-width: 280px !important;
-    width: 280px !important;
-    height: 280px !important;
+    max-width: 294px !important;
+    width: 294px !important;
+    height: 294px !important;
   }
 }
 
 @media (max-width: 1280px) and (min-width: 1025px) and (max-height: 720px) {
   .ad-overlay img.ad-image {
-    max-width: 260px !important;
-    width: 260px !important;
-    height: 260px !important;
+    max-width: 273px !important;
+    width: 273px !important;
+    height: 273px !important;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .ad-overlay img.ad-image {
-    max-width: 300px !important;
-    width: 300px !important;
-    height: 300px !important;
+    max-width: 315px !important;
+    width: 315px !important;
+    height: 315px !important;
   }
 }
 
-/* Mobile: centrado en pantalla */
+/* Mobile: centrado en pantalla (+10%) */
 @media (max-width: 768px) {
   .ad-overlay {
     position: fixed;
@@ -1016,22 +1016,22 @@ vertical-align: middle;
     transform: translate(-50%, -50%);
   }
   .ad-overlay img.ad-image {
-    width: 349.6125px !important;
-    height: 349.6125px !important;
+    width: 384.57px !important;
+    height: 384.57px !important;
   }
 }
 
 @media (max-width: 480px) {
   .ad-overlay img.ad-image {
-    width: 235.125px !important;
-    height: 235.125px !important;
+    width: 258.64px !important;
+    height: 258.64px !important;
   }
 }
 
 @media (max-width: 320px) {
   .ad-overlay img.ad-image {
-    width: 177.5625px !important;
-    height: 177.5625px !important;
+    width: 195.32px !important;
+    height: 195.32px !important;
   }
 }
 
@@ -1966,11 +1966,10 @@ footer { padding: 0.2rem; min-height: 70px; }
 <h2 class="section-title dj-title">
 Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff41; display: inline; margin-left: 10px; font-weight: 900;"></div>
 </h2>
-<!-- CONTENEDOR DE LA IMAGEN DEL DJ (con position: relative para el overlay) -->
+<!-- CONTENEDOR DE LA IMAGEN DEL DJ -->
 <div class="dj-image-container">
-  <!-- IMAGEN DEL DJ - CARGA DINÁMICA -->
   <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
-  <!-- AD OVERLAY - PUBLICIDAD (dentro del contenedor de la imagen del DJ) -->
+  <!-- AD OVERLAY - PUBLICIDAD -->
   <div class="ad-overlay" id="ad-overlay">
     <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
     <img src="img/publicidad.png" alt="Publicidad" class="ad-image" id="ad-image">
@@ -2031,7 +2030,7 @@ document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_use
 /* ===================================================== */
 /* CONFIGURACIÓN DE PUBLICIDAD */
 /* ===================================================== */
-const AD_ENABLED = true; // 🔧 Cambia a false para desactivar la publicidad. ANUNCIO
+const AD_ENABLED = true; // 🔧 Cambia a false para desactivar la publicidad
 
 const audio = document.getElementById('radio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
@@ -2121,7 +2120,6 @@ function initAdListeners() {
   adCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); hideAdOverlay(); });
   adOverlay.addEventListener('click', (e) => { if (e.target === adOverlay) hideAdOverlay(); });
 
-  // Mostrar 1 segundo después de que cargue la página
   setTimeout(showAdOverlay, 1000);
 }
 
@@ -2264,7 +2262,6 @@ return djName.toLowerCase()
 }
 function updateDjImage(djName = 'autodj') {
 if (djProfileImg) {
-// CASO ESPECIAL: Si el DJ es |Lu5|0n, usar ilusion.png
 const normalizedDjName = djName.toLowerCase().replace(/\s/g, '');
 let imageName;
 
@@ -2537,17 +2534,15 @@ updateVolumeDisplay();
 /* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
 /* ===================================================== */
 setInterval(function() {
-// Solo actualizamos la portada y la imagen del DJ
 updateAlbumArtBackground();
 checkAndUpdateDjImage();
-// Ya NO se recarga el script sonic_js
 }, 10000);
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
 setupGlitchObservers();
 initChatListeners();
 initStaffListeners();
-initAdListeners(); // ✅ Inicializa publicidad corregida
+initAdListeners();
 adjustChatIframeForMobile();
 console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
 });
