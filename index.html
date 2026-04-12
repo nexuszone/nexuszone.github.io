@@ -1825,8 +1825,11 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 <h3>💬 Chat Nexus</h3>
 <button class="chat-close-btn" id="chat-close">×</button>
 </div>
-<div class="chat-iframe-container" id="chat-iframe-container">
-<!-- El iframe se insertará dinámicamente con JS -->
+<div class="chat-iframe-container">
+<script>
+const num = Math.floor(Math.random() * 9000) + 1000;
+document.write(`<iframe src="https://chat.chatzona.org/index.html?nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" allow="microphone"></iframe>`);
+</script>
 </div>
 </div>
 <div class="chat-overlay" id="chat-overlay"></div>
@@ -1861,7 +1864,6 @@ const chatPanel = document.getElementById('chat-panel');
 const chatClose = document.getElementById('chat-close');
 const chatBtn = document.getElementById('chat-btn');
 const chatOverlay = document.getElementById('chat-overlay');
-const chatIframeContainer = document.getElementById('chat-iframe-container');
 const staffPanel = document.getElementById('staff-panel');
 const staffClose = document.getElementById('staff-close');
 const staffBtn = document.getElementById('staff-btn');
@@ -1902,10 +1904,6 @@ chatPanel.style.height = viewportHeight + 'px';
 } else {
 chatPanel.style.height = window.innerHeight + 'px';
 }
-if (chatIframeContainer) {
-const keyboardSpace = window.innerWidth < 480 ? 55 : 60;
-chatIframeContainer.style.paddingBottom = keyboardSpace + 'px';
-}
 }
 }
 if (window.visualViewport) {
@@ -1916,34 +1914,9 @@ window.addEventListener('resize', () => {
 clearTimeout(window.chatResizeTimer);
 window.chatResizeTimer = setTimeout(adjustChatIframeForMobile, 150);
 });
-function createChatIframe() {
-chatIframeContainer.innerHTML = '';
-const randomNum = Math.floor(Math.random() * 9000) + 1000;
-const nick = `Nexus_User${randomNum}`;
-const chatUrl = `https://chat.chatzona.org/index.html#nick=${encodeURIComponent(nick)}&channel=Nexus_Zone`;
-console.log(`🔗 URL del chat: ${chatUrl}`);
-console.log(`💬 Nick generado: ${nick}`);
-const iframe = document.createElement('iframe');
-iframe.id = 'chat-iframe';
-iframe.src = chatUrl;
-iframe.width = '100%';
-iframe.height = '100%';
-iframe.frameBorder = '0';
-iframe.loading = 'eager';
-iframe.allow = 'microphone';
-iframe.style.cssText = 'width:100%;height:100%;border:none;background:transparent;position:relative;z-index:0;display:block;touch-action:auto;';
-iframe.onload = function() {
-console.log('✅ Iframe del chat cargado correctamente');
-};
-iframe.onerror = function() {
-console.error('❌ Error al cargar el iframe del chat');
-};
-chatIframeContainer.appendChild(iframe);
-}
 function toggleChat() {
 isChatVisible = !isChatVisible;
 if (isChatVisible) {
-createChatIframe();
 chatPanel.classList.remove('hidden');
 chatPanel.classList.add('visible');
 chatOverlay.classList.add('active');
@@ -1954,7 +1927,6 @@ chatPanel.classList.remove('visible');
 chatPanel.classList.add('hidden');
 chatOverlay.classList.remove('active');
 chatPanel.style.height = '';
-chatIframeContainer.innerHTML = '';
 document.body.style.overflow = '';
 }
 }
