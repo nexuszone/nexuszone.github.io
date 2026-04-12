@@ -856,17 +856,19 @@ vertical-align: middle;
 }
 
 /* ============================================ */
-/* AD OVERLAY - PUBLICIDAD */
+/* AD OVERLAY - PUBLICIDAD (CORREGIDO) */
 /* ============================================ */
 .ad-overlay {
   position: fixed;
-  z-index: 2000;
+  z-index: 9999 !important;
   display: none;
   pointer-events: auto;
+  filter: none !important;
+  -webkit-filter: none !important;
 }
 
 .ad-overlay.active {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
 }
@@ -882,9 +884,12 @@ vertical-align: middle;
     -15px 0 25px rgba(189, 0, 255, 0.6),
     15px 0 25px rgba(0, 255, 65, 0.6),
     0 0 30px rgba(139, 139, 139, 0.4);
-  /* SIN FILTROS DE DESENFOQUE - explícitamente none */
   filter: none !important;
   -webkit-filter: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  max-width: none;
+  display: block;
 }
 
 .ad-close-btn {
@@ -905,7 +910,7 @@ vertical-align: middle;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2001;
+  z-index: 10000;
   padding: 0;
   line-height: 1;
 }
@@ -923,11 +928,9 @@ vertical-align: middle;
     right: 18%;
     transform: translateY(-50%);
   }
-  
   .ad-overlay img.ad-image {
-    max-width: 412.125px;
-    width: 412.125px;
-    height: 412.125px;
+    width: 412.125px !important;
+    height: 412.125px !important;
   }
 }
 
@@ -938,7 +941,6 @@ vertical-align: middle;
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  
   .ad-overlay img.ad-image {
     width: 349.6125px !important;
     height: 349.6125px !important;
@@ -1615,9 +1617,7 @@ max-height: 72px;
 #dj-profile-img {
 width: 349.6125px !important;
 height: 349.6125px !important;
-/* Animación desactivada en móvil */
 animation: none !important;
-/* Resplandor estático */
 box-shadow:
 -10px 0 20px rgba(189, 0, 255, 0.5),
 10px 0 20px rgba(0, 255, 65, 0.5),
@@ -1694,9 +1694,7 @@ max-height: 65px;
 #dj-profile-img {
 width: 235.125px !important;
 height: 235.125px !important;
-/* Animación desactivada en móvil */
 animation: none !important;
-/* Resplandor estático */
 box-shadow:
 -8px 0 15px rgba(189, 0, 255, 0.5),
 8px 0 15px rgba(0, 255, 65, 0.5),
@@ -1789,9 +1787,7 @@ max-height: 58px;
 #dj-profile-img {
 width: 177.5625px !important;
 height: 177.5625px !important;
-/* Animación desactivada en móvil */
 animation: none !important;
-/* Resplandor estático */
 box-shadow:
 -6px 0 12px rgba(189, 0, 255, 0.5),
 6px 0 12px rgba(0, 255, 65, 0.5),
@@ -1989,6 +1985,7 @@ const staffOverlay = document.getElementById('staff-overlay');
 const staffGrid = document.getElementById('staff-grid');
 const adOverlay = document.getElementById('ad-overlay');
 const adCloseBtn = document.getElementById('ad-close-btn');
+const adImage = document.getElementById('ad-image');
 let isPlaying = false;
 let audioContext = null;
 let analyzer = null;
@@ -2013,43 +2010,44 @@ volumeSlider.value = 1.0;
 audio.crossOrigin = 'anonymous';
 
 /* ===================================================== */
-/* FUNCIONES DE PUBLICIDAD */
+/* FUNCIONES DE PUBLICIDAD (CORREGIDAS Y DEPURADAS) */
 /* ===================================================== */
+let adTimer = null;
+
 function showAdOverlay() {
-  if (!AD_ENABLED) return;
+  console.log('📢 [AD] showAdOverlay llamado');
+  if (!AD_ENABLED) return console.log('📢 [AD] Publicidad desactivada');
+  if (!adOverlay || !adImage) return console.error('❌ [AD] Elementos del DOM no encontrados');
   
   adOverlay.classList.add('active');
+  console.log('✅ [AD] Overlay activado | Imagen:', adImage.src);
   
-  // Auto-ocultar después de 5 segundos
-  const adTimer = setTimeout(() => {
+  if (adTimer) clearTimeout(adTimer);
+  adTimer = setTimeout(() => {
+    console.log('⏰ [AD] Tiempo cumplido (5s), ocultando');
     hideAdOverlay();
   }, 5000);
-  
-  // Guardar referencia para poder cancelar si se cierra manualmente
-  adOverlay.dataset.timer = adTimer;
 }
 
 function hideAdOverlay() {
+  if (!adOverlay) return;
   adOverlay.classList.remove('active');
-  if (adOverlay.dataset.timer) {
-    clearTimeout(parseInt(adOverlay.dataset.timer));
-    delete adOverlay.dataset.timer;
-  }
+  if (adTimer) { clearTimeout(adTimer); adTimer = null; }
+  console.log('📢 [AD] Overlay ocultado');
 }
 
 function initAdListeners() {
-  if (!AD_ENABLED) return;
-  
-  // Cerrar con botón
-  adCloseBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hideAdOverlay();
-  });
-  
-  // Mostrar al cargar la página
-  window.addEventListener('load', () => {
-    setTimeout(showAdOverlay, 1000); // Pequeño delay para mejor experiencia
-  });
+  console.log('📢 [AD] initAdListeners ejecutado | AD_ENABLED:', AD_ENABLED);
+  if (!AD_ENABLED || !adOverlay || !adCloseBtn || !adImage) return;
+
+  adImage.onload = () => console.log('✅ [AD] Imagen cargada correctamente');
+  adImage.onerror = () => console.error('❌ [AD] ERROR: No se pudo cargar img/publicidad.png');
+
+  adCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); hideAdOverlay(); });
+  adOverlay.addEventListener('click', (e) => { if (e.target === adOverlay) hideAdOverlay(); });
+
+  // Mostrar 1 segundo después de que cargue la página
+  setTimeout(showAdOverlay, 1000);
 }
 
 function updateVolumeDisplay() {
@@ -2474,7 +2472,7 @@ updateAlbumArtBackground();
 setupGlitchObservers();
 initChatListeners();
 initStaffListeners();
-initAdListeners(); // ✅ Inicializar listeners de publicidad
+initAdListeners(); // ✅ Inicializa publicidad corregida
 adjustChatIframeForMobile();
 console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
 });
