@@ -1827,8 +1827,8 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 </div>
 <div class="chat-iframe-container">
 <script>
-const num = Math.floor(Math.random() * 9000) + 1000;
-document.write(`<iframe src="https://chat.chatzona.org/index.html?nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" allow="microphone"></iframe>`);
+const num = Math.floor(Math.random() * 1000);
+document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`);
 </script>
 </div>
 </div>
@@ -1864,6 +1864,7 @@ const chatPanel = document.getElementById('chat-panel');
 const chatClose = document.getElementById('chat-close');
 const chatBtn = document.getElementById('chat-btn');
 const chatOverlay = document.getElementById('chat-overlay');
+const chatIframeContainer = document.querySelector('.chat-iframe-container');
 const staffPanel = document.getElementById('staff-panel');
 const staffClose = document.getElementById('staff-close');
 const staffBtn = document.getElementById('staff-btn');
@@ -1903,6 +1904,10 @@ const viewportHeight = window.visualViewport.height;
 chatPanel.style.height = viewportHeight + 'px';
 } else {
 chatPanel.style.height = window.innerHeight + 'px';
+}
+if (chatIframeContainer) {
+const keyboardSpace = window.innerWidth < 480 ? 55 : 60;
+chatIframeContainer.style.paddingBottom = keyboardSpace + 'px';
 }
 }
 }
@@ -2026,14 +2031,17 @@ return djName.toLowerCase()
 }
 function updateDjImage(djName = 'autodj') {
 if (djProfileImg) {
+// CASO ESPECIAL: Si el DJ es |Lu5|0n, usar ilusion.png
 const normalizedDjName = djName.toLowerCase().replace(/\s/g, '');
 let imageName;
+
 if (normalizedDjName.includes('|lu5|0n') || normalizedDjName.includes('lu50n') || normalizedDjName === '|lu5|0n') {
 imageName = 'ilusion';
 console.log(`🎭 DJ especial detectado: ${djName} -> Usando imagen: ilusion.png`);
 } else {
 imageName = sanitizeDjName(djName);
 }
+
 const imagePath = `portadasdjs/${imageName}.png`;
 djProfileImg.src = imagePath;
 djProfileImg.alt = djName;
@@ -2292,9 +2300,14 @@ tapeRight.classList.remove('animated');
 playPauseBtn.addEventListener('click', togglePlayPause);
 volumeSlider.addEventListener('input', changeVolume);
 updateVolumeDisplay();
+/* ===================================================== */
+/* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
+/* ===================================================== */
 setInterval(function() {
+// Solo actualizamos la portada y la imagen del DJ
 updateAlbumArtBackground();
 checkAndUpdateDjImage();
+// Ya NO se recarga el script sonic_js
 }, 10000);
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
