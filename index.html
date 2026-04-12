@@ -1825,11 +1825,8 @@ Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff4
 <h3>💬 Chat Nexus</h3>
 <button class="chat-close-btn" id="chat-close">×</button>
 </div>
-<div class="chat-iframe-container">
-<script>
-const num = Math.floor(Math.random() * 1000);
-document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`);
-</script>
+<div class="chat-iframe-container" id="chat-iframe-container">
+<!-- El iframe se insertará dinámicamente con JS -->
 </div>
 </div>
 <div class="chat-overlay" id="chat-overlay"></div>
@@ -1864,7 +1861,7 @@ const chatPanel = document.getElementById('chat-panel');
 const chatClose = document.getElementById('chat-close');
 const chatBtn = document.getElementById('chat-btn');
 const chatOverlay = document.getElementById('chat-overlay');
-const chatIframeContainer = document.querySelector('.chat-iframe-container');
+const chatIframeContainer = document.getElementById('chat-iframe-container');
 const staffPanel = document.getElementById('staff-panel');
 const staffClose = document.getElementById('staff-close');
 const staffBtn = document.getElementById('staff-btn');
@@ -1919,9 +1916,38 @@ window.addEventListener('resize', () => {
 clearTimeout(window.chatResizeTimer);
 window.chatResizeTimer = setTimeout(adjustChatIframeForMobile, 150);
 });
+// ✅ FUNCIÓN PARA CREAR EL IFRAME DEL CHAT CON NICK ALEATORIO
+function createChatIframe() {
+// Limpiar contenido previo
+chatIframeContainer.innerHTML = '';
+// Generar número aleatorio entre 1000-9999 para mayor variedad
+const randomNum = Math.floor(Math.random() * 9000) + 1000;
+const nick = `Nexus_User${randomNum}`;
+const chatUrl = `https://chat.chatzona.org/index.html#nick=${encodeURIComponent(nick)}&channel=Nexus_Zone`;
+// Crear iframe dinámicamente
+const iframe = document.createElement('iframe');
+iframe.id = 'chat-iframe';
+iframe.src = chatUrl;
+iframe.width = '100%';
+iframe.height = '100%';
+iframe.frameBorder = '0';
+iframe.loading = 'lazy';
+iframe.allow = 'microphone';
+iframe.style.background = 'transparent';
+iframe.style.border = 'none';
+iframe.style.display = 'block';
+iframe.style.touchAction = 'auto';
+iframe.style.position = 'relative';
+iframe.style.zIndex = '0';
+// Añadir al contenedor
+chatIframeContainer.appendChild(iframe);
+console.log(`💬 Chat cargado con nick: ${nick}`);
+}
 function toggleChat() {
 isChatVisible = !isChatVisible;
 if (isChatVisible) {
+// ✅ CREAR IFRAME CON NICK NUEVO CADA VEZ QUE SE ABRE
+createChatIframe();
 chatPanel.classList.remove('hidden');
 chatPanel.classList.add('visible');
 chatOverlay.classList.add('active');
@@ -1932,6 +1958,8 @@ chatPanel.classList.remove('visible');
 chatPanel.classList.add('hidden');
 chatOverlay.classList.remove('active');
 chatPanel.style.height = '';
+// ✅ LIMPIAR IFRAME AL CERRAR PARA LIBERAR MEMORIA
+chatIframeContainer.innerHTML = '';
 document.body.style.overflow = '';
 }
 }
