@@ -196,7 +196,6 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
-position: relative;
 }
 .section-title {
 font-family: 'Orbitron', sans-serif;
@@ -815,7 +814,7 @@ inset 0 0 5px rgba(0, 0, 0, 0.5);
 border: 2px solid #000;
 }
 /* ============================================ */
-/* IMAGEN DEL DJ */
+/* IMAGEN DEL DJ - NUEVO ESTILO */
 /* ============================================ */
 #dj-profile-img {
 width: 100%;
@@ -855,232 +854,6 @@ margin-left: 10px;
 display: inline-block;
 vertical-align: middle;
 }
-
-/* ============================================ */
-/* DJ IMAGE CONTAINER */
-/* ============================================ */
-.dj-image-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* ============================================ */
-/* NUEVO: INFO DE PAÍS DEL DJ */
-/* ============================================ */
-.dj-country-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: rgba(26, 26, 26, 0.7);
-  border: 1px solid rgba(139, 139, 139, 0.3);
-  border-radius: 20px;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: #00ff41;
-  text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
-  letter-spacing: 1px;
-  animation: country-glow 3s ease-in-out infinite alternate;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-.dj-country-info:hover {
-  border-color: #bd00ff;
-  box-shadow: 0 0 12px rgba(189, 0, 255, 0.4);
-}
-.dj-flag {
-  font-size: 1.1rem;
-  filter: drop-shadow(0 0 4px rgba(189, 0, 255, 0.5));
-  animation: flag-float 2.5s ease-in-out infinite;
-}
-.dj-country-name {
-  color: #bd00ff;
-  text-shadow: 0 0 6px rgba(189, 0, 255, 0.6);
-}
-@keyframes country-glow {
-  from { box-shadow: 0 0 8px rgba(0, 255, 65, 0.3), 0 0 15px rgba(189, 0, 255, 0.2); }
-  to { box-shadow: 0 0 12px rgba(0, 255, 65, 0.5), 0 0 22px rgba(189, 0, 255, 0.4); }
-}
-@keyframes flag-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
-}
-
-/* ============================================ */
-/* AD OVERLAY - PUBLICIDAD */
-/* ============================================ */
-.ad-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100 !important;
-  display: none;
-  pointer-events: auto;
-  filter: none !important;
-  -webkit-filter: none !important;
-}
-
-.ad-overlay.active {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.ad-overlay img.ad-image {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  /* CUADRADA CON BORDES REDONDEADOS */
-  border-radius: 20px;
-  border: 3px solid #bd00ff;
-  object-fit: cover;
-  box-shadow:
-    -15px 0 25px rgba(189, 0, 255, 0.6),
-    15px 0 25px rgba(0, 255, 65, 0.6),
-    0 0 30px rgba(139, 139, 139, 0.4);
-  filter: none !important;
-  -webkit-filter: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  max-width: none;
-  display: block;
-}
-
-.ad-close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #0a0a0a;
-  border: 2px solid #bd00ff;
-  color: #bd00ff;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  font-size: 1.2rem;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 101;
-  padding: 0;
-  line-height: 1;
-}
-
-.ad-close-btn:hover {
-  background: #bd00ff;
-  color: #0a0a0a;
-  box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
-}
-
-/* ============================================ */
-/* TAMANOS DE PUBLICIDAD - PC (+5%) | MÓVIL (+10%) */
-/* ============================================ */
-
-/* Desktop general (+5%) */
-@media (min-width: 769px) {
-  .ad-overlay img.ad-image {
-    max-width: 432.73px !important;
-    width: 432.73px !important;
-    height: 432.73px !important;
-  }
-}
-
-@media (max-width: 1920px) and (min-width: 1601px) and (max-height: 1080px) {
-  .ad-overlay img.ad-image {
-    max-width: 399px !important;
-    width: 399px !important;
-    height: 399px !important;
-  }
-}
-
-@media (max-width: 1600px) and (min-width: 1441px) and (max-height: 900px) {
-  .ad-overlay img.ad-image {
-    max-width: 367.5px !important;
-    width: 367.5px !important;
-    height: 367.5px !important;
-  }
-}
-
-@media (max-width: 1536px) and (min-width: 1401px) and (max-height: 864px) {
-  .ad-overlay img.ad-image {
-    max-width: 357px !important;
-    width: 357px !important;
-    height: 357px !important;
-  }
-}
-
-@media (max-width: 1440px) and (min-width: 1367px) and (max-height: 900px) {
-  .ad-overlay img.ad-image {
-    max-width: 346.5px !important;
-    width: 346.5px !important;
-    height: 346.5px !important;
-  }
-}
-
-@media (max-width: 1366px) and (min-width: 1281px) and (max-height: 768px) {
-  .ad-overlay img.ad-image {
-    max-width: 294px !important;
-    width: 294px !important;
-    height: 294px !important;
-  }
-}
-
-@media (max-width: 1280px) and (min-width: 1025px) and (max-height: 720px) {
-  .ad-overlay img.ad-image {
-    max-width: 273px !important;
-    width: 273px !important;
-    height: 273px !important;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .ad-overlay img.ad-image {
-    max-width: 315px !important;
-    width: 315px !important;
-    height: 315px !important;
-  }
-}
-
-/* Mobile: centrado en pantalla (+10%) */
-@media (max-width: 768px) {
-  .ad-overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .ad-overlay img.ad-image {
-    width: 384.57px !important;
-    height: 384.57px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .ad-overlay img.ad-image {
-    width: 258.64px !important;
-    height: 258.64px !important;
-  }
-}
-
-@media (max-width: 320px) {
-  .ad-overlay img.ad-image {
-    width: 195.32px !important;
-    height: 195.32px !important;
-  }
-}
-
 /* Pie de página */
 footer {
 background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
@@ -1429,8 +1202,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 7px; }
 .cassette-screw { width: 19px; height: 19px; }
 .header-logo { max-height: 100px; max-width: 200px; left: 1.2rem; }
-.dj-country-info { font-size: 0.7rem; padding: 5px 12px; }
-.dj-flag { font-size: 1rem; }
 }
 @media (max-width: 1600px) and (min-width: 1441px) and (max-height: 900px) {
 header { padding: 0.8rem 1.1rem; }
@@ -1464,8 +1235,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 7px; }
 .cassette-screw { width: 19px; height: 19px; }
 .header-logo { max-height: 95px; max-width: 190px; left: 1.1rem; }
-.dj-country-info { font-size: 0.7rem; padding: 5px 12px; }
-.dj-flag { font-size: 1rem; }
 }
 @media (max-width: 1536px) and (min-width: 1401px) and (max-height: 864px) {
 header { padding: 0.8rem 1.1rem; }
@@ -1499,7 +1268,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 7px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 90px; max-width: 180px; left: 1.1rem; }
-.dj-country-info { font-size: 0.7rem; }
 }
 @media (max-width: 1440px) and (min-width: 1367px) and (max-height: 900px) {
 header { padding: 0.8rem 1rem; }
@@ -1533,7 +1301,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 7px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 85px; max-width: 170px; left: 1rem; }
-.dj-country-info { font-size: 0.68rem; }
 }
 @media (max-width: 1366px) and (min-width: 1281px) and (max-height: 768px) {
 header { padding: 0.7rem 1rem; }
@@ -1567,7 +1334,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 6px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 80px; max-width: 160px; left: 1rem; }
-.dj-country-info { font-size: 0.68rem; padding: 4px 10px; }
 }
 @media (max-width: 1280px) and (min-width: 1025px) and (max-height: 720px) {
 header { padding: 0.7rem 0.9rem; }
@@ -1601,7 +1367,6 @@ footer { padding: 0.3rem; min-height: 80px; }
 .led-strip-top, .led-strip-bottom { height: 6px; }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 75px; max-width: 150px; left: 0.9rem; }
-.dj-country-info { font-size: 0.65rem; }
 }
 @media (min-width: 1025px) and (max-width: 1366px) {
 .cassette-player { max-width: 500px; min-height: 300px; }
@@ -1619,7 +1384,6 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.9rem); }
 .play-btn { width: 70px; height: 28px; font-size: 1.1rem; }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 70px; max-width: 140px; left: 1rem; }
-.dj-country-info { font-size: 0.65rem; }
 }
 @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
 header { padding: 0.7rem 1rem; }
@@ -1696,7 +1460,6 @@ padding: 1rem;
 }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 70px; max-width: 140px; left: 1rem; }
-.dj-country-info { font-size: 0.65rem; }
 }
 @media (max-width: 768px) {
 header { padding: 0.7rem 1rem; }
@@ -1747,7 +1510,9 @@ max-height: 72px;
 #dj-profile-img {
 width: 349.6125px !important;
 height: 349.6125px !important;
+/* Animación desactivada en móvil */
 animation: none !important;
+/* Resplandor estático */
 box-shadow:
 -10px 0 20px rgba(189, 0, 255, 0.5),
 10px 0 20px rgba(0, 255, 65, 0.5),
@@ -1778,7 +1543,6 @@ padding: 1rem;
 }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 70px; max-width: 140px; left: 1rem; }
-.dj-country-info { font-size: 0.65rem; padding: 4px 10px; }
 }
 @media (max-width: 480px) {
 header { padding: 0.6rem 0.8rem; }
@@ -1825,7 +1589,9 @@ max-height: 65px;
 #dj-profile-img {
 width: 235.125px !important;
 height: 235.125px !important;
+/* Animación desactivada en móvil */
 animation: none !important;
+/* Resplandor estático */
 box-shadow:
 -8px 0 15px rgba(189, 0, 255, 0.5),
 8px 0 15px rgba(0, 255, 65, 0.5),
@@ -1844,8 +1610,6 @@ padding: 0.8rem;
 }
 .cassette-screw { width: 16px; height: 16px; }
 .header-logo { max-height: 55px; max-width: 120px; left: 0.8rem; }
-.dj-country-info { font-size: 0.6rem; padding: 3px 8px; min-width: 100px; }
-.dj-flag { font-size: 0.9rem; }
 }
 @media (max-width: 400px) {
 .cassette-player {
@@ -1878,7 +1642,6 @@ max-height: 60px;
 .equalizer-container { height: 18px; }
 .cassette-screw { width: 15px; height: 15px; }
 .header-logo { max-height: 50px; max-width: 110px; left: 0.7rem; }
-.dj-country-info { font-size: 0.58rem; }
 }
 @media (max-width: 320px) {
 header { padding: 0.5rem 0.6rem; }
@@ -1921,7 +1684,9 @@ max-height: 58px;
 #dj-profile-img {
 width: 177.5625px !important;
 height: 177.5625px !important;
+/* Animación desactivada en móvil */
 animation: none !important;
+/* Resplandor estático */
 box-shadow:
 -6px 0 12px rgba(189, 0, 255, 0.5),
 6px 0 12px rgba(0, 255, 65, 0.5),
@@ -1932,7 +1697,6 @@ footer { padding: 0.2rem; min-height: 70px; }
 .footer-nexus, .footer-zone, .footer-credit, .footer-separator { font-size: 0.75rem; }
 .cassette-screw { width: 15px; height: 15px; }
 .header-logo { max-height: 45px; max-width: 100px; left: 0.6rem; }
-.dj-country-info { font-size: 0.55rem; padding: 2px 6px; }
 }
 </style>
 <!-- DATOS ESTRUCTURADOS PARA GOOGLE (SCHEMA.ORG) -->
@@ -2027,22 +1791,8 @@ footer { padding: 0.2rem; min-height: 70px; }
 <h2 class="section-title dj-title">
 Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff41; display: inline; margin-left: 10px; font-weight: 900;"></div>
 </h2>
-<!-- CONTENEDOR DE LA IMAGEN DEL DJ -->
-<div class="dj-image-container">
-  <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
-  
-  <!-- NUEVO: INFO DE PAÍS DEL DJ -->
-  <div class="dj-country-info" id="dj-country-info">
-    <span class="dj-flag" id="dj-flag">🌍</span>
-    <span class="dj-country-name" id="dj-country-name">En línea</span>
-  </div>
-  
-  <!-- AD OVERLAY - PUBLICIDAD -->
-  <div class="ad-overlay" id="ad-overlay">
-    <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
-    <img src="img/publicidad.png" alt="Publicidad" class="ad-image" id="ad-image">
-  </div>
-</div>
+<!-- IMAGEN DEL DJ - CARGA DINÁMICA -->
+<img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
 </section>
 </div>
 <div class="led-strip-bottom" id="led-bottom"></div>
@@ -2095,118 +1845,53 @@ document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_use
 <div class="staff-overlay" id="staff-overlay"></div>
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
-/* ===================================================== */
-/* CONFIGURACIÓN DE PUBLICIDAD */
-/* ===================================================== */
-const AD_ENABLED = true; // 🔧 Cambia a false para desactivar la publicidad
-
-/* ===================================================== */
-/* 🌍 MAPEO DE DJs A PAÍSES */
-/* ===================================================== */
-/* 🔧 INSTRUCCIONES PARA AGREGAR DJs:
-   - La CLAVE es el nick normalizado: minúsculas, sin espacios ni símbolos
-   - Ejemplo: "AdharaCanis" → "adharacanis"
-   - Ejemplo: "Auto DJ" o "Nexus DJ" → "autodj" o "nexusdj"
-   - Ejemplo: "|Lu5|0n" → "lu50n"
-   - Usa la bandera emoji del país: 🇸🇻 🇲🇽 🇪🇸 🇦🇷 🇨🇴 etc.
-*/
-const djCountryMap = {
-  'autodj': { country: 'El Salvador', flag: '🇸🇻', code: 'SV' },
-  'nexusdj': { country: 'El Salvador', flag: '🇸🇻', code: 'SV' }, // ✅ Corregido
-  'adharacanis': { country: 'El Salvador', flag: '🇸🇻', code: 'SV' },
-  // 🔧 Agrega más DJs aquí siguiendo el mismo formato:
-  // 'nombredj': { country: 'Nombre País', flag: '🇽🇽', code: 'XX' },
-};
-
-/* ===================================================== */
-/* FUNCIONES DE PAÍS DEL DJ */
-/* ===================================================== */
-function getDjCountryInfo(djName) {
-  if (!djName) return djCountryMap['autodj'];
-  
-  // Normalizar nombre para búsqueda: minúsculas, sin espacios, sin caracteres especiales
-  const normalized = djName.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]/g, '');
-  
-  // Buscar coincidencia exacta o parcial
-  for (const [key, value] of Object.entries(djCountryMap)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
-      return value;
-    }
-  }
-  
-  // Fallback si no se encuentra
-  return { country: 'En línea', flag: '🌍', code: 'ON' };
-}
-
-function updateDjCountryDisplay(djName = '') {
-  const countryInfo = document.getElementById('dj-country-info');
-  const djFlag = document.getElementById('dj-flag');
-  const djCountryName = document.getElementById('dj-country-name');
-  
-  if (!countryInfo || !djFlag || !djCountryName) return;
-  
-  const info = getDjCountryInfo(djName);
-  
-  // Actualizar con animación sutil
-  djFlag.style.opacity = '0';
-  djCountryName.style.opacity = '0';
-  
-  setTimeout(() => {
-    djFlag.textContent = info.flag;
-    djCountryName.textContent = info.country;
-    djFlag.style.opacity = '1';
-    djCountryName.style.opacity = '1';
-  }, 150);
-  
-  // Efecto glow adicional al cambiar
-  countryInfo.style.animation = 'none';
-  setTimeout(() => {
-    countryInfo.style.animation = 'country-glow 3s ease-in-out infinite alternate';
-  }, 10);
-}
-
-/* ===================================================== */
-/* FUNCIONES DE PUBLICIDAD */
-/* ===================================================== */
-let adTimer = null;
-
-function showAdOverlay() {
-  console.log('📢 [AD] showAdOverlay llamado');
-  if (!AD_ENABLED) return console.log('📢 [AD] Publicidad desactivada');
-  if (!adOverlay || !adImage) return console.error('❌ [AD] Elementos del DOM no encontrados');
-  
-  adOverlay.classList.add('active');
-  console.log('✅ [AD] Overlay activado | Imagen:', adImage.src);
-  
-  if (adTimer) clearTimeout(adTimer);
-  adTimer = setTimeout(() => {
-    console.log('⏰ [AD] Tiempo cumplido (5s), ocultando');
-    hideAdOverlay();
-  }, 5000);
-}
-
-function hideAdOverlay() {
-  if (!adOverlay) return;
-  adOverlay.classList.remove('active');
-  if (adTimer) { clearTimeout(adTimer); adTimer = null; }
-  console.log('📢 [AD] Overlay ocultado');
-}
-
-function initAdListeners() {
-  console.log('📢 [AD] initAdListeners ejecutado | AD_ENABLED:', AD_ENABLED);
-  if (!AD_ENABLED || !adOverlay || !adCloseBtn || !adImage) return;
-
-  adImage.onload = () => console.log('✅ [AD] Imagen cargada correctamente');
-  adImage.onerror = () => console.error('❌ [AD] ERROR: No se pudo cargar img/publicidad.png');
-
-  adCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); hideAdOverlay(); });
-  adOverlay.addEventListener('click', (e) => { if (e.target === adOverlay) hideAdOverlay(); });
-
-  setTimeout(showAdOverlay, 1000);
-}
-
+const audio = document.getElementById('radio-player');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const tapeLeft = document.getElementById('tape-left');
+const tapeRight = document.getElementById('tape-right');
+const albumArtBg = document.getElementById('album-art-bg');
+const volumeSlider = document.getElementById('volume');
+const volumePercentage = document.getElementById('volume-percentage');
+const equalizer = document.getElementById('equalizer');
+const bars = document.querySelectorAll('.bar');
+const streamUrl = 'https://mars.streamerr.co/8434/stream';
+const sonicTitle = document.getElementById('sonic_title');
+const sonicDj = document.getElementById('sonic_dj');
+const djProfileImg = document.getElementById('dj-profile-img');
+const ledTop = document.getElementById('led-top');
+const ledBottom = document.getElementById('led-bottom');
+const chatPanel = document.getElementById('chat-panel');
+const chatClose = document.getElementById('chat-close');
+const chatBtn = document.getElementById('chat-btn');
+const chatOverlay = document.getElementById('chat-overlay');
+const chatIframeContainer = document.querySelector('.chat-iframe-container');
+const staffPanel = document.getElementById('staff-panel');
+const staffClose = document.getElementById('staff-close');
+const staffBtn = document.getElementById('staff-btn');
+const staffOverlay = document.getElementById('staff-overlay');
+const staffGrid = document.getElementById('staff-grid');
+let isPlaying = false;
+let audioContext = null;
+let analyzer = null;
+let dataArray = null;
+let animationId = null;
+let isVisualizing = false;
+const barCount = bars.length;
+let audioGraphSetup = false;
+let isChatVisible = false;
+let isStaffVisible = false;
+let staffLoaded = false;
+const ledColors = ['#8b8b8b', '#bd00ff', '#00ff41'];
+let ledColorIndex = 0;
+let lastBeatTime = 0;
+const beatThreshold = 180;
+const colorChangeThreshold = 3;
+let beatCount = 0;
+let visualizerFrameCount = 0;
+const isMobile = window.innerWidth <= 768;
+audio.volume = 1.0;
+volumeSlider.value = 1.0;
+audio.crossOrigin = 'anonymous';
 function updateVolumeDisplay() {
 const percent = Math.round(audio.volume * 100);
 volumePercentage.textContent = percent + '%';
@@ -2346,17 +2031,8 @@ return djName.toLowerCase()
 }
 function updateDjImage(djName = 'autodj') {
 if (djProfileImg) {
-const normalizedDjName = djName.toLowerCase().replace(/\s/g, '');
-let imageName;
-
-if (normalizedDjName.includes('|lu5|0n') || normalizedDjName.includes('lu50n') || normalizedDjName === '|lu5|0n') {
-imageName = 'ilusion';
-console.log(`🎭 DJ especial detectado: ${djName} -> Usando imagen: ilusion.png`);
-} else {
-imageName = sanitizeDjName(djName);
-}
-
-const imagePath = `portadasdjs/${imageName}.png`;
+const sanitizedName = sanitizeDjName(djName);
+const imagePath = `portadasdjs/${sanitizedName}.png`;
 djProfileImg.src = imagePath;
 djProfileImg.alt = djName;
 console.log(`🖼 Imagen del DJ actualizada: ${imagePath}`);
@@ -2391,8 +2067,6 @@ if (sonicDj) {
 const djObserver = new MutationObserver(() => {
 updateGlitchDataText(sonicDj);
 checkAndUpdateDjImage();
-// ✅ ACTUALIZAR PAÍS CUANDO CAMBIA EL DJ
-updateDjCountryDisplay(sonicDj.textContent.trim());
 if (Math.random() < 0.3) {
 triggerRandomGlitch(sonicDj);
 }
@@ -2400,8 +2074,6 @@ triggerRandomGlitch(sonicDj);
 djObserver.observe(sonicDj, { childList: true, characterData: true, subtree: true });
 updateGlitchDataText(sonicDj);
 checkAndUpdateDjImage();
-// ✅ INICIALIZAR PAÍS AL CARGAR
-updateDjCountryDisplay(sonicDj.textContent.trim());
 }
 }
 function updateAlbumArtBackground() {
@@ -2622,18 +2294,17 @@ updateVolumeDisplay();
 /* ✅ OPTIMIZADO: Solo actualiza visuales, NO recarga script */
 /* ===================================================== */
 setInterval(function() {
+// Solo actualizamos la portada y la imagen del DJ
 updateAlbumArtBackground();
 checkAndUpdateDjImage();
+// Ya NO se recarga el script sonic_js
 }, 10000);
 window.addEventListener('load', function() {
 updateAlbumArtBackground();
 setupGlitchObservers();
 initChatListeners();
 initStaffListeners();
-initAdListeners();
 adjustChatIframeForMobile();
-// ✅ Inicializar país del DJ al cargar
-updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
 console.log("🎧 Nexus Zone cargado. Haz clic en PLAY para iniciar.");
 });
 audio.addEventListener('ended', () => {
