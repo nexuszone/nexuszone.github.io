@@ -627,7 +627,7 @@ z-index: 1;
 }
 
 /* ============================================ */
-/* INFO DE PAÍS DEL DJ - CON BANDERA SVG */
+/* INFO DE PAÍS DEL DJ - CON EMOJI */
 /* ============================================ */
 .dj-country-info {
 display: flex;
@@ -655,14 +655,11 @@ pointer-events: auto;
 border-color: #bd00ff;
 box-shadow: 0 0 15px rgba(189, 0, 255, 0.5);
 }
-.dj-flag-img {
-width: 26px;
-height: 18px;
-object-fit: cover;
-border-radius: 3px;
-border: 1px solid rgba(139, 139, 139, 0.3);
+.dj-flag {
+font-size: 1.8rem;
 filter: drop-shadow(0 0 4px rgba(189, 0, 255, 0.5));
 animation: flag-float 2.5s ease-in-out infinite;
+line-height: 1;
 }
 .dj-country-name {
 color: #bd00ff;
@@ -1005,7 +1002,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 19px; height: 19px; }
 .header-logo { max-height: 100px; max-width: 200px; left: 1.2rem; }
 .dj-country-info { font-size: 0.95rem; padding: 12px 24px; }
-.dj-flag-img { width: 28px; height: 19px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 1600px) and (min-width: 1441px) and (max-height: 900px) {
 header { padding: 0.8rem 1.1rem; }
@@ -1040,7 +1037,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 19px; height: 19px; }
 .header-logo { max-height: 95px; max-width: 190px; left: 1.1rem; }
 .dj-country-info { font-size: 0.95rem; padding: 12px 24px; }
-.dj-flag-img { width: 28px; height: 19px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 1536px) and (min-width: 1401px) and (max-height: 864px) {
 header { padding: 0.8rem 1.1rem; }
@@ -1075,7 +1072,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 90px; max-width: 180px; left: 1.1rem; }
 .dj-country-info { font-size: 0.9rem; }
-.dj-flag-img { width: 27px; height: 18px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 1440px) and (min-width: 1367px) and (max-height: 900px) {
 header { padding: 0.8rem 1rem; }
@@ -1110,7 +1107,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 85px; max-width: 170px; left: 1rem; }
 .dj-country-info { font-size: 0.9rem; }
-.dj-flag-img { width: 27px; height: 18px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 1366px) and (min-width: 1281px) and (max-height: 768px) {
 header { padding: 0.7rem 1rem; }
@@ -1145,7 +1142,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 18px; height: 18px; }
 .header-logo { max-height: 80px; max-width: 160px; left: 1rem; }
 .dj-country-info { font-size: 0.9rem; padding: 8px 16px; }
-.dj-flag-img { width: 26px; height: 18px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 1280px) and (min-width: 1025px) and (max-height: 720px) {
 header { padding: 0.7rem 0.9rem; }
@@ -1180,7 +1177,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 75px; max-width: 150px; left: 0.9rem; }
 .dj-country-info { font-size: 0.85rem; }
-.dj-flag-img { width: 25px; height: 17px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (min-width: 1025px) and (max-width: 1366px) {
 .cassette-player { max-width: 500px; min-height: 300px; }
@@ -1199,7 +1196,7 @@ h1 { font-size: clamp(1.2rem, 3vw, 1.9rem); }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 70px; max-width: 140px; left: 1rem; }
 .dj-country-info { font-size: 0.85rem; padding: 8px 16px; }
-.dj-flag-img { width: 25px; height: 17px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
 header { padding: 0.7rem 1rem; }
@@ -1282,7 +1279,7 @@ footer { padding: 0.3rem; min-height: 80px; }
 .cassette-screw { width: 17px; height: 17px; }
 .header-logo { max-height: 70px; max-width: 140px; left: 1rem; }
 .dj-country-info { font-size: 0.85rem; padding: 8px 16px; }
-.dj-flag-img { width: 25px; height: 17px; }
+.dj-flag { font-size: 1.8rem; }
 }
 @media (max-width: 480px) {
 header { padding: 0.6rem 0.8rem; }
@@ -1323,7 +1320,7 @@ footer { padding: 0.25rem; min-height: 75px; }
 .cassette-screw { width: 16px; height: 16px; }
 .header-logo { max-height: 55px; max-width: 120px; left: 0.8rem; }
 .dj-country-info { font-size: 0.75rem; padding: 6px 12px; min-width: 130px; }
-.dj-flag-img { width: 22px; height: 15px; }
+.dj-flag { font-size: 1.6rem; }
 }
 @media (max-width: 400px) {
 .cassette-player { padding: 0.9rem 0.7rem; }
@@ -1342,7 +1339,7 @@ footer { padding: 0.25rem; min-height: 75px; }
 .cassette-screw { width: 15px; height: 15px; }
 .header-logo { max-height: 50px; max-width: 110px; left: 0.7rem; }
 .dj-country-info { font-size: 0.7rem; padding: 5px 10px; min-width: 110px; }
-.dj-flag-img { width: 20px; height: 14px; }
+.dj-flag { font-size: 1.5rem; }
 }
 @media (max-width: 320px) {
 header { padding: 0.5rem 0.6rem; }
@@ -1376,7 +1373,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 .cassette-screw { width: 15px; height: 15px; }
 .header-logo { max-height: 45px; max-width: 100px; left: 0.6rem; }
 .dj-country-info { font-size: 0.65rem; padding: 4px 8px; min-width: 100px; }
-.dj-flag-img { width: 19px; height: 13px; }
+.dj-flag { font-size: 1.4rem; }
 }
 </style>
 <!-- DATOS ESTRUCTURADOS PARA GOOGLE (SCHEMA.ORG) -->
@@ -1437,7 +1434,7 @@ footer { padding: 0.2rem; min-height: 70px; }
 <div class="dj-image-container">
   <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
   <div class="dj-country-info" id="dj-country-info">
-    <img class="dj-flag-img" id="dj-flag-img" src="https://flagcdn.com/w40/sv.svg" alt="Bandera">
+    <span class="dj-flag" id="dj-flag">🌐</span>
     <span class="dj-country-name" id="dj-country-name">El Salvador</span>
   </div>
   <div class="ad-overlay" id="ad-overlay">
@@ -1476,12 +1473,12 @@ footer { padding: 0.2rem; min-height: 70px; }
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
 /* ===================================================== */
-/* MAPEO DE DJs A PAÍSES (USA CÓDIGO ISO DE 2 LETRAS) */
+/* MAPEO DE DJs A PAÍSES (USA EMOJIS) */
 /* ===================================================== */
 const djCountryMap = {
-  'autodj': { country: 'El Salvador', flag: 'sv', code: 'SV' },
-  'nexusdj': { country: 'El Salvador', flag: 'sv', code: 'SV' },
-  'adharacanis': { country: 'El Salvador', flag: 'sv', code: 'SV' },
+  'autodj': { country: 'El Salvador', flag: '🇸' },
+  'nexusdj': { country: 'El Salvador', flag: '🇸🇻' },
+  'adharacanis': { country: 'El Salvador', flag: '🇸🇻' },
 };
 const AD_ENABLED = true;
 let countryUpdateLock = false;
@@ -1492,26 +1489,20 @@ function getDjCountryInfo(djName) {
   for (const [key, value] of Object.entries(djCountryMap)) {
     if (normalized.includes(key) || key.includes(normalized)) return value;
   }
-  return { country: 'En línea', flag: 'on', code: 'ON' };
+  return { country: 'En línea', flag: '🌐' };
 }
 
 function updateDjCountryDisplay(djName = '') {
   const countryInfo = document.getElementById('dj-country-info');
-  const djFlagImg = document.getElementById('dj-flag-img');
+  const djFlag = document.getElementById('dj-flag');
   const djCountryName = document.getElementById('dj-country-name');
-  if (!countryInfo || !djFlagImg || !djCountryName) return;
+  if (!countryInfo || !djFlag || !djCountryName) return;
   const info = getDjCountryInfo(djName);
-  djFlagImg.style.opacity = '0'; djCountryName.style.opacity = '0';
+  djFlag.style.opacity = '0'; djCountryName.style.opacity = '0';
   setTimeout(() => {
-    // Bandera SVG desde flagcdn.com (funciona en TODOS los sistemas)
-    if (info.code === 'ON') {
-      djFlagImg.src = 'https://flagcdn.com/w40/on.svg';
-    } else {
-      djFlagImg.src = `https://flagcdn.com/w40/${info.flag}.svg`;
-    }
-    djFlagImg.alt = info.country;
+    djFlag.textContent = info.flag;
     djCountryName.textContent = info.country;
-    djFlagImg.style.opacity = '1'; djCountryName.style.opacity = '1';
+    djFlag.style.opacity = '1'; djCountryName.style.opacity = '1';
   }, 150);
   countryInfo.style.animation = 'none';
   setTimeout(() => countryInfo.style.animation = 'country-glow 3s ease-in-out infinite alternate', 10);
