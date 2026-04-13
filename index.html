@@ -645,13 +645,16 @@ h1 {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+/* ✅ EFECTO GLOW EXTERIOR PARA NOMBRE DEL PAÍS (igual al DJ) */
 .dj-country-name {
-  color: #00ff41; /* Texto verde */
+  color: #00ff41;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 1px;
-  text-shadow: 0 0 6px rgba(189, 0, 255, 0.7), 0 0 12px rgba(189, 0, 255, 0.4); /* Resplandor morado */
+  text-shadow: 0 0 8px rgba(189, 0, 255, 0.9), 0 0 15px rgba(0, 255, 65, 0.7);
+  animation: title-glow 2.5s ease-in-out infinite alternate;
   display: inline-block;
+  position: relative;
 }
 
 @keyframes country-glow {
@@ -662,22 +665,27 @@ h1 {
 
 /* Resto del CSS... */
 .ad-overlay {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100 !important;
-  display: none;
+  position: fixed !important;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  transform: none !important;
+  z-index: 9999 !important;
+  display: none !important;
   pointer-events: auto;
   filter: none !important;
   -webkit-filter: none !important;
+  background: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .ad-overlay.active {
   display: flex !important;
-  align-items: center;
-  justify-content: center;
 }
 .ad-overlay img.ad-image {
   width: 100%;
+  max-width: 432.73px;
   height: auto;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
@@ -688,18 +696,17 @@ h1 {
   -webkit-filter: none !important;
   opacity: 1 !important;
   visibility: visible !important;
-  max-width: none;
   display: block;
   transform: scale(1.1);
   transform-origin: center;
 }
 .ad-close-btn {
   position: absolute;
-  top: 10px; right: 10px;
+  top: 20px; right: 20px;
   background: #0a0a0a;
   border: 2px solid #bd00ff;
   color: #bd00ff;
-  width: 30px; height: 30px;
+  width: 35px; height: 35px;
   border-radius: 50%;
   cursor: pointer;
   font-family: 'Orbitron', sans-serif;
@@ -709,7 +716,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 101;
+  z-index: 10000;
   padding: 0;
   line-height: 1;
 }
@@ -743,14 +750,14 @@ h1 {
   .ad-overlay img.ad-image { max-width: 315px !important; width: 315px !important; height: 315px !important; }
 }
 @media (max-width: 768px) {
-  .ad-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-  .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; }
+  .ad-overlay { position: fixed !important; top: 0 !important; left: 0 !important; transform: none !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; }
+  .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; max-width: 90vw !important; }
 }
 @media (max-width: 480px) {
-  .ad-overlay img.ad-image { width: 258.64px !important; height: 258.64px !important; }
+  .ad-overlay img.ad-image { width: 258.64px !important; height: 258.64px !important; max-width: 85vw !important; }
 }
 @media (max-width: 320px) {
-  .ad-overlay img.ad-image { width: 195.32px !important; height: 195.32px !important; }
+  .ad-overlay img.ad-image { width: 195.32px !important; height: 195.32px !important; max-width: 80vw !important; }
 }
 footer {
   background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
@@ -1545,6 +1552,8 @@ const djCountryMap = {
 };
 const AD_ENABLED = true;
 let countryUpdateLock = false;
+let lastCountryUpdate = 0;
+const COUNTRY_UPDATE_DEBOUNCE = 800; // ✅ Debounce para reducir parpadeo
 
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
@@ -1556,6 +1565,11 @@ function getDjCountryInfo(djName) {
 }
 
 function updateDjCountryDisplay(djName = '') {
+  // ✅ DEBOUNCE: Evitar actualizaciones muy frecuentes que causan parpadeo
+  const now = Date.now();
+  if (now - lastCountryUpdate < COUNTRY_UPDATE_DEBOUNCE) return;
+  lastCountryUpdate = now;
+  
   const countryInfo = document.getElementById('dj-country-info');
   const djFlagCss = document.getElementById('dj-flag-css');
   const djCountryName = document.getElementById('dj-country-name');
@@ -1563,9 +1577,15 @@ function updateDjCountryDisplay(djName = '') {
   
   const info = getDjCountryInfo(djName);
   
+  // ✅ SUAVIZAR: Solo actualizar si el contenido realmente cambió
+  if (djCountryName.textContent === info.country && djFlagCss.classList.contains(info.flagClass)) return;
+  
   // Remover clases anteriores
   djFlagCss.className = 'dj-flag-css';
   
+  // ✅ TRANSICIÓN MÁS SUAVE: Usar opacity con duración mayor
+  djFlagCss.style.transition = 'opacity 0.3s ease';
+  djCountryName.style.transition = 'opacity 0.3s ease';
   djFlagCss.style.opacity = '0';
   djCountryName.style.opacity = '0';
   
@@ -1575,7 +1595,7 @@ function updateDjCountryDisplay(djName = '') {
     djCountryName.textContent = info.country;
     djFlagCss.style.opacity = '1';
     djCountryName.style.opacity = '1';
-  }, 150);
+  }, 200); // ✅ Aumentado de 150ms a 200ms para transición más suave
   
   countryInfo.style.animation = 'none';
   setTimeout(() => countryInfo.style.animation = 'country-glow 3s ease-in-out infinite alternate', 10);
