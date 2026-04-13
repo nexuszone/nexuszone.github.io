@@ -647,18 +647,11 @@ h1 {
 
 .dj-country-name {
   color: #bd00ff;
-  text-shadow: 0 0 6px rgba(189, 0, 255, 0.6);
-}
-
-/* Estilo para el nombre del país con efecto glitch */
-.dj-country-name.cyber-glitch {
-  color: #bd00ff !important;
-  text-shadow: 0 0 8px rgba(189, 0, 255, 0.9), 0 0 15px rgba(0, 255, 65, 0.7) !important;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 700;
   letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.7), 0 0 12px rgba(0, 255, 65, 0.4);
   display: inline-block;
-  max-width: 100%;
-  word-break: break-word;
 }
 
 @keyframes country-glow {
@@ -1498,7 +1491,7 @@ footer {
   <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
   <div class="dj-country-info" id="dj-country-info">
     <div class="dj-flag-css flag-sv" id="dj-flag-css"></div>
-    <span class="dj-country-name cyber-glitch" id="dj-country-name" data-text="El Salvador">El Salvador</span>
+    <span class="dj-country-name" id="dj-country-name">El Salvador</span>
   </div>
   <div class="ad-overlay" id="ad-overlay">
     <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
@@ -1578,10 +1571,6 @@ function updateDjCountryDisplay(djName = '') {
     // Agregar nueva clase de bandera
     djFlagCss.classList.add(info.flagClass);
     djCountryName.textContent = info.country;
-    // Actualizar data-text para el efecto glitch
-    if (djCountryName.classList.contains('cyber-glitch')) {
-      djCountryName.setAttribute('data-text', info.country);
-    }
     djFlagCss.style.opacity = '1';
     djCountryName.style.opacity = '1';
   }, 150);
