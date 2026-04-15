@@ -1436,7 +1436,7 @@ footer {
 <div class="led-strip-top" id="led-top"></div>
 <div class="main-container">
 <section class="player-section">
-<h2 class="section-title player-title"></h2>
+<h2 class="section-title player-title">Reproductor</h2>
 <div class="cassette-player">
 <div class="cassette-screw top-left"></div>
 <div class="cassette-screw top-right"></div>
@@ -1525,6 +1525,14 @@ const djCountryMap = {
   'yahirmaniaca': { country: 'México', flagUrl: 'https://flagcdn.com/w40/mx.webp', code: 'MX' },
   'lu50n': { country: 'Bolivia', flagUrl: 'https://flagcdn.com/w40/bo.webp', code: 'BO' },
 };
+
+// ✅ FALLBACK PERSONALIZADO - NEXUSLANDIA
+const FALLBACK_COUNTRY = {
+  country: 'Nexuslandia',
+  flagUrl: 'img/nexuslandia.png',
+  code: 'NX'
+};
+
 const AD_ENABLED = true;
 let countryUpdateLock = false;
 let lastCountryUpdate = 0;
@@ -1536,7 +1544,8 @@ function getDjCountryInfo(djName) {
   for (const [key, value] of Object.entries(djCountryMap)) {
     if (normalized.includes(key) || key.includes(normalized)) return value;
   }
-  return { country: 'En línea', flagUrl: 'https://flagcdn.com/w40/un.webp', code: 'ON' };
+  // ✅ Retorna Nexuslandia como fallback
+  return FALLBACK_COUNTRY;
 }
 
 function updateDjCountryDisplay(djName = '') {
