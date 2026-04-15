@@ -1647,6 +1647,16 @@ function updateDjImage(djName = 'autodj') {
   let imageName = normalized.includes('|lu5|0n') || normalized.includes('lu50n') ? 'ilusion' : sanitizeDjName(djName);
   djProfileImg.src = `portadasdjs/${imageName}.png`;
   djProfileImg.alt = djName;
+  
+  // ✅ FALBACK DE IMAGEN: Si no encuentra la imagen del DJ, carga autodj.png
+  djProfileImg.onerror = function() {
+    if (imageName.toLowerCase() !== 'autodj') {
+      console.log(`🖼️ Imagen de DJ no encontrada: ${imageName}.png. Cargando autodj.png`);
+      this.onerror = null; // Evitar bucle infinito si autodj.png también falla
+      this.src = 'portadasdjs/autodj.png';
+      this.alt = 'Auto DJ';
+    }
+  };
 }
 function checkAndUpdateDjImage() {
   if (!sonicDj || !djProfileImg) return;
