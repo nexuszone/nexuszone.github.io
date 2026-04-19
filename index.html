@@ -1538,10 +1538,10 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 
+/* ✅ CORREGIDO: Normaliza igual tanto la entrada como las claves del mapa */
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
   
-  // ✅ Normalización consistente: lowercase + quitar acentos + reemplazar NO alfanuméricos por '_'
   const normalize = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_');
   
   const normalizedInput = normalize(djName);
@@ -1552,8 +1552,7 @@ function getDjCountryInfo(djName) {
       return value;
     }
   }
-  
-  // ✅ Fallback a Nexuslandia
+  // ✅ Retorna Nexuslandia como fallback
   return FALLBACK_COUNTRY;
 }
 
