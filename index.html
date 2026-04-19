@@ -1538,20 +1538,37 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 
-/* ✅ CORREGIDO: Normaliza igual tanto la entrada como las claves del mapa */
+/* ✅ CORREGIDO: Normaliza mejor incluyendo variaciones con pipes y números */
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
   
-  const normalize = (str) => str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_');
+  const normalize = (str) => {
+    // Primero removemos pipes y caracteres especiales, luego normalizamos
+    return str.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[|]/g, '')  // Removemos pipes
+      .replace(/0/g, 'o')   // Convertimos 0 a o para coincidencias
+      .replace(/[^a-z0-9]/g, '_');
+  };
   
   const normalizedInput = normalize(djName);
   
+  // Búsqueda mejorada que maneja variaciones
   for (const [key, value] of Object.entries(djCountryMap)) {
     const normalizedKey = normalize(key);
+    
+    // Coincidencia exacta después de normalizar
+    if (normalizedInput === normalizedKey) {
+      return value;
+    }
+    
+    // Coincidencia parcial (si el input contiene la clave o viceversa)
     if (normalizedInput.includes(normalizedKey) || normalizedKey.includes(normalizedInput)) {
       return value;
     }
   }
+  
   // ✅ Retorna Nexuslandia como fallback
   return FALLBACK_COUNTRY;
 }
