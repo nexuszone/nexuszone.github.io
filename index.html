@@ -1903,8 +1903,23 @@ function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getEleme
 /* INIT */
 /* ===================================================== */
 window.addEventListener('load', function() {
-  updateAlbumArtBackground(); setupGlitchObservers(); initChatListeners(); initStaffListeners(); initAdListeners(); adjustChatIframeForMobile();
+  updateAlbumArtBackground();
+  setupGlitchObservers();
+  initChatListeners();
+  initStaffListeners();
+  initAdListeners();
+  adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
+
+  // ✅ NUEVO: Observador para actualizar portada automáticamente al cambiar canción
+  const artContainer = document.getElementById('sonic_art_full');
+  if (artContainer) {
+    const artObserver = new MutationObserver(() => {
+      setTimeout(() => updateAlbumArtBackground(), 300); // Pequeño delay para asegurar que el widget inyectó la imagen
+    });
+    artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
+  }
+
   console.log("🎧 Nexus Zone cargado correctamente.");
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
