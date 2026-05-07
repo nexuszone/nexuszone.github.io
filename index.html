@@ -1701,7 +1701,7 @@ function showAdOverlay() {
   if (!AD_ENABLED || !adOverlay || !adImage) return;
   adOverlay.classList.add('active');
   if (adTimer) clearTimeout(adTimer);
-  adTimer = setTimeout(() => { hideAdOverlay(); }, 8000);
+  adTimer = setTimeout(() => { hideAdOverlay(); }, 10000);
 }
 function hideAdOverlay() { if(adOverlay) { adOverlay.classList.remove('active'); if(adTimer){clearTimeout(adTimer); adTimer=null;} } }
 function initAdListeners() {
