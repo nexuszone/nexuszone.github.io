@@ -1790,6 +1790,44 @@ function updateDjCountryDisplay(djName = '') {
 }
 
 /* ===================================================== */
+/* ✅ CONTROL DEL BOTÓN DE PETICIONES SEGÚN DJ */
+/* ===================================================== */
+function isAutoDJ(djName) {
+  if (!djName) return true;
+  const normalized = djName.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return normalized === '' || 
+         normalized.includes('no dj') || 
+         normalized.includes('autodj') || 
+         normalized.includes('nexus dj') ||
+         normalized === 'nexusdj';
+}
+
+function updateRequestsButtonState(djName = '') {
+  const requestsBtn = document.getElementById('requests-btn');
+  if (!requestsBtn) return;
+  
+  const isAuto = isAutoDJ(djName);
+  
+  if (isAuto) {
+    // DESACTIVAR botón cuando AutoDJ está emitiendo
+    requestsBtn.style.pointerEvents = 'none';
+    requestsBtn.style.opacity = '0.5';
+    requestsBtn.setAttribute('aria-disabled', 'true');
+    requestsBtn.setAttribute('data-disabled', 'autodj');
+    requestsBtn.title = 'Peticiones disponibles solo con DJ en vivo';
+    requestsBtn.style.cursor = 'not-allowed';
+  } else {
+    // ACTIVAR botón cuando DJ real está emitiendo
+    requestsBtn.style.pointerEvents = 'auto';
+    requestsBtn.style.opacity = '1';
+    requestsBtn.removeAttribute('aria-disabled');
+    requestsBtn.removeAttribute('data-disabled');
+    requestsBtn.title = 'Pedir Canción';
+    requestsBtn.style.cursor = 'pointer';
+  }
+}
+
+/* ===================================================== */
 /* ELEMENTOS */
 /* ===================================================== */
 const audio = document.getElementById('radio-player');
@@ -2277,11 +2315,13 @@ function setupGlitchObservers() {
       if(countryUpdateLock) return; countryUpdateLock = true;
       updateGlitchDataText(sonicDj); checkAndUpdateDjImage();
       updateDjCountryDisplay(sonicDj.textContent.trim());
+      updateRequestsButtonState(sonicDj.textContent.trim()); // ✅ ACTUALIZAR ESTADO DEL BOTÓN DE PETICIONES
       if(Math.random()<0.3) triggerRandomGlitch(sonicDj);
       setTimeout(()=>countryUpdateLock=false, 100);
     });
     obs.observe(sonicDj, {childList:true, characterData:true, subtree:true});
     updateGlitchDataText(sonicDj); checkAndUpdateDjImage(); updateDjCountryDisplay(sonicDj.textContent.trim());
+    updateRequestsButtonState(sonicDj.textContent.trim()); // ✅ INICIALIZAR ESTADO DEL BOTÓN
   }
 }
 function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getElementById('sonic_art_full'); if(c&&c.querySelector('img')){ const s=c.querySelector('img').src; if(s){ albumArtBg.style.backgroundImage=`url('${s}')`; albumArtBg.style.opacity='0.4'; } } }, 500); }
@@ -2298,6 +2338,13 @@ window.addEventListener('load', function() {
   initRequestsListeners();
   adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
+  
+  // ✅ INICIALIZAR ESTADO DEL BOTÓN DE PETICIONES CON RETRASO PARA SONIC WIDGET
+  setTimeout(() => {
+    if (sonicDj) {
+      updateRequestsButtonState(sonicDj.textContent.trim());
+    }
+  }, 1000);
 
   const artContainer = document.getElementById('sonic_art_full');
   if (artContainer) {
