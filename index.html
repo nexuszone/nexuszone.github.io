@@ -806,6 +806,168 @@ footer {
   font-size: 0.6rem;
   margin-top: 0.2rem;
 }
+
+/* ============================================ */
+/* NUEVO: PANEL DE PETICIONES (V2 - Cloud Sync) */
+/* ============================================ */
+.requests-panel {
+  position: fixed;
+  top: 0; right: -50vw;
+  width: 50vw;
+  height: 100vh;
+  height: 100dvh;
+  background: #0a0a0a;
+  border-left: 3px solid #bd00ff;
+  box-shadow: -5px 0 25px rgba(189, 0, 255, 0.4), 0 0 30px rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  transition: right 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Orbitron', sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+.requests-panel.visible { right: 0; }
+.requests-header {
+  padding: 1rem;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-bottom: 2px solid #bd00ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.requests-header h3 {
+  color: #00ff41;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+  margin: 0;
+}
+.requests-close-btn {
+  background: none;
+  border: 2px solid #bd00ff;
+  color: #bd00ff;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.requests-close-btn:hover {
+  background: #bd00ff;
+  color: #0a0a0a;
+  box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
+}
+.requests-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+.requests-auth, .requests-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+.request-input {
+  background: rgba(26, 26, 26, 0.8);
+  border: 2px solid #00ff41;
+  color: #00ff41;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+  transition: all 0.2s ease;
+}
+.request-input:focus {
+  border-color: #bd00ff;
+  box-shadow: 0 0 12px rgba(189, 0, 255, 0.5);
+}
+#request-nick { border-color: #bd00ff; }
+.request-submit-btn {
+  background: linear-gradient(135deg, #00ff41, #00cc33);
+  border: none;
+  color: #0a0a0a;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
+  transition: all 0.2s ease;
+}
+.request-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.7);
+}
+#request-logout-btn {
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  margin-top: 10px;
+  box-shadow: 0 0 10px rgba(255, 51, 51, 0.4);
+}
+#request-logout-btn:hover {
+  box-shadow: 0 0 20px rgba(255, 51, 51, 0.7);
+  transform: translateY(-2px);
+}
+.request-list-container {
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(139, 139, 139, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 100px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(139, 139, 139, 0.2);
+  font-size: 0.9rem;
+  color: #e0e0e0;
+}
+.request-item:last-child { border-bottom: none; }
+.request-text { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.4); }
+.request-time { color: #888; font-size: 0.75rem; margin-left: 8px; }
+.request-delete-btn {
+  background: none; border: 1px solid #ff3333; color: #ff3333;
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease; flex-shrink: 0; margin-left: 10px;
+}
+.request-delete-btn:hover {
+  background: #ff3333; color: #0a0a0a; box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+}
+.requests-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  opacity: 0; visibility: hidden;
+  transition: all 0.3s ease;
+}
+.requests-overlay.active { opacity: 1; visibility: visible; }
+
+@media (max-width: 768px) {
+  .requests-panel { width: 100vw; right: -100vw; height: 100dvh; height: -webkit-fill-available; }
+  .requests-panel.visible { right: 0; }
+}
+
 .chat-panel {
   position: fixed;
   top: 0; right: -50vw;
@@ -1491,6 +1653,8 @@ footer {
 <a href="https://www.tiktok.com/@nexuszone2?_r=1&_t=ZS-946qRwctwGa" class="social-link" title="Tiktok" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg></a>
 <a href="#" class="social-link" id="staff-btn" title="Staff"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></a>
 <a href="#" class="social-link" id="chat-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></a>
+<!-- NUEVO: Botón de Peticiones -->
+<a href="#" class="social-link" id="requests-btn" title="Pedir Canción"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></a>
 </div>
 <div class="copyright">
 <span class="footer-brand"><span class="footer-nexus">NEXUS</span><span class="footer-zone">ZONE</span></span>
@@ -1510,6 +1674,28 @@ footer {
 <div class="staff-grid" id="staff-grid"></div>
 </div>
 <div class="staff-overlay" id="staff-overlay"></div>
+
+<!-- NUEVO: Panel de Peticiones -->
+<div class="requests-panel hidden" id="requests-panel">
+  <div class="requests-header"><h3>🎵 Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
+  <div class="requests-content">
+    <div id="requests-auth" class="requests-auth">
+      <input type="password" id="request-pass" class="request-input" placeholder="🔒 Contraseña (DJ o Escucha)">
+      <button id="request-auth-btn" class="request-submit-btn">Entrar</button>
+    </div>
+    <div id="requests-main" class="requests-main" style="display:none;">
+      <input type="text" id="request-nick" class="request-input" placeholder="🎤 Tu Nick (máx 20 chars)" maxlength="20">
+      <input type="text" id="request-input" class="request-input" placeholder="🎵 Canción - Artista (máx 80 chars)" maxlength="80">
+      <button id="request-submit-btn" class="request-submit-btn">Enviar Petición</button>
+      <div class="request-list-container">
+        <div id="request-list"></div>
+      </div>
+      <button id="request-logout-btn" class="request-submit-btn">🔒 Salir</button>
+    </div>
+  </div>
+</div>
+<div class="requests-overlay" id="requests-overlay"></div>
+
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
 /* ===================================================== */
@@ -1758,6 +1944,186 @@ function initStaffListeners() {
 }
 
 /* ===================================================== */
+/* NUEVO: SISTEMA DE PETICIONES (V2 - Cloud Sync) */
+/* ===================================================== */
+const DJ_PASS = 'dj2026';
+const LISTENER_PASS = 'nexus2026';
+let userRole = null;
+let requestRefreshInterval = null;
+const REQUEST_COOLDOWN = 5 * 60 * 1000;
+const REQUEST_EXPIRY = 20 * 60 * 1000;
+let isSyncing = false;
+
+// 🔗 CONFIGURACIÓN JSONBIN
+const BIN_ID = '6a1c1975ddf5aa59f77b6dc2';
+const API_KEY = '$2a$10$l7pwDNDS96podLHrossjbOom0nbtKWJsj/x7GiKPzXq0M4SMWTgQq';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+const requestsPanel = document.getElementById('requests-panel');
+const requestsClose = document.getElementById('requests-close');
+const requestsBtn = document.getElementById('requests-btn');
+const requestsOverlay = document.getElementById('requests-overlay');
+const requestsAuth = document.getElementById('requests-auth');
+const requestsMain = document.getElementById('requests-main');
+const requestPassInput = document.getElementById('request-pass');
+const requestAuthBtn = document.getElementById('request-auth-btn');
+const requestNickInput = document.getElementById('request-nick');
+const requestInput = document.getElementById('request-input');
+const requestSubmitBtn = document.getElementById('request-submit-btn');
+const requestList = document.getElementById('request-list');
+const requestLogoutBtn = document.getElementById('request-logout-btn');
+
+function sanitizeHtml(str) { return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function getCooldowns() { try { return JSON.parse(localStorage.getItem('nz_cooldowns') || '{}'); } catch { return {}; } }
+function saveCooldowns(data) { localStorage.setItem('nz_cooldowns', JSON.stringify(data)); }
+
+async function loadRequests() {
+  try {
+    const res = await fetch(`${BIN_URL}/latest`, { headers: { 'X-Master-Key': API_KEY } });
+    if (!res.ok) throw new Error('Error al cargar');
+    const data = await res.json();
+    return Array.isArray(data.record) ? data.record : (data.record && Array.isArray(data.record.requests) ? data.record.requests : []);
+  } catch(e) { console.error("Error cloud:", e); return []; }
+}
+
+async function saveRequests(reqs) {
+  if (isSyncing) return;
+  isSyncing = true;
+  try {
+    await fetch(BIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY }, body: JSON.stringify({ requests: reqs }) });
+  } catch(e) { console.error("Error save:", e); alert("Error guardando petición. Revisa tu conexión."); }
+  finally { isSyncing = false; }
+}
+
+async function renderRequests() {
+  if (isSyncing) return;
+  requestList.innerHTML = '<p style="color:#888;text-align:center;">⏳ Cargando peticiones...</p>';
+  let reqs = await loadRequests();
+  const now = Date.now();
+  const active = reqs.filter(r => now - r.time < REQUEST_EXPIRY);
+  if (active.length !== reqs.length) await saveRequests(active);
+  reqs = active;
+
+  reqs.sort((a,b) => b.time - a.time);
+  requestList.innerHTML = reqs.length === 0
+    ? '<p style="color:#888;text-align:center;margin-top:10px;">Sin peticiones activas</p>'
+    : '';
+
+  reqs.forEach((r, i) => {
+    const timeLeft = Math.max(0, Math.ceil((REQUEST_EXPIRY - (now - r.time)) / 60000));
+    const div = document.createElement('div');
+    div.className = 'request-item';
+    div.innerHTML = `
+      <div>
+        <span class="request-text">${sanitizeHtml(r.nick)} - ${sanitizeHtml(r.text)}</span>
+        <span class="request-time">⏱️ ${timeLeft}min</span>
+      </div>
+      ${userRole === 'dj' ? `<button class="request-delete-btn" data-idx="${i}" title="Eliminar (Solo DJ)">×</button>` : ''}
+    `;
+    requestList.appendChild(div);
+  });
+}
+
+async function handleRequestSubmit() {
+  if (isSyncing) return alert("⏳ Guardando petición anterior, espera un momento.");
+  const nick = requestNickInput.value.trim();
+  const text = requestInput.value.trim();
+
+  if (!nick) return alert('Por favor, escribe tu Nick.');
+  if (!text) return alert('Por favor, escribe la Canción - Artista.');
+  if (text.length > 80) return alert('Máximo 80 caracteres.');
+
+  const cooldowns = getCooldowns();
+  const lastTime = cooldowns[nick.toLowerCase()] || 0;
+  if (Date.now() - lastTime < REQUEST_COOLDOWN) {
+    const waitSec = Math.ceil((REQUEST_COOLDOWN - (Date.now() - lastTime)) / 1000);
+    return alert(`⏳ Debes esperar ${waitSec} segundos antes de pedir otra canción.`);
+  }
+
+  const reqs = await loadRequests();
+  reqs.push({ nick, text, time: Date.now(), id: Math.random().toString(36).substr(2, 9) });
+  await saveRequests(reqs);
+
+  cooldowns[nick.toLowerCase()] = Date.now();
+  saveCooldowns(cooldowns);
+
+  requestInput.value = '';
+  await renderRequests();
+  requestInput.focus();
+}
+
+async function deleteRequest(idx) {
+  if (userRole !== 'dj' || isSyncing) return;
+  const reqs = await loadRequests();
+  reqs.splice(idx, 1);
+  await saveRequests(reqs);
+  await renderRequests();
+}
+
+function toggleRequestsPanel() {
+  const isVisible = requestsPanel.classList.contains('visible');
+  if (!isVisible) {
+    requestsPanel.classList.remove('hidden');
+    requestsPanel.classList.add('visible');
+    requestsOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (!userRole) requestPassInput.focus();
+    else { renderRequests(); startRefresh(); }
+  } else {
+    requestsPanel.classList.remove('visible');
+    requestsPanel.classList.add('hidden');
+    requestsOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+    stopRefresh();
+  }
+}
+
+function startRefresh() {
+  if (!requestRefreshInterval) requestRefreshInterval = setInterval(renderRequests, 10000);
+}
+function stopRefresh() {
+  if (requestRefreshInterval) { clearInterval(requestRefreshInterval); requestRefreshInterval = null; }
+}
+
+function initRequestsListeners() {
+  requestsBtn.addEventListener('click', (e) => { e.preventDefault(); toggleRequestsPanel(); });
+  requestsClose.addEventListener('click', toggleRequestsPanel);
+  requestsOverlay.addEventListener('click', toggleRequestsPanel);
+  document.addEventListener('keydown', (e) => { if(e.key==='Escape' && requestsPanel.classList.contains('visible')) toggleRequestsPanel(); });
+
+  requestAuthBtn.addEventListener('click', () => {
+    const pass = requestPassInput.value;
+    if (pass === DJ_PASS) { userRole = 'dj'; enterPanel(); }
+    else if (pass === LISTENER_PASS) { userRole = 'listener'; enterPanel(); }
+    else { alert('Contraseña incorrecta'); }
+  });
+  requestPassInput.addEventListener('keydown', (e) => { if(e.key==='Enter') requestAuthBtn.click(); });
+
+  requestSubmitBtn.addEventListener('click', handleRequestSubmit);
+  requestInput.addEventListener('keydown', (e) => { if(e.key==='Enter') handleRequestSubmit(); });
+
+  requestList.addEventListener('click', (e) => {
+    const btn = e.target.closest('.request-delete-btn');
+    if (btn) deleteRequest(parseInt(btn.dataset.idx));
+  });
+
+  requestLogoutBtn.addEventListener('click', () => {
+    userRole = null;
+    requestsMain.style.display = 'none';
+    requestsAuth.style.display = 'flex';
+    requestPassInput.value = '';
+    stopRefresh();
+  });
+}
+
+function enterPanel() {
+  requestsAuth.style.display = 'none';
+  requestsMain.style.display = 'flex';
+  renderRequests();
+  startRefresh();
+}
+
+/* ===================================================== */
 /* AUDIO & VISUALIZADOR + BARRAS LED */
 /* ===================================================== */
 function setupAudioGraph() {
@@ -1906,14 +2272,14 @@ window.addEventListener('load', function() {
   initChatListeners();
   initStaffListeners();
   initAdListeners();
+  initRequestsListeners();
   adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
 
-  // ✅ NUEVO: Observador para actualizar portada automáticamente al cambiar canción
   const artContainer = document.getElementById('sonic_art_full');
   if (artContainer) {
     const artObserver = new MutationObserver(() => {
-      setTimeout(() => updateAlbumArtBackground(), 300); // Pequeño delay para asegurar que el widget inyectó la imagen
+      setTimeout(() => updateAlbumArtBackground(), 300);
     });
     artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
   }
