@@ -1162,61 +1162,57 @@ footer {
 }
 
 /* ============================================ */
-/* ✅ NUEVO: MODAL PARA POEMA/FRASE DE LA SEMANA */
+/* ✅ NUEVO: PANEL LATERAL PARA POEMA/FRASE DE LA SEMANA */
 /* ============================================ */
-.poem-overlay {
+.poem-panel {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  z-index: 2000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
+  top: 0; right: -50vw;
+  width: 50vw;
+  height: 100vh;
+  height: 100dvh;
+  background: linear-gradient(145deg, #0a0a0a, #050505);
+  border-left: 3px solid #bd00ff;
+  box-shadow: -5px 0 30px rgba(189, 0, 255, 0.5), 0 0 40px rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  transition: right 0.3s ease-out;
   display: flex;
+  flex-direction: column;
+  font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
+}
+.poem-panel.visible { right: 0; }
+.poem-panel.hidden { display: none; }
+.poem-header {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+  border-bottom: 2px solid #bd00ff;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  box-sizing: border-box;
+  flex-shrink: 0;
 }
-.poem-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-.poem-modal {
-  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-  border: 3px solid #bd00ff;
-  border-radius: 20px;
-  padding: 1.5rem;
-  max-width: 90vw;
-  max-height: 90vh;
-  position: relative;
-  box-shadow: 0 0 30px rgba(189, 0, 255, 0.5), 0 0 60px rgba(0, 255, 65, 0.3);
-  animation: poemSlideIn 0.3s ease-out;
-}
-@keyframes poemSlideIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.poem-header h3 {
+  color: #00ff41;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+  margin: 0;
+  letter-spacing: 1px;
 }
 .poem-close-btn {
-  position: absolute;
-  top: -15px; right: -15px;
-  background: #0a0a0a;
+  background: none;
   border: 2px solid #bd00ff;
   color: #bd00ff;
-  width: 35px; height: 35px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   cursor: pointer;
   font-family: 'Orbitron', sans-serif;
   font-weight: 900;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  padding: 0;
-  line-height: 1;
+  flex-shrink: 0;
 }
 .poem-close-btn:hover {
   background: #bd00ff;
@@ -1224,30 +1220,59 @@ footer {
   box-shadow: 0 0 15px rgba(189, 0, 255, 0.8);
   transform: scale(1.1);
 }
+.poem-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+.poem-content::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(189, 0, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
 .poem-image {
-  max-width: 100%;
-  max-height: 70vh;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   border-radius: 12px;
   border: 2px solid rgba(189, 0, 255, 0.4);
-  box-shadow: 0 0 20px rgba(189, 0, 255, 0.3), 0 0 40px rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 25px rgba(189, 0, 255, 0.4), 0 0 50px rgba(0, 255, 65, 0.2);
   display: block;
-  object-fit: contain;
+  z-index: 2;
+  transition: transform 0.3s ease;
 }
-.poem-title {
-  color: #00ff41;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-  text-align: center;
-  margin-bottom: 1rem;
-  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
-  letter-spacing: 1px;
+.poem-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 35px rgba(189, 0, 255, 0.6), 0 0 70px rgba(0, 255, 65, 0.3);
+}
+.poem-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.poem-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 @media (max-width: 768px) {
-  .poem-modal { padding: 1rem; border-radius: 16px; }
-  .poem-close-btn { top: -12px; right: -12px; width: 32px; height: 32px; font-size: 1.2rem; }
-  .poem-image { max-height: 65vh; }
+  .poem-panel { width: 100vw; right: -100vw; }
+  .poem-panel.visible { right: 0; }
+  .poem-header { padding: 0.8rem 1rem; }
+  .poem-close-btn { width: 30px; height: 30px; font-size: 1.1rem; }
+  .poem-image { border-radius: 8px; }
 }
 
 /* Responsive - Solo agrego lo nuevo */
@@ -1756,14 +1781,17 @@ footer {
 </div>
 </footer>
 
-<!-- ✅ NUEVO: MODAL PARA POEMA/FRASE DE LA SEMANA -->
-<div class="poem-overlay" id="poem-overlay">
-  <div class="poem-modal">
+<!-- ✅ NUEVO: PANEL LATERAL PARA POEMA/FRASE DE LA SEMANA -->
+<div class="poem-panel hidden" id="poem-panel">
+  <div class="poem-header">
+    <h3>✨ Poema / Frase de la Semana ✨</h3>
     <button class="poem-close-btn" id="poem-close" aria-label="Cerrar">×</button>
-    <div class="poem-title">✨ Poema / Frase de la Semana ✨</div>
+  </div>
+  <div class="poem-content">
     <img src="img/poemasemana.png" alt="Poema de la Semana" class="poem-image" id="poem-image">
   </div>
 </div>
+<div class="poem-overlay" id="poem-overlay"></div>
 
 <div class="chat-panel hidden" id="chat-panel">
 <div class="chat-header"><h3>💬 Chat Nexus</h3><button class="chat-close-btn" id="chat-close">×</button></div>
@@ -1962,16 +1990,17 @@ const staffGrid = document.getElementById('staff-grid');
 const adOverlay = document.getElementById('ad-overlay');
 const adCloseBtn = document.getElementById('ad-close-btn');
 const adImage = document.getElementById('ad-image');
-// ✅ NUEVO: Elementos del modal de poema
-const poemOverlay = document.getElementById('poem-overlay');
+// ✅ NUEVO: Elementos del panel de poema
+const poemPanel = document.getElementById('poem-panel');
 const poemClose = document.getElementById('poem-close');
 const poemBtn = document.getElementById('poem-btn');
 const poemImage = document.getElementById('poem-image');
+const poemOverlay = document.getElementById('poem-overlay');
 
 let isPlaying = false;
 let audioContext = null, analyzer = null, dataArray = null, animationId = null;
 let isVisualizing = false, audioGraphSetup = false;
-let isChatVisible = false, isStaffVisible = false, staffLoaded = false;
+let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
 const ledColors = ['#8b8b8b', '#bd00ff', '#00ff41'];
 let ledColorIndex = 0, lastBeatTime = 0, beatCount = 0, visualizerFrameCount = 0;
@@ -2091,11 +2120,13 @@ function initStaffListeners() {
 }
 
 /* ===================================================== */
-/* ✅ NUEVO: MODAL DE POEMA/FRASE DE LA SEMANA */
+/* ✅ NUEVO: PANEL LATERAL DE POEMA/FRASE DE LA SEMANA */
 /* ===================================================== */
-function togglePoemModal() {
-  const isActive = poemOverlay.classList.contains('active');
-  if (!isActive) {
+function togglePoemPanel() {
+  isPoemVisible = !isPoemVisible;
+  if (isPoemVisible) {
+    poemPanel.classList.remove('hidden');
+    poemPanel.classList.add('visible');
     poemOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
     // Recargar imagen para asegurar que se muestre la versión más reciente
@@ -2105,16 +2136,18 @@ function togglePoemModal() {
       setTimeout(() => { poemImage.src = currentSrc; }, 50);
     }
   } else {
+    poemPanel.classList.remove('visible');
+    poemPanel.classList.add('hidden');
     poemOverlay.classList.remove('active');
     document.body.style.overflow = '';
   }
 }
 
 function initPoemListeners() {
-  if (poemBtn) poemBtn.addEventListener('click', (e) => { e.preventDefault(); togglePoemModal(); });
-  if (poemClose) poemClose.addEventListener('click', togglePoemModal);
-  if (poemOverlay) poemOverlay.addEventListener('click', (e) => { if (e.target === poemOverlay) togglePoemModal(); });
-  document.addEventListener('keydown', (e) => { if(e.key==='Escape' && poemOverlay && poemOverlay.classList.contains('active')) togglePoemModal(); });
+  if (poemBtn) poemBtn.addEventListener('click', (e) => { e.preventDefault(); togglePoemPanel(); });
+  if (poemClose) poemClose.addEventListener('click', togglePoemPanel);
+  if (poemOverlay) poemOverlay.addEventListener('click', togglePoemPanel);
+  document.addEventListener('keydown', (e) => { if(e.key==='Escape' && isPoemVisible) togglePoemPanel(); });
   
   // Pre-cargar imagen para mejor experiencia
   if (poemImage) {
