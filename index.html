@@ -1929,8 +1929,8 @@ function isAutoDJ(djName) {
   if (!djName) return true;
   const normalized = djName.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
-  // Lista exacta de nombres que desactivan peticiones
-  const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'SmileDj', 'AdharaCanis'];
+  // Lista exacta de nombres que desactivan peticiones (TODOS EN MINÚSCULAS)
+  const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'smiledj', 'adharacanis'];
   
   return listaBloqueo.includes(normalized);
 }
