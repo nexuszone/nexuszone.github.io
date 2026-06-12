@@ -1928,13 +1928,12 @@ function updateDjCountryDisplay(djName = '') {
 function isAutoDJ(djName) {
   if (!djName) return true;
   const normalized = djName.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  return normalized === '' || 
-         normalized.includes('no dj') || 
-         normalized.includes('autodj') || 
-         normalized.includes('nexus dj') ||
-         normalized === 'nexusdj';
+  
+  // Lista exacta de nombres que desactivan peticiones
+  const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'SmileDj'];
+  
+  return listaBloqueo.includes(normalized);
 }
-
 function updateRequestsButtonState(djName = '') {
   const requestsBtn = document.getElementById('requests-btn');
   if (!requestsBtn) return;
