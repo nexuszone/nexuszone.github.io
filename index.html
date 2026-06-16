@@ -1834,6 +1834,7 @@ footer {
 /* ===================================================== */
 const djCountryMap = {
   'adharacanis': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
+  'Amatista': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
   'pueblo_rock': { country: 'Argentina', flagUrl: 'https://flagcdn.com/w40/ar.webp', code: 'AR' },
   'DjIvan': { country: 'España', flagUrl: 'https://flagcdn.com/w40/es.webp', code: 'ES' },
   'SmileDj': { country: 'España', flagUrl: 'https://flagcdn.com/w40/es.webp', code: 'ES' },
@@ -1931,7 +1932,7 @@ function isAutoDJ(djName) {
   const normalized = djName.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
   // Lista exacta de nombres que desactivan peticiones (TODOS EN MINÚSCULAS)
-  const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'smiledj', 'cisnenegro', 'pueblo_rock', 'w0lf', 'djivan', 'lu50n', '|lu5|on'];
+  const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'smiledj', 'cisnenegro', 'pueblo_rock', 'w0lf', 'djivan', 'lu50n', '|lu5|on', 'AndreSZ', 'Amatista'];
   
   return listaBloqueo.includes(normalized);
 }
