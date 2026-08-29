@@ -35,6 +35,7 @@ body {
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-y: contain;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 .background-image {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
@@ -56,15 +57,15 @@ body {
 }
 header {
   background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-  padding: 1rem 1.5rem; text-align: center; position: relative; z-index: 10; flex-shrink: 0;
+  padding: 0.8rem 1.5rem; text-align: center; position: relative; z-index: 10; flex-shrink: 0;
 }
 .header-content {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 0.3rem; position: relative;
+  gap: 0.2rem; position: relative;
 }
 .header-logo {
   position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%);
-  height: 100%; max-height: 100px; width: auto; max-width: 200px;
+  height: 100%; max-height: 80px; width: auto; max-width: 160px;
   object-fit: contain; z-index: 11;
   filter: drop-shadow(0 0 8px rgba(189, 0, 255, 0.6));
   transition: filter 0.3s ease, transform 0.3s ease;
@@ -75,7 +76,7 @@ header {
 }
 h1 {
   font-family: 'Orbitron', sans-serif; font-weight: 900;
-  font-size: clamp(1.3rem, 3.5vw, 2.5rem); letter-spacing: 3px; text-transform: uppercase;
+  font-size: clamp(1.2rem, 3vw, 2.2rem); letter-spacing: 3px; text-transform: uppercase;
   background: linear-gradient(to right, #bd00ff, #00ff41);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; text-fill-color: transparent;
@@ -83,7 +84,7 @@ h1 {
 }
 .header-subtitle {
   font-family: 'Orbitron', sans-serif; font-weight: 700;
-  font-size: clamp(0.7rem, 1.5vw, 1rem); letter-spacing: 2px; text-transform: uppercase;
+  font-size: clamp(0.65rem, 1.3vw, 0.9rem); letter-spacing: 2px; text-transform: uppercase;
   background: linear-gradient(to right, #00ff41, #00cc33);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; text-fill-color: transparent;
@@ -96,25 +97,28 @@ h1 {
   will-change: background, box-shadow;
 }
 .main-container {
-  display: flex; flex: 1; padding: clamp(1rem, 3vw, 2rem);
-  gap: clamp(1rem, 2vw, 2rem); position: relative; z-index: 1;
+  display: flex; flex: 1;
+  padding: clamp(0.8rem, 2vw, 1.5rem);
+  gap: clamp(0.8rem, 1.5vw, 1.5rem);
+  position: relative; z-index: 1;
   overflow-y: auto; -webkit-overflow-scrolling: touch;
+  align-items: center;
 }
 .player-section, .dj-section {
   flex: 1; background: transparent; border-radius: 10px;
-  padding: clamp(1rem, 2vw, 2rem); display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
+  padding: clamp(0.8rem, 1.5vw, 1.5rem);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 .section-title {
   font-family: 'Orbitron', sans-serif; font-weight: 900;
-  font-size: clamp(1rem, 1.8vw, 1.4rem); margin-bottom: 1.5rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem); margin-bottom: 1rem;
   text-align: center; text-transform: uppercase; letter-spacing: 2px;
 }
 .player-title, .dj-title { color: #bd00ff; padding-bottom: 0.5rem; }
 .cassette-player {
-  width: 95%; max-width: 575px; height: auto; min-height: 340px;
+  width: 95%; max-width: 520px; height: auto; min-height: 300px;
   background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border: 3px solid #8b8b8b; border-radius: 20px; padding: 1.5rem;
+  border: 3px solid #8b8b8b; border-radius: 20px; padding: 1.2rem;
   position: relative; overflow: hidden; display: flex; flex-direction: column;
   transform: translateZ(0);
 }
@@ -144,14 +148,14 @@ h1 {
 }
 .cassette-content {
   position: relative; z-index: 2; height: 100%;
-  display: flex; flex-direction: column; justify-content: space-between; gap: 15px;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
 }
 .song-info {
-  width: 100%; text-align: center; margin-bottom: 5px; color: #00ff41;
+  width: 100%; text-align: center; margin-bottom: 3px; color: #00ff41;
   font-family: 'Orbitron', sans-serif; font-weight: 900;
-  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem);
   text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(189, 0, 255, 0.7);
-  min-height: 30px; display: flex; align-items: center; justify-content: center;
+  min-height: 25px; display: flex; align-items: center; justify-content: center;
   padding: 0 5px; letter-spacing: 1.5px;
 }
 :root { --pink-neon: #bd00ff; --green-neon: #00ff41; }
@@ -225,36 +229,36 @@ h1 {
 }
 #sonic_title {
   font-family: 'Orbitron', sans-serif; font-weight: 900; word-break: break-word;
-  font-size: clamp(1rem, 1.8vw, 1.4rem); text-align: center; letter-spacing: 1.5px;
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem); text-align: center; letter-spacing: 1.5px;
 }
 #sonic_dj { text-transform: none !important; }
 .cassette-tapes {
   display: flex; justify-content: center; align-items: center; flex-shrink: 0; position: relative;
-  height: 140px; margin-top: 5px; width: 100%; padding: 0 10px; gap: 25px;
+  height: 125px; margin-top: 5px; width: 100%; padding: 0 10px; gap: 20px;
   background: rgba(0, 0, 0, 0.5); border-radius: 80px;
   border: 2px solid rgba(139, 139, 139, 0.3);
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-left: auto; margin-right: auto; max-width: 420px;
-  overflow: visible; flex-wrap: nowrap;
+  margin-left: auto; margin-right: auto; max-width: 400px;
+  overflow: hidden; flex-wrap: nowrap;
 }
 .tape-reel {
-  width: 85px; height: 85px; border: 4px solid #8b8b8b; border-radius: 50%;
+  width: 80px; height: 80px; border: 4px solid #8b8b8b; border-radius: 50%;
   background: radial-gradient(circle at center, #333 0%, #2a2a2a 35%, #1a1a1a 60%, #444 100%);
   display: flex; align-items: center; justify-content: center;
   position: relative; overflow: hidden; z-index: 3;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 5px rgba(139, 139, 139, 0.5);
   animation: subtleSpin 15s linear infinite; flex-shrink: 0; aspect-ratio: 1 / 1;
-  min-width: 85px; max-width: 85px; will-change: transform;
+  min-width: 80px; max-width: 80px; will-change: transform;
 }
 @keyframes subtleSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .tape-reel::before {
-  content: ''; position: absolute; width: 60px; height: 60px;
+  content: ''; position: absolute; width: 56px; height: 56px;
   border: 3px solid #8b8b8b; border-radius: 50%;
   background: radial-gradient(circle at center, #444 0%, #333 40%, #222 100%);
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.7), 0 0 3px rgba(139, 139, 139, 0.6);
 }
 .tape-reel::after {
-  content: ''; position: absolute; width: 28px; height: 28px;
+  content: ''; position: absolute; width: 26px; height: 26px;
   border: 2px solid #8b8b8b; border-radius: 50%; background: #555;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8), 0 0 4px rgba(0, 255, 65, 0.3); z-index: 2;
 }
@@ -312,11 +316,11 @@ h1 {
 .tape-reel.animated { animation: fastSpin 4s linear infinite; }
 @keyframes fastSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(720deg); } }
 .cassette-center {
-  width: 170px; height: 118px; background: #1a1a1a; border: 3px solid #8b8b8b; border-radius: 8px;
+  width: 160px; height: 110px; background: #1a1a1a; border: 3px solid #8b8b8b; border-radius: 8px;
   position: relative; display: flex; flex-direction: column; justify-content: space-between; margin: 0;
   flex-shrink: 0; z-index: 3;
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7), 0 0 8px rgba(139, 139, 139, 0.4);
-  overflow: hidden; min-width: 170px; max-width: 170px;
+  overflow: hidden; min-width: 160px; max-width: 160px;
 }
 .cassette-center::before {
   content: ''; position: absolute; width: 85%; height: 3px;
@@ -374,8 +378,8 @@ h1 {
   background-size: 100% 4px; pointer-events: none; z-index: 6; opacity: 0.7;
 }
 .volume-control {
-  width: 100%; max-width: 402.5px; margin: 0 auto; flex-shrink: 0; z-index: 3;
-  background: rgba(20, 20, 20, 0.85); padding: 12px; border-radius: 10px;
+  width: 100%; max-width: 380px; margin: 0 auto; flex-shrink: 0; z-index: 3;
+  background: rgba(20, 20, 20, 0.85); padding: 10px; border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 .volume-label {
@@ -396,7 +400,7 @@ h1 {
   border: 2px solid #000;
 }
 #dj-profile-img {
-  width: 100%; max-width: 412.125px; height: auto; aspect-ratio: 1 / 1;
+  width: 100%; max-width: 380px; height: auto; aspect-ratio: 1 / 1;
   border-radius: 50%; border: 3px solid #8b8b8b; object-fit: cover;
   box-shadow: -15px 0 25px rgba(189, 0, 255, 0.6), 15px 0 25px rgba(0, 255, 65, 0.6), 0 0 30px rgba(139, 139, 139, 0.4);
   animation: dj-breathing 3s ease-in-out infinite; display: block; margin: 0 auto;
@@ -413,12 +417,12 @@ h1 {
   }
 }
 #sonic_dj.cyber-glitch {
-  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem);
   margin-left: 10px; display: inline-block; vertical-align: middle;
 }
 .dj-image-container {
   position: relative; display: flex; justify-content: center; align-items: center;
-  flex-direction: column; gap: 24px; z-index: 50;
+  flex-direction: column; gap: 18px; z-index: 50;
 }
 .dj-country-info {
   display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -631,87 +635,32 @@ footer {
 }
 .staff-overlay { z-index: 1000; }
 .requests-overlay.active, .chat-overlay.active, .staff-overlay.active, .poem-overlay.active { opacity: 1; visibility: visible; }
-  
-/* ============================================ */
-/* ✅ RESPONSIVE MÓVIL - CORREGIDO */
-/* ============================================ */
+
 @media (max-width: 768px) {
-  /* ✅ HEADER: Logo más pequeño y no tapa el título */
   header { padding: 0.7rem 1rem !important; }
-  .header-logo { 
-    max-height: 50px !important; 
-    max-width: 100px !important; 
-    left: 0.8rem !important;
-  }
-  .header-content {
-    padding-left: 110px !important;
-  }
-  
-  /* ✅ MAIN: Vertical */
+  .header-logo { max-height: 50px !important; max-width: 100px !important; left: 0.8rem !important; }
+  .header-content { padding-left: 110px !important; }
   .main-container { flex-direction: column !important; padding: 1rem !important; gap: 1rem !important; }
   .player-section, .dj-section { width: 100% !important; flex: none !important; padding: 1rem !important; }
-  
-  /* ✅ CASSETTE: Carretes visibles sin cortar */
-  .cassette-player { 
-    width: 100% !important; 
-    max-width: 100% !important; 
-    height: auto !important; 
-    min-height: 310px !important; 
-    padding: 1.2rem !important;
-  }
-  .cassette-tapes { 
-    height: auto !important; 
-    min-height: 120px !important; 
-    margin-top: 3px !important; 
-    padding: 0 8px !important; 
-    gap: 10px !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-  }
-  .tape-reel { 
-    width: 72px !important; 
-    height: 72px !important; 
-    min-width: 72px !important; 
-    max-width: 72px !important;
-  }
-  .tape-reel::before { width: 50px !important; height: 50px !important; }
-  .tape-reel::after { width: 23px !important; height: 23px !important; }
-  .tape-reel span { width: 6px !important; height: 20px !important; }
-  .tape-reel span:nth-child(1) { transform: rotate(45deg) translate(19px, -4px) !important; }
-  .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(19px, -4px) !important; }
-  .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(19px, -4px) !important; }
-  .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(19px, -4px) !important; }
-  .cassette-center { width: 145px !important; height: 100px !important; min-width: 145px !important; max-width: 145px !important; }
-  
-  /* ✅ DJ visible */
-  #dj-profile-img { 
-    display: block !important; 
-    max-width: 280px !important; 
-    width: 100% !important; 
-    height: auto !important; 
-    margin: 0 auto !important; 
-  }
+  .cassette-player { width: 100% !important; max-width: 100% !important; height: auto !important; min-height: 320px !important; padding: 1.2rem !important; }
+  .cassette-tapes { height: 130px !important; margin-top: 5px !important; padding: 0 10px !important; gap: 15px !important; max-width: 100% !important; overflow: hidden !important; }
+  .tape-reel { width: 68px !important; height: 68px !important; min-width: 68px !important; max-width: 68px !important; }
+  .tape-reel::before { width: 48px !important; height: 48px !important; }
+  .tape-reel::after { width: 22px !important; height: 22px !important; }
+  .tape-reel span { width: 6px !important; height: 18px !important; }
+  .tape-reel span:nth-child(1) { transform: rotate(45deg) translate(18px, -4px) !important; }
+  .tape-reel span:nth-child(2) { transform: rotate(135deg) translate(18px, -4px) !important; }
+  .tape-reel span:nth-child(3) { transform: rotate(225deg) translate(18px, -4px) !important; }
+  .tape-reel span:nth-child(4) { transform: rotate(315deg) translate(18px, -4px) !important; }
+  .cassette-center { width: 140px !important; height: 95px !important; min-width: 140px !important; max-width: 140px !important; }
+  #dj-profile-img { display: block !important; max-width: 280px !important; width: 100% !important; height: auto !important; margin: 0 auto !important; }
   #sonic_dj { display: inline-block !important; visibility: visible !important; opacity: 1 !important; }
-  .dj-country-info { 
-    display: flex !important; 
-    visibility: visible !important; 
-    opacity: 1 !important; 
-    font-size: 0.85rem !important; 
-    padding: 8px 16px !important; 
-  }
-  
-  /* ✅ Optimizaciones */
+  .dj-country-info { display: flex !important; visibility: visible !important; opacity: 1 !important; font-size: 0.85rem !important; padding: 8px 16px !important; }
   .album-art-bg { filter: none !important; opacity: 0.25; }
-  .tape-reel, .cassette-player, #dj-profile-img, .dj-country-info {
-    box-shadow: 0 0 15px rgba(189, 0, 255, 0.3), 0 0 15px rgba(0, 255, 65, 0.3) !important;
-  }
+  .tape-reel, .cassette-player, #dj-profile-img, .dj-country-info { box-shadow: 0 0 15px rgba(189, 0, 255, 0.3), 0 0 15px rgba(0, 255, 65, 0.3) !important; }
   #dj-profile-img { animation: none !important; }
   .cyber-glitch { text-shadow: 0 0 5px rgba(189, 0, 255, 0.6) !important; }
-  
-  /* ✅ Paneles */
-  .requests-panel, .chat-panel, .staff-panel, .poem-panel {
-    width: 100vw !important; right: -100vw !important; height: 100dvh; height: -webkit-fill-available;
-  }
+  .requests-panel, .chat-panel, .staff-panel, .poem-panel { width: 100vw !important; right: -100vw !important; height: 100dvh; height: -webkit-fill-available; }
   .requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { right: 0 !important; }
   .chat-iframe-container { padding-bottom: 60px; }
   .staff-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1rem; }
