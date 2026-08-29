@@ -421,15 +421,14 @@ h1 {
   border: 2px solid #000;
 }
 
-/* ✅ IMAGEN DJ: Cuadrada con bordes redondeados (no cortada) */
+/* ✅ IMAGEN DJ - CÍRCULO PERFECTO COMO EL ORIGINAL */
 #dj-profile-img {
   width: 100%; max-width: 412.125px; height: auto;
-  aspect-ratio: 1 / 1; border-radius: 20px; border: 3px solid #8b8b8b;
-  object-fit: contain;
+  aspect-ratio: 1 / 1; border-radius: 50%; border: 3px solid #8b8b8b;
+  object-fit: cover;
   box-shadow: -15px 0 25px rgba(189, 0, 255, 0.6), 15px 0 25px rgba(0, 255, 65, 0.6), 0 0 30px rgba(139, 139, 139, 0.4);
   animation: dj-breathing 3s ease-in-out infinite;
   display: block; margin: 0 auto;
-  background: #0a0a0a;
 }
 @keyframes dj-breathing {
   0%, 100% {
@@ -1295,7 +1294,7 @@ footer {
 <div class="staff-overlay" id="staff-overlay"></div>
 
 <div class="requests-panel hidden" id="requests-panel">
-  <div class="requests-header"><h3>🎵 Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
+  <div class="requests-header"><h3> Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
   <div class="requests-content">
     <div id="requests-auth" class="requests-auth">
       <input type="password" id="request-pass" class="request-input" placeholder="🔒 Contraseña (DJ o Escucha)">
@@ -1303,7 +1302,7 @@ footer {
     </div>
     <div id="requests-main" class="requests-main" style="display:none;">
       <input type="text" id="request-nick" class="request-input" placeholder="🎤 Tu Nick (máx 20 chars)" maxlength="20">
-      <input type="text" id="request-input" class="request-input" placeholder=" Canción - Artista (máx 80 chars)" maxlength="80">
+      <input type="text" id="request-input" class="request-input" placeholder="🎵 Canción - Artista (máx 80 chars)" maxlength="80">
       <button id="request-submit-btn" class="request-submit-btn">Enviar Petición</button>
       <div class="request-list-container">
         <div id="request-list"></div>
@@ -1654,7 +1653,7 @@ async function saveRequests(reqs) {
 }
 async function renderRequests() {
   if (isSyncing) return;
-  requestList.innerHTML = '<p style="color:#888;text-align:center;"> Cargando...</p>';
+  requestList.innerHTML = '<p style="color:#888;text-align:center;">⏳ Cargando...</p>';
   let reqs = await loadRequests();
   const now = Date.now();
   const active = reqs.filter(r => now - r.time < REQUEST_EXPIRY);
