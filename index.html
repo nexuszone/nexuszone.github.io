@@ -34,6 +34,7 @@ body {
   position: relative;
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
 }
 .background-image {
   position: fixed;
@@ -47,7 +48,6 @@ body {
   pointer-events: none;
   filter: brightness(0.35) contrast(0.9);
   opacity: 0.5;
-  will-change: transform;
 }
 .background-image::after {
   content: '';
@@ -141,6 +141,7 @@ h1 {
   transition: background 0.05s ease, box-shadow 0.05s ease;
   box-shadow: 0 0 0 rgba(139, 139, 139, 0);
   flex-shrink: 0;
+  will-change: background, box-shadow;
 }
 .main-container {
   display: flex;
@@ -151,6 +152,7 @@ h1 {
   z-index: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  contain: layout style; /* ⚡ OPTIMIZACIÓN DE SCROLL */
 }
 .player-section, .dj-section {
   flex: 1;
@@ -161,6 +163,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  contain: layout paint; /* ⚡ AISLAMIENTO DE RENDERIZADO */
 }
 .section-title {
   font-family: 'Orbitron', sans-serif;
@@ -188,6 +191,7 @@ h1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  contain: layout paint; /* ⚡ AISLAMIENTO DE RENDERIZADO */
 }
 .cassette-player::before {
   content: '';
@@ -510,7 +514,7 @@ h1 {
   position: relative;
   transition: transform 0.05s ease-out;
   flex: 1;
-  will-change: transform, box-shadow, background;
+  will-change: transform; /* ⚡ ÚNICO will-change necesario */
   transform: scaleY(0.07);
 }
 .equalizer-container::after {
@@ -575,6 +579,7 @@ h1 {
   flex-direction: column;
   gap: 24px;
   z-index: 50;
+  contain: layout paint; /* ⚡ AISLAMIENTO DE RENDERIZADO */
 }
 .dj-country-info {
   display: flex;
@@ -972,6 +977,7 @@ footer {
   flex-direction: column;
   font-family: 'Orbitron', sans-serif;
   -webkit-overflow-scrolling: touch;
+  contain: strict; /* ⚡ AISLAMIENTO TOTAL DEL IFRAME */
 }
 .chat-panel.visible { right: 0; }
 .chat-header {
@@ -1048,7 +1054,6 @@ footer {
   visibility: visible;
 }
 
-/* ✅ STAFF PANEL - MISMO SISTEMA SLIDE-IN QUE CHAT */
 .staff-panel {
   position: fixed;
   top: 0; right: -50vw;
@@ -1112,8 +1117,6 @@ footer {
   align-content: start;
   -webkit-overflow-scrolling: touch;
 }
-
-/* ✅ IMÁGENES STAFF: Opacidad en vez de display:none + 10% más pequeñas */
 .staff-photo {
   width: 90%;
   max-width: 90%;
@@ -1268,7 +1271,9 @@ footer {
   .poem-image { border-radius: 8px; }
 }
 
-/* ✅ MEDIA QUERIES ORIGINALES - SIN CAMBIOS */
+/* ============================================ */
+/* MEDIA QUERIES ORIGINALES INTACTAS */
+/* ============================================ */
 @media (min-width: 2560px) {
   .cassette-player { max-width: 650px !important; }
   .header-logo { max-height: 120px; max-width: 250px; }
@@ -1805,7 +1810,6 @@ footer {
 </div>
 <div class="chat-overlay" id="chat-overlay"></div>
 
-<!-- ✅ STAFF SIN CLASE "hidden" (usa sistema slide-in igual que chat) -->
 <div class="staff-panel" id="staff-panel">
 <div class="staff-header"><h3>🎧 Staff Nexus</h3><button class="staff-close-btn" id="staff-close">×</button></div>
 <div class="staff-grid" id="staff-grid"></div>
@@ -1852,10 +1856,8 @@ const AD_ENABLED = false;
 let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
-
-// ✅ NUEVO: Timer para destruir chat a los 30 minutos
 let chatDestroyTimer = null;
-const CHAT_DESTROY_DELAY = 30 * 60 * 1000; // 30 minutos
+const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
 
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return FALLBACK_COUNTRY;
@@ -2022,7 +2024,7 @@ function initAdListeners() {
 let chatIframeHtml = '';
 function initChatIframe() {
   const num = Math.floor(Math.random() * 1000);
-  chatIframeHtml = `<iframe id="chat-iframe-element" src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`;
+  chatIframeHtml = `<iframe id="chat-iframe" src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`;
 }
 function adjustChatIframeForMobile() {
   if (window.innerWidth <= 768 && isChatVisible) {
@@ -2030,16 +2032,12 @@ function adjustChatIframeForMobile() {
     if (chatIframeContainer) chatIframeContainer.style.paddingBottom = (window.innerWidth < 480 ? 55 : 60) + 'px';
   }
 }
-// ✅ MODIFICADO: Destruir chat a los 30 minutos de inactividad
+// ⚡ OPTIMIZACIÓN CRÍTICA: Pausar visualizador al abrir chat para liberar CPU/GPU
 function toggleChat() {
   isChatVisible = !isChatVisible;
   if (isChatVisible) {
-    // Al abrir: cancelar el timer de destrucción si existía
-    if (chatDestroyTimer) {
-      clearTimeout(chatDestroyTimer);
-      chatDestroyTimer = null;
-    }
-    if (!document.getElementById('chat-iframe-element')) {
+    if (chatDestroyTimer) { clearTimeout(chatDestroyTimer); chatDestroyTimer = null; }
+    if (!document.getElementById('chat-iframe')) {
       chatIframeContainer.innerHTML = chatIframeHtml;
     }
     chatPanel.classList.remove('hidden');
@@ -2047,18 +2045,28 @@ function toggleChat() {
     chatOverlay.classList.add('active');
     setTimeout(adjustChatIframeForMobile, 300);
     document.body.style.overflow = 'hidden';
+    
+    // ⚡ PAUSAR VISUALIZADOR PARA QUE EL CHAT VAYA FLUIDO
+    if (isVisualizing) {
+      isVisualizing = false;
+      if (animationId) cancelAnimationFrame(animationId);
+    }
   } else {
-    // Al cerrar: iniciar timer de 30 minutos para destruir el iframe
     chatDestroyTimer = setTimeout(() => {
       chatIframeContainer.innerHTML = '';
       chatDestroyTimer = null;
-      console.log("🗑️ Iframe del chat destruido por inactividad (30 min). Memoria liberada.");
     }, CHAT_DESTROY_DELAY);
     chatPanel.classList.remove('visible');
     chatPanel.classList.add('hidden');
     chatOverlay.classList.remove('active');
     chatPanel.style.height = '';
     document.body.style.overflow = '';
+    
+    // ⚡ REANUDAR VISUALIZADOR SI LA MÚSICA SIGUE SONANDO
+    if (isPlaying && analyzer && !isVisualizing) {
+      isVisualizing = true;
+      visualize();
+    }
   }
 }
 function initChatListeners() {
@@ -2068,7 +2076,6 @@ function initChatListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isChatVisible) toggleChat(); });
 }
 
-// ✅ MODIFICADO: Sistema de opacity para que carguen sin display:none
 function loadStaffImages() {
   staffGrid.innerHTML = '';
   for(let i = 1; i <= 50; i++) {
@@ -2082,7 +2089,6 @@ function loadStaffImages() {
     staffGrid.appendChild(img);
   }
 }
-// ✅ MODIFICADO: Sistema slide-in igual que chat
 function toggleStaffPanel() {
   isStaffVisible = !isStaffVisible;
   if (isStaffVisible) {
@@ -2291,7 +2297,6 @@ function setupAudioGraph() {
 function startVisualizer() {
   if(isVisualizing || !analyzer) return; isVisualizing = true; visualize();
 }
-// ✅ OPTIMIZADO: Reset usando transform scaleY en vez de height
 function stopVisualizer() {
   isVisualizing = false; if(animationId) cancelAnimationFrame(animationId); animationId = null;
   bars.forEach(b => {
@@ -2302,12 +2307,11 @@ function stopVisualizer() {
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
 }
-// ✅ OPTIMIZADO: Usa transform scaleY + frame skipping mejorado
+// ⚡ OPTIMIZACIÓN: Frame skipping más agresivo en móvil (15 FPS)
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   visualizerFrameCount++;
-  // Frame skipping más agresivo en móvil (3 frames) para reducir CPU
-  const frameSkip = isMobile ? 3 : 1;
+  const frameSkip = isMobile ? 4 : 1; // 60/4 = 15 FPS en móvil
   if(visualizerFrameCount % frameSkip !== 0) { animationId = requestAnimationFrame(visualize); return; }
   analyzer.getByteFrequencyData(dataArray); const totalBins = dataArray.length; const binsPerBar = totalBins/barCount;
   for(let i=0; i<barCount; i++) {
