@@ -924,7 +924,7 @@ footer {
 
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
-// ✅ SOLUCIÓN DEFINITIVA: Page Visibility API para pausar todo cuando la pestaña no está activa
+// ✅ SOLUCIÓN CORREGIDA: Solo pausar el visualizador, NO las animaciones CSS
 const djCountryMap = {
   'adharacanis': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
   'Amatista': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
@@ -945,10 +945,6 @@ let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 let chatDestroyTimer = null;
 const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
-
-// ✅ Variables para controlar el estado de visibilidad
-let isPageVisible = true;
-let pausedIntervals = [];
 
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
@@ -1102,7 +1098,7 @@ function hideAdOverlay() { if(adOverlay) { adOverlay.classList.remove('active');
 function initAdListeners() {
   if (!AD_ENABLED || !adOverlay || !adCloseBtn || !adImage) return;
   adImage.onload = () => console.log('✅ [AD] Imagen cargada');
-  adImage.onerror = () => console.error('❌ [AD] Error img/publicidad.png');
+  adImage.onerror = () => console.error(' [AD] Error img/publicidad.png');
   adCloseBtn.addEventListener('click', (e) => { e.stopPropagation(); hideAdOverlay(); });
   adOverlay.addEventListener('click', (e) => { if (e.target === adOverlay) hideAdOverlay(); });
   setTimeout(showAdOverlay, 1000);
@@ -1415,11 +1411,10 @@ function setupGlitchObservers() {
 }
 function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getElementById('sonic_art_full'); if(c&&c.querySelector('img')){ const s=c.querySelector('img').src; if(s){ albumArtBg.style.backgroundImage=`url('${s}')`; albumArtBg.style.opacity='0.4'; } } }, 500); }
 
-// ✅ SOLUCIÓN DEFINITIVA: Page Visibility API
+// ✅ SOLUCIÓN CORREGIDA: Solo pausar el requestAnimationFrame del visualizador
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
-    // ✅ Pestaña oculta: pausar todo
-    isPageVisible = false;
+    // Pestaña oculta: solo pausar el visualizador (NO las animaciones CSS)
     if (isVisualizing) {
       isVisualizing = false;
       if (animationId) {
@@ -1427,18 +1422,14 @@ document.addEventListener('visibilitychange', function() {
         animationId = null;
       }
     }
-    // Pausar animaciones CSS
-    document.body.style.animationPlayState = 'paused';
-    console.log('⏸️ Página pausada - pestaña no visible');
+    console.log('⏸️ Visualizador pausado - pestaña no visible');
   } else {
-    // ✅ Pestaña visible: reanudar todo
-    isPageVisible = true;
-    document.body.style.animationPlayState = 'running';
+    // Pestaña visible: reanudar visualizador si la música está sonando
     if (isPlaying && analyzer && !isVisualizing) {
       isVisualizing = true;
       visualize();
     }
-    console.log('▶️ Página reanudada - pestaña visible');
+    console.log('▶️ Visualizador reanudado - pestaña visible');
   }
 });
 
@@ -1453,7 +1444,7 @@ window.addEventListener('load', function() {
     const artObserver = new MutationObserver(() => { setTimeout(() => updateAlbumArtBackground(), 300); });
     artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
   }
-  console.log("🎧 Nexus Zone cargado correctamente con Page Visibility API.");
+  console.log("🎧 Nexus Zone cargado correctamente.");
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
