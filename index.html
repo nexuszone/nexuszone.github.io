@@ -151,6 +151,7 @@ h1 {
   z-index: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  contain: layout style; /* ⚡ OPTIMIZACIÓN */
 }
 .player-section, .dj-section {
   flex: 1;
@@ -161,6 +162,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  contain: layout paint; /* ⚡ OPTIMIZACIÓN */
 }
 .section-title {
   font-family: 'Orbitron', sans-serif;
@@ -188,6 +190,7 @@ h1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  contain: layout paint; /* ⚡ OPTIMIZACIÓN */
 }
 .cassette-player::before {
   content: '';
@@ -573,10 +576,6 @@ h1 {
   gap: 24px;
   z-index: 50;
 }
-
-/* ============================================ */
-/* BANDERAS CON IMÁGENES PNG/WEBP EXTERNAS */
-/* ============================================ */
 .dj-country-info {
   display: flex;
   align-items: center;
@@ -603,8 +602,6 @@ h1 {
   border-color: #bd00ff;
   box-shadow: 0 0 15px rgba(189, 0, 255, 0.5);
 }
-
-/* Bandera como imagen PNG/WebP */
 .dj-flag-img {
   width: 30px;
   height: 20px;
@@ -618,8 +615,6 @@ h1 {
   transform: scale(1.1);
   box-shadow: 0 0 8px rgba(189, 0, 255, 0.6);
 }
-
-/* ✅ EFECTO GLOW EXTERIOR PARA NOMBRE DEL PAÍS (igual al DJ) */
 .dj-country-name {
   color: #00ff41;
   font-size: 1rem;
@@ -630,14 +625,11 @@ h1 {
   display: inline-block;
   position: relative;
 }
-
 @keyframes country-glow {
   from { box-shadow: 0 0 8px rgba(0, 255, 65, 0.3), 0 0 15px rgba(189, 0, 255, 0.2); }
   to { box-shadow: 0 0 15px rgba(0, 255, 65, 0.6), 0 0 28px rgba(189, 0, 255, 0.5); }
 }
 @keyframes flag-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-
-/* ✅ PUBLICIDAD - POSICIONADA DENTRO DEL CONTENDOR DJ, SIN FILTROS */
 .ad-overlay {
   position: absolute !important;
   top: 50%; left: 50%;
@@ -727,6 +719,12 @@ h1 {
 @media (max-width: 768px) {
   .ad-overlay { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: auto !important; height: auto !important; z-index: 1000 !important; }
   .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; max-width: 90vw !important; }
+  
+  /* ⚡ OPTIMIZACIÓN: LEDs estáticos en móvil para ahorrar CPU/GPU */
+  .led-strip-top, .led-strip-bottom {
+    background: linear-gradient(90deg, #bd00ff, #00ff41) !important;
+    box-shadow: 0 0 8px rgba(189, 0, 255, 0.5), 0 0 8px rgba(0, 255, 65, 0.5) !important;
+  }
 }
 @media (max-width: 480px) {
   .ad-overlay img.ad-image { width: 258.64px !important; height: 258.64px !important; max-width: 85vw !important; }
@@ -806,10 +804,6 @@ footer {
   font-size: 0.6rem;
   margin-top: 0.2rem;
 }
-
-/* ============================================ */
-/* NUEVO: PANEL DE PETICIONES (V3 - Solo visible) */
-/* ============================================ */
 .requests-panel {
   position: fixed;
   top: 0; right: -50vw;
@@ -983,6 +977,7 @@ footer {
   flex-direction: column;
   font-family: 'Orbitron', sans-serif;
   -webkit-overflow-scrolling: touch;
+  contain: strict; /* ⚡ OPTIMIZACIÓN */
 }
 .chat-panel.visible { right: 0; }
 .chat-header {
@@ -1123,15 +1118,21 @@ footer {
   align-content: start;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ✅ STAFF: 10% más pequeñas y con fade-in (sin display:none para evitar cortes) */
 .staff-photo {
-  width: 100%;
+  width: 90%;
+  max-width: 90%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #00ff41;
   box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
-  transition: all 0.3s ease;
-  display: none;
+  transition: opacity 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  margin: 0 auto;
+  display: block;
 }
 .staff-photo:hover {
   transform: scale(1.05);
@@ -1139,7 +1140,8 @@ footer {
   border-color: #bd00ff;
 }
 .staff-photo.loaded {
-  display: block;
+  opacity: 1;
+  visibility: visible;
   animation: staffFadeIn 0.5s ease;
 }
 @keyframes staffFadeIn {
@@ -1161,9 +1163,6 @@ footer {
   visibility: visible;
 }
 
-/* ============================================ */
-/* ✅ NUEVO: PANEL LATERAL PARA POEMA/FRASE DE LA SEMANA */
-/* ============================================ */
 .poem-panel {
   position: fixed;
   top: 0; right: -50vw;
@@ -1767,11 +1766,9 @@ footer {
 <a href="https://www.tiktok.com/@nexuszone2?_r=1&_t=ZS-946qRwctwGa" class="social-link" title="Tiktok" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg></a>
 <a href="#" class="social-link" id="staff-btn" title="Staff"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></a>
 <a href="#" class="social-link" id="chat-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></a>
-<!-- ✅ NUEVO: Botón de Poema/Frase de la Semana -->
 <a href="#" class="social-link" id="poem-btn" title="Poema de la Semana">
   <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:white;"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
 </a>
-<!-- Botón de Peticiones -->
 <a href="#" class="social-link" id="requests-btn" title="Pedir Canción"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></a>
 </div>
 <div class="copyright">
@@ -1781,7 +1778,6 @@ footer {
 </div>
 </footer>
 
-<!-- ✅ NUEVO: PANEL LATERAL PARA POEMA/FRASE DE LA SEMANA -->
 <div class="poem-panel hidden" id="poem-panel">
   <div class="poem-header">
     <h3>✨ Poema / Frase de la Semana ✨</h3>
@@ -1795,23 +1791,21 @@ footer {
 
 <div class="chat-panel hidden" id="chat-panel">
 <div class="chat-header"><h3>💬 Chat Nexus</h3><button class="chat-close-btn" id="chat-close">×</button></div>
-<div class="chat-iframe-container">
-<script>const num = Math.floor(Math.random() * 1000); document.write(`<iframe src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`);</script>
-</div>
+<div class="chat-iframe-container" id="chat-iframe-container"></div>
 </div>
 <div class="chat-overlay" id="chat-overlay"></div>
+
 <div class="staff-panel hidden" id="staff-panel">
 <div class="staff-header"><h3>🎧 Staff Nexus</h3><button class="staff-close-btn" id="staff-close">×</button></div>
 <div class="staff-grid" id="staff-grid"></div>
 </div>
 <div class="staff-overlay" id="staff-overlay"></div>
 
-<!-- NUEVO: Panel de Peticiones -->
 <div class="requests-panel hidden" id="requests-panel">
-  <div class="requests-header"><h3> Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
+  <div class="requests-header"><h3>🎵 Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
   <div class="requests-content">
     <div id="requests-auth" class="requests-auth">
-      <input type="password" id="request-pass" class="request-input" placeholder=" Contraseña (DJ o Escucha)">
+      <input type="password" id="request-pass" class="request-input" placeholder="🔒 Contraseña (DJ o Escucha)">
       <button id="request-auth-btn" class="request-submit-btn">Entrar</button>
     </div>
     <div id="requests-main" class="requests-main" style="display:none;">
@@ -1829,9 +1823,6 @@ footer {
 
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
-/* ===================================================== */
-/* MAPEO DE DJs A PAÍSES - CON URLS DE BANDERAS */
-/* ===================================================== */
 const djCountryMap = {
   'adharacanis': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
   'Amatista': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
@@ -1845,51 +1836,32 @@ const djCountryMap = {
   'Caraxs': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
   'AndreSZ': { country: 'Chile', flagUrl: 'https://flagcdn.com/w40/cl.webp', code: 'CL' },
 };
-
-// ✅ FALLBACK PERSONALIZADO - NEXUSLANDIA
-const FALLBACK_COUNTRY = {
-  country: 'Nexuslandia',
-  flagUrl: 'img/nexuslandia.png',
-  code: 'NX'
-};
-/* activar publicidad karaoke */
+const FALLBACK_COUNTRY = { country: 'Nexuslandia', flagUrl: 'img/nexuslandia.png', code: 'NX' };
 const AD_ENABLED = false;
 let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 
-/* ✅ CORREGIDO: Normaliza mejor incluyendo variaciones con pipes y números */
+// ⚡ OPTIMIZACIÓN: Timer para destruir chat a los 30 minutos
+let chatDestroyTimer = null;
+const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
+
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
-  
   const normalize = (str) => {
-    // Primero removemos pipes y caracteres especiales, luego normalizamos
     return str.toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[|]/g, '')  // Removemos pipes
-      .replace(/0/g, 'o')   // Convertimos 0 a o para coincidencias
+      .replace(/[|]/g, '')
+      .replace(/0/g, 'o')
       .replace(/[^a-z0-9]/g, '_');
   };
-  
   const normalizedInput = normalize(djName);
-  
-  // Búsqueda mejorada que maneja variaciones
   for (const [key, value] of Object.entries(djCountryMap)) {
     const normalizedKey = normalize(key);
-    
-    // Coincidencia exacta después de normalizar
-    if (normalizedInput === normalizedKey) {
-      return value;
-    }
-    
-    // Coincidencia parcial (si el input contiene la clave o viceversa)
-    if (normalizedInput.includes(normalizedKey) || normalizedKey.includes(normalizedInput)) {
-      return value;
-    }
+    if (normalizedInput === normalizedKey) { return value; }
+    if (normalizedInput.includes(normalizedKey) || normalizedKey.includes(normalizedInput)) { return value; }
   }
-  
-  // ✅ Retorna Nexuslandia como fallback
   return FALLBACK_COUNTRY;
 }
 
@@ -1897,21 +1869,16 @@ function updateDjCountryDisplay(djName = '') {
   const now = Date.now();
   if (now - lastCountryUpdate < COUNTRY_UPDATE_DEBOUNCE) return;
   lastCountryUpdate = now;
-  
   const countryInfo = document.getElementById('dj-country-info');
   const djFlagImg = document.getElementById('dj-flag-img');
   const djCountryName = document.getElementById('dj-country-name');
   if (!countryInfo || !djFlagImg || !djCountryName) return;
-  
   const info = getDjCountryInfo(djName);
-  
   if (djCountryName.textContent === info.country && djFlagImg.src === info.flagUrl) return;
-  
   djFlagImg.style.transition = 'opacity 0.3s ease';
   djCountryName.style.transition = 'opacity 0.3s ease';
   djFlagImg.style.opacity = '0';
   djCountryName.style.opacity = '0';
-  
   setTimeout(() => {
     djFlagImg.src = info.flagUrl;
     djFlagImg.alt = info.country;
@@ -1919,31 +1886,21 @@ function updateDjCountryDisplay(djName = '') {
     djFlagImg.style.opacity = '1';
     djCountryName.style.opacity = '1';
   }, 200);
-  
   countryInfo.style.animation = 'none';
   setTimeout(() => countryInfo.style.animation = 'country-glow 3s ease-in-out infinite alternate', 10);
 }
 
-/* ===================================================== */
-/* ✅ CONTROL DEL BOTÓN DE PETICIONES SEGÚN DJ */
-/* ===================================================== */
 function isAutoDJ(djName) {
   if (!djName) return true;
   const normalized = djName.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  
-  // Lista exacta de nombres que desactivan peticiones (TODOS EN MINÚSCULAS)
   const listaBloqueo = ['', 'no dj', 'autodj', 'nexus dj', 'nexusdj', 'smiledj', 'cisnenegro', 'pueblo_rock', 'w0lf', 'djivan', 'lu50n', '|lu5|on', 'AndreSZ'];
-  
   return listaBloqueo.includes(normalized);
 }
 function updateRequestsButtonState(djName = '') {
   const requestsBtn = document.getElementById('requests-btn');
   if (!requestsBtn) return;
-  
   const isAuto = isAutoDJ(djName);
-  
   if (isAuto) {
-    // DESACTIVAR botón cuando AutoDJ está emitiendo
     requestsBtn.style.pointerEvents = 'none';
     requestsBtn.style.opacity = '0.5';
     requestsBtn.setAttribute('aria-disabled', 'true');
@@ -1951,7 +1908,6 @@ function updateRequestsButtonState(djName = '') {
     requestsBtn.title = 'Peticiones disponibles solo con DJ en vivo';
     requestsBtn.style.cursor = 'not-allowed';
   } else {
-    // ACTIVAR botón cuando DJ real está emitiendo
     requestsBtn.style.pointerEvents = 'auto';
     requestsBtn.style.opacity = '1';
     requestsBtn.removeAttribute('aria-disabled');
@@ -1961,9 +1917,6 @@ function updateRequestsButtonState(djName = '') {
   }
 }
 
-/* ===================================================== */
-/* ELEMENTOS */
-/* ===================================================== */
 const audio = document.getElementById('radio-player');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const tapeLeft = document.getElementById('tape-left');
@@ -1983,7 +1936,7 @@ const chatPanel = document.getElementById('chat-panel');
 const chatClose = document.getElementById('chat-close');
 const chatBtn = document.getElementById('chat-btn');
 const chatOverlay = document.getElementById('chat-overlay');
-const chatIframeContainer = document.querySelector('.chat-iframe-container');
+const chatIframeContainer = document.getElementById('chat-iframe-container');
 const staffPanel = document.getElementById('staff-panel');
 const staffClose = document.getElementById('staff-close');
 const staffBtn = document.getElementById('staff-btn');
@@ -1992,7 +1945,6 @@ const staffGrid = document.getElementById('staff-grid');
 const adOverlay = document.getElementById('ad-overlay');
 const adCloseBtn = document.getElementById('ad-close-btn');
 const adImage = document.getElementById('ad-image');
-// ✅ NUEVO: Elementos del panel de poema
 const poemPanel = document.getElementById('poem-panel');
 const poemClose = document.getElementById('poem-close');
 const poemBtn = document.getElementById('poem-btn');
@@ -2011,9 +1963,6 @@ const colorChangeThreshold = 3;
 const isMobile = window.innerWidth <= 768;
 audio.volume = 1.0; volumeSlider.value = 1.0; audio.crossOrigin = 'anonymous';
 
-/* ===================================================== */
-/* UTILIDADES */
-/* ===================================================== */
 function updateVolumeDisplay() {
   const percent = Math.round(audio.volume * 100);
   volumePercentage.textContent = percent + '%';
@@ -2035,12 +1984,9 @@ function updateDjImage(djName = 'autodj') {
   let imageName = normalized.includes('|lu5|0n') || normalized.includes('lu50n') ? 'ilusion' : sanitizeDjName(djName);
   djProfileImg.src = `portadasdjs/${imageName}.png`;
   djProfileImg.alt = djName;
-  
-  // ✅ FALBACK DE IMAGEN: Si no encuentra la imagen del DJ, carga autodj.png
   djProfileImg.onerror = function() {
     if (imageName.toLowerCase() !== 'autodj') {
-      console.log(`🖼️ Imagen de DJ no encontrada: ${imageName}.png. Cargando autodj.png`);
-      this.onerror = null; // Evitar bucle infinito si autodj.png también falla
+      this.onerror = null;
       this.src = 'portadasdjs/autodj.png';
       this.alt = 'Auto DJ';
     }
@@ -2055,9 +2001,6 @@ function checkAndUpdateDjImage() {
   return false;
 }
 
-/* ===================================================== */
-/* PUBLICIDAD */
-/* ===================================================== */
 let adTimer = null;
 function showAdOverlay() {
   if (!AD_ENABLED || !adOverlay || !adImage) return;
@@ -2075,19 +2018,38 @@ function initAdListeners() {
   setTimeout(showAdOverlay, 1000);
 }
 
-/* ===================================================== */
-/* CHAT */
-/* ===================================================== */
-function adjustChatIframeForMobile() {
-  if (window.innerWidth <= 768 && isChatVisible) {
-    chatPanel.style.height = window.visualViewport ? window.visualViewport.height + 'px' : window.innerHeight + 'px';
-    if (chatIframeContainer) chatIframeContainer.style.paddingBottom = (window.innerWidth < 480 ? 55 : 60) + 'px';
-  }
-}
+// ⚡ OPTIMIZACIÓN: Inyección dinámica del iframe del chat
 function toggleChat() {
   isChatVisible = !isChatVisible;
-  if(isChatVisible) { chatPanel.classList.remove('hidden'); chatPanel.classList.add('visible'); chatOverlay.classList.add('active'); setTimeout(adjustChatIframeForMobile, 300); document.body.style.overflow = 'hidden'; }
-  else { chatPanel.classList.remove('visible'); chatPanel.classList.add('hidden'); chatOverlay.classList.remove('active'); chatPanel.style.height = ''; document.body.style.overflow = ''; }
+  if(isChatVisible) {
+    if (chatDestroyTimer) { clearTimeout(chatDestroyTimer); chatDestroyTimer = null; }
+    if (!document.getElementById('chat-iframe')) {
+      const num = Math.floor(Math.random() * 1000);
+      chatIframeContainer.innerHTML = `<iframe id="chat-iframe" src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`;
+    }
+    chatPanel.classList.remove('hidden'); chatPanel.classList.add('visible'); chatOverlay.classList.add('active'); 
+    setTimeout(adjustChatIframeForMobile, 300); document.body.style.overflow = 'hidden';
+    
+    // ⚡ PAUSAR VISUALIZADOR PARA QUE EL CHAT VAYA FLUIDO
+    if (isVisualizing) {
+      isVisualizing = false;
+      if (animationId) cancelAnimationFrame(animationId);
+    }
+  } else {
+    chatDestroyTimer = setTimeout(() => {
+      chatIframeContainer.innerHTML = '';
+      chatDestroyTimer = null;
+    }, CHAT_DESTROY_DELAY);
+    
+    chatPanel.classList.remove('visible'); chatPanel.classList.add('hidden'); chatOverlay.classList.remove('active'); 
+    chatPanel.style.height = ''; document.body.style.overflow = '';
+    
+    // ⚡ REANUDAR VISUALIZADOR SI LA MÚSICA SIGUE SONANDO
+    if (isPlaying && analyzer && !isVisualizing) {
+      isVisualizing = true;
+      visualize();
+    }
+  }
 }
 function initChatListeners() {
   chatBtn.addEventListener('click', (e) => { e.preventDefault(); toggleChat(); });
@@ -2096,14 +2058,13 @@ function initChatListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isChatVisible) toggleChat(); });
 }
 
-/* ===================================================== */
-/* STAFF */
-/* ===================================================== */
+// ⚡ OPTIMIZACIÓN: Staff con fade-in y 10% más pequeñas
 function loadStaffImages() {
   staffGrid.innerHTML = ''; let loaded = 0;
   for(let i=1; i<=50; i++) {
     const img = document.createElement('img');
     img.src = `staff/dj${i}.png`; img.alt = `Staff ${i}`; img.classList.add('staff-photo');
+    img.decoding = 'async';
     img.onload = function() { loaded++; this.classList.add('loaded'); this.style.display='block'; };
     img.onerror = function() { this.style.display='none'; };
     staffGrid.appendChild(img);
@@ -2121,9 +2082,6 @@ function initStaffListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isStaffVisible) toggleStaffPanel(); });
 }
 
-/* ===================================================== */
-/* ✅ NUEVO: PANEL LATERAL DE POEMA/FRASE DE LA SEMANA */
-/* ===================================================== */
 function togglePoemPanel() {
   isPoemVisible = !isPoemVisible;
   if (isPoemVisible) {
@@ -2131,7 +2089,6 @@ function togglePoemPanel() {
     poemPanel.classList.add('visible');
     poemOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Recargar imagen para asegurar que se muestre la versión más reciente
     if (poemImage) {
       const currentSrc = poemImage.src;
       poemImage.src = '';
@@ -2150,17 +2107,12 @@ function initPoemListeners() {
   if (poemClose) poemClose.addEventListener('click', togglePoemPanel);
   if (poemOverlay) poemOverlay.addEventListener('click', togglePoemPanel);
   document.addEventListener('keydown', (e) => { if(e.key==='Escape' && isPoemVisible) togglePoemPanel(); });
-  
-  // Pre-cargar imagen para mejor experiencia
   if (poemImage) {
     const preload = new Image();
     preload.src = poemImage.src;
   }
 }
 
-/* ===================================================== */
-/* NUEVO: SISTEMA DE PETICIONES (V3 - Solo cuando visible) */
-/* ===================================================== */
 const DJ_PASS = 'dj2026';
 const LISTENER_PASS = 'nexus2026';
 let userRole = null;
@@ -2168,8 +2120,6 @@ let requestRefreshInterval = null;
 const REQUEST_COOLDOWN = 5 * 60 * 1000;
 const REQUEST_EXPIRY = 20 * 60 * 1000;
 let isSyncing = false;
-
-// 🔗 CONFIGURACIÓN JSONBIN
 const BIN_ID = '6a1c1975ddf5aa59f77b6dc2';
 const API_KEY = '$2a$10$l7pwDNDS96podLHrossjbOom0nbtKWJsj/x7GiKPzXq0M4SMWTgQq';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
@@ -2212,7 +2162,7 @@ async function saveRequests(reqs) {
 
 async function renderRequests() {
   if (isSyncing) return;
-  requestList.innerHTML = '<p style="color:#888;text-align:center;"> Cargando peticiones...</p>';
+  requestList.innerHTML = '<p style="color:#888;text-align:center;">⏳ Cargando peticiones...</p>';
   let reqs = await loadRequests();
   const now = Date.now();
   const active = reqs.filter(r => now - r.time < REQUEST_EXPIRY);
@@ -2278,41 +2228,35 @@ async function deleteRequest(idx) {
 function toggleRequestsPanel() {
   const isVisible = requestsPanel.classList.contains('visible');
   if (!isVisible) {
-    // ✅ ABRIR PANEL: Cargar datos y empezar refresh SOLO si está visible
     requestsPanel.classList.remove('hidden');
     requestsPanel.classList.add('visible');
     requestsOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
     if (!userRole) {
       requestPassInput.focus();
     } else {
-      // Cargar una vez al abrir, luego refresh cada 45s solo si sigue visible
       renderRequests().then(() => {
-        startRefresh(); // Solo inicia si el panel sigue visible
+        startRefresh();
       });
     }
   } else {
-    // ✅ CERRAR PANEL: Detener refresh para ahorrar API calls
     requestsPanel.classList.remove('visible');
     requestsPanel.classList.add('hidden');
     requestsOverlay.classList.remove('active');
     document.body.style.overflow = '';
-    stopRefresh(); // Detiene el intervalo inmediatamente
+    stopRefresh();
   }
 }
 
-// ✅ OPTIMIZADO: Solo refresca si el panel está visible
 function startRefresh() {
   if (!requestRefreshInterval && requestsPanel.classList.contains('visible')) {
     requestRefreshInterval = setInterval(() => {
-      // Verificar que sigue visible antes de cada refresh
       if (requestsPanel.classList.contains('visible')) {
         renderRequests();
       } else {
-        stopRefresh(); // Auto-detener si se cerró por otra vía
+        stopRefresh();
       }
-    }, 45000); // 45 segundos
+    }, 45000);
   }
 }
 
@@ -2357,13 +2301,9 @@ function initRequestsListeners() {
 function enterPanel() {
   requestsAuth.style.display = 'none';
   requestsMain.style.display = 'flex';
-  // Carga inicial + refresh solo si visible
   renderRequests().then(() => startRefresh());
 }
 
-/* ===================================================== */
-/* AUDIO & VISUALIZADOR + BARRAS LED */
-/* ===================================================== */
 function setupAudioGraph() {
   if(audioGraphSetup || !audioContext) return;
   try {
@@ -2384,9 +2324,18 @@ function stopVisualizer() {
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
 }
+
+// ⚡ OPTIMIZACIÓN: Frame skipping en móvil y LEDs estáticos
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
-  visualizerFrameCount++; if(isMobile && visualizerFrameCount%2!==0) { animationId = requestAnimationFrame(visualize); return; }
+  
+  const frameSkip = isMobile ? 4 : 1; // 15 FPS en móvil en lugar de 60
+  visualizerFrameCount++;
+  if(visualizerFrameCount % frameSkip !== 0) { 
+    animationId = requestAnimationFrame(visualize); 
+    return; 
+  }
+  
   analyzer.getByteFrequencyData(dataArray); const totalBins = dataArray.length; const binsPerBar = totalBins/barCount;
   for(let i=0; i<barCount; i++) {
     let sum=0, count=0;
@@ -2398,13 +2347,12 @@ function visualize() {
     bars[i].style.boxShadow = `0 0 ${8*gf}px rgba(0,255,65,${0.4+gf*0.6}), 0 0 ${12*gf}px rgba(189,0,255,${0.4*gf})`;
     bars[i].style.background = height>20 ? 'linear-gradient(to top, #00ff41, #bd00ff)' : height>10 ? 'linear-gradient(to top, #00cc33, #9900ff)' : 'linear-gradient(to top, #008822, #7a00cc)';
   }
-  updateLedStrips();
+  
+  if (!isMobile) updateLedStrips(); // ⚡ No calcular LEDs en móvil
+  
   animationId = requestAnimationFrame(visualize);
 }
 
-/* ===================================================== */
-/* ✅ BARRAS LED AL RITMO DE LOS BAJOS */
-/* ===================================================== */
 function getBassIntensity() {
   if (!analyzer || !dataArray) return 0;
   let bassSum = 0;
@@ -2451,9 +2399,6 @@ function updateLedStrips() {
   }
 }
 
-/* ===================================================== */
-/* PLAY / PAUSE */
-/* ===================================================== */
 function togglePlayPause() {
   if(!isPlaying) {
     if(audio.src !== streamUrl) audio.src = streamUrl;
@@ -2479,9 +2424,6 @@ playPauseBtn.addEventListener('click', togglePlayPause);
 volumeSlider.addEventListener('input', () => { audio.volume = parseFloat(volumeSlider.value); updateVolumeDisplay(); });
 updateVolumeDisplay();
 
-/* ===================================================== */
-/* OBSERVERS */
-/* ===================================================== */
 function setupGlitchObservers() {
   if(sonicTitle) {
     const obs = new MutationObserver(() => { updateGlitchDataText(sonicTitle); if(Math.random()<0.3) triggerRandomGlitch(sonicTitle); });
@@ -2492,20 +2434,17 @@ function setupGlitchObservers() {
       if(countryUpdateLock) return; countryUpdateLock = true;
       updateGlitchDataText(sonicDj); checkAndUpdateDjImage();
       updateDjCountryDisplay(sonicDj.textContent.trim());
-      updateRequestsButtonState(sonicDj.textContent.trim()); // ✅ ACTUALIZAR ESTADO DEL BOTÓN DE PETICIONES
+      updateRequestsButtonState(sonicDj.textContent.trim());
       if(Math.random()<0.3) triggerRandomGlitch(sonicDj);
       setTimeout(()=>countryUpdateLock=false, 100);
     });
     obs.observe(sonicDj, {childList:true, characterData:true, subtree:true});
     updateGlitchDataText(sonicDj); checkAndUpdateDjImage(); updateDjCountryDisplay(sonicDj.textContent.trim());
-    updateRequestsButtonState(sonicDj.textContent.trim()); // ✅ INICIALIZAR ESTADO DEL BOTÓN
+    updateRequestsButtonState(sonicDj.textContent.trim());
   }
 }
 function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getElementById('sonic_art_full'); if(c&&c.querySelector('img')){ const s=c.querySelector('img').src; if(s){ albumArtBg.style.backgroundImage=`url('${s}')`; albumArtBg.style.opacity='0.4'; } } }, 500); }
 
-/* ===================================================== */
-/* INIT */
-/* ===================================================== */
 window.addEventListener('load', function() {
   updateAlbumArtBackground();
   setupGlitchObservers();
@@ -2513,11 +2452,9 @@ window.addEventListener('load', function() {
   initStaffListeners();
   initAdListeners();
   initRequestsListeners();
-  initPoemListeners(); // ✅ INICIALIZAR LISTENERS DEL POEMA
+  initPoemListeners();
   adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
-  
-  // ✅ INICIALIZAR ESTADO DEL BOTÓN DE PETICIONES CON RETRASO PARA SONIC WIDGET
   setTimeout(() => {
     if (sonicDj) {
       updateRequestsButtonState(sonicDj.textContent.trim());
@@ -2532,7 +2469,7 @@ window.addEventListener('load', function() {
     artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
   }
 
-  console.log("🎧 Nexus Zone cargado correctamente.");
+  console.log("🎧 Nexus Zone cargado correctamente con optimizaciones de rendimiento.");
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
