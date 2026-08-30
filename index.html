@@ -39,7 +39,7 @@ body {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
   background-image: url('img/fondo.png'); background-size: cover;
   background-position: center; background-repeat: no-repeat; pointer-events: none;
-  filter: brightness(0.35) contrast(0.9); opacity: 0.5;
+  filter: brightness(0.35) contrast(0.9); opacity: 0.5; will-change: transform;
 }
 .background-image::after {
   content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -85,10 +85,12 @@ h1 {
 .main-container {
   display: flex; flex: 1; padding: clamp(1rem, 3vw, 2rem); gap: clamp(1rem, 2vw, 2rem);
   position: relative; z-index: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  contain: layout style;
 }
 .player-section, .dj-section {
   flex: 1; background: transparent; border-radius: 10px; padding: clamp(1rem, 2vw, 2rem);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
+  contain: layout paint;
 }
 .section-title {
   font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1rem, 1.8vw, 1.4rem);
@@ -99,6 +101,7 @@ h1 {
   width: 95%; max-width: 575px; height: auto; min-height: 340px;
   background: linear-gradient(145deg, #2a2a2a, #1a1a1a); border: 3px solid #8b8b8b; border-radius: 20px;
   padding: 1.5rem; position: relative; overflow: hidden; display: flex; flex-direction: column;
+  contain: layout paint;
 }
 .cassette-player::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
@@ -304,6 +307,7 @@ h1 {
   width: 6px; height: 2px; background: linear-gradient(to top, #00ff41, #bd00ff);
   border-radius: 2px 2px 0 0; box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
   transform-origin: bottom; position: relative; transition: height 0.03s ease-out; flex: 1;
+  will-change: height, box-shadow, background;
 }
 .equalizer-container::after {
   content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -394,6 +398,10 @@ h1 {
 @media (max-width: 768px) {
   .ad-overlay { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: auto !important; height: auto !important; z-index: 1000 !important; }
   .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; max-width: 90vw !important; }
+  .led-strip-top, .led-strip-bottom {
+    background: linear-gradient(90deg, #bd00ff, #00ff41) !important;
+    box-shadow: 0 0 8px rgba(189, 0, 255, 0.5), 0 0 8px rgba(0, 255, 65, 0.5) !important;
+  }
 }
 @media (max-width: 480px) { .ad-overlay img.ad-image { width: 258.64px !important; height: 258.64px !important; max-width: 85vw !important; } }
 @media (max-width: 320px) { .ad-overlay img.ad-image { width: 195.32px !important; height: 195.32px !important; max-width: 80vw !important; } }
@@ -487,7 +495,7 @@ footer {
   background: #0a0a0a; border-left: 3px solid #bd00ff;
   box-shadow: -5px 0 25px rgba(189, 0, 255, 0.4), 0 0 30px rgba(0, 0, 0, 0.8);
   z-index: 1000; transition: right 0.3s ease-out; display: flex; flex-direction: column;
-  font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch;
+  font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch; contain: strict;
 }
 .chat-panel.visible { right: 0; }
 .chat-header {
@@ -513,6 +521,7 @@ footer {
 }
 .chat-overlay.active { opacity: 1; visibility: visible; }
 
+/* ✅ PANEL STAFF: Desplazamiento desde la derecha igual que el chat */
 .staff-panel {
   position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; height: 100dvh;
   background: #0a0a0a; border-left: 3px solid #00ff41;
@@ -521,6 +530,7 @@ footer {
   font-family: 'Orbitron', sans-serif; overflow: hidden; -webkit-overflow-scrolling: touch;
 }
 .staff-panel.visible { right: 0; }
+
 .staff-header {
   padding: 1rem; background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
   border-bottom: 2px solid #00ff41; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
@@ -536,6 +546,8 @@ footer {
   flex: 1; overflow-y: auto; padding: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem; align-content: start; -webkit-overflow-scrolling: touch;
 }
+
+/* ✅ STAFF: 10% más pequeñas, con desplazamiento suave (slide-in) y fade-in */
 .staff-photo {
   width: 90%; max-width: 90%; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover;
   border: 3px solid #00ff41; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
@@ -550,6 +562,7 @@ footer {
 }
 .staff-photo.loaded { opacity: 1; transform: translateY(0) scale(1); visibility: visible; }
 .staff-photo.error { display: none; }
+
 .staff-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.7); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
@@ -863,14 +876,14 @@ footer {
 <div class="led-strip-bottom" id="led-bottom"></div>
 <footer>
 <div class="social-links">
+<a href="https://t.me/NeXusZoNe" class="social-link" title="Telegram" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg></a>
+<a href="https://www.tiktok.com/@nexuszone2?_r=1&_t=ZS-946qRwctwGa" class="social-link" title="Tiktok" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg></a>
 <a href="#" class="social-link" id="staff-btn" title="Staff"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></a>
 <a href="#" class="social-link" id="chat-btn" title="Chat"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></a>
 <a href="#" class="social-link" id="poem-btn" title="Poema de la Semana">
   <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:white;"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
 </a>
 <a href="#" class="social-link" id="requests-btn" title="Pedir Canción"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></a>
-<a href="https://t.me/NeXusZoNe" class="social-link" title="Telegram" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg></a>
-<a href="https://www.tiktok.com/@nexuszone2?_r=1&_t=ZS-946qRwctwGa" class="social-link" title="Tiktok" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg></a>
 </div>
 <div class="copyright">
 <span class="footer-brand"><span class="footer-nexus">NEXUS</span><span class="footer-zone">ZONE</span></span>
@@ -911,7 +924,7 @@ footer {
     </div>
     <div id="requests-main" class="requests-main" style="display:none;">
       <input type="text" id="request-nick" class="request-input" placeholder="🎤 Tu Nick (máx 20 chars)" maxlength="20">
-      <input type="text" id="request-input" class="request-input" placeholder=" Canción - Artista (máx 80 chars)" maxlength="80">
+      <input type="text" id="request-input" class="request-input" placeholder="🎵 Canción - Artista (máx 80 chars)" maxlength="80">
       <button id="request-submit-btn" class="request-submit-btn">Enviar Petición</button>
       <div class="request-list-container">
         <div id="request-list"></div>
@@ -1292,9 +1305,9 @@ function initRequestsListeners() {
   requestSubmitBtn.addEventListener('click', handleRequestSubmit);
   requestInput.addEventListener('keydown', (e) => { if(e.key==='Enter') handleRequestSubmit(); });
   requestList.addEventListener('click', (e) => { const btn = e.target.closest('.request-delete-btn'); if (btn) deleteRequest(parseInt(btn.dataset.idx)); });
-  requestLogoutBtn.addEventListener('click', () => { userRole = null; requestsMain.style.display='none'; requestsAuth.style.display='flex'; requestPassInput.value=''; stopRefresh(); });
+  requestLogoutBtn.addEventListener('click', () => { userRole = null; requestsMain.style.display = 'none'; requestsAuth.style.display = 'flex'; requestPassInput.value = ''; stopRefresh(); });
 }
-function enterPanel() { requestsAuth.style.display='none'; requestsMain.style.display='flex'; renderRequests().then(() => startRefresh()); }
+function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.display = 'flex'; renderRequests().then(() => startRefresh()); }
 
 function setupAudioGraph() {
   if(audioGraphSetup || !audioContext) return;
@@ -1308,7 +1321,7 @@ function setupAudioGraph() {
 function startVisualizer() { if(isVisualizing || !analyzer) return; isVisualizing = true; visualize(); }
 function stopVisualizer() {
   isVisualizing = false; if(animationId) cancelAnimationFrame(animationId); animationId = null;
-  bars.forEach(b => { b.style.transform = 'scaleY(0.07)'; b.style.boxShadow = '0 0 5px rgba(0,255,65,0.5)'; b.style.background = 'linear-gradient(to top, #00ff41, #bd00ff)'; });
+  bars.forEach(b => { b.style.height='2px'; b.style.boxShadow='0 0 5px rgba(0,255,65,0.5)'; b.style.background='linear-gradient(to top, #00ff41, #bd00ff)'; });
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
 }
@@ -1324,7 +1337,7 @@ function visualize() {
     for(let j=Math.floor(i*binsPerBar); j<Math.floor((i+1)*binsPerBar) && j<totalBins; j++) { sum += dataArray[j] * (i<4?1.4:i>=8?1.5:1.15); count++; }
     const avg = count>0 ? sum/count : 0;
     let height = Math.min(Math.sqrt(avg)*2.0, 28); height = Math.max(height, 2);
-    bars[i].style.transform = `scaleY(${height/28})`;
+    bars[i].style.height = height+'px';
     const gf = Math.min(height/28,1);
     bars[i].style.boxShadow = `0 0 ${8*gf}px rgba(0,255,65,${0.4+gf*0.6}), 0 0 ${12*gf}px rgba(189,0,255,${0.4*gf})`;
     bars[i].style.background = height>20 ? 'linear-gradient(to top, #00ff41, #bd00ff)' : height>10 ? 'linear-gradient(to top, #00cc33, #9900ff)' : 'linear-gradient(to top, #008822, #7a00cc)';
@@ -1410,7 +1423,7 @@ function setupGlitchObservers() {
 }
 function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getElementById('sonic_art_full'); if(c&&c.querySelector('img')){ const s=c.querySelector('img').src; if(s){ albumArtBg.style.backgroundImage=`url('${s}')`; albumArtBg.style.opacity='0.4'; } } }, 500); }
 
-// ✅ SOLUCIÓN: Solo pausar el visualizador, NO las animaciones CSS
+// ✅ PREVENCIÓN DE ERROR DE MEMORIA: Pausar animaciones cuando la pestaña no está activa
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     if (isVisualizing) {
@@ -1420,19 +1433,16 @@ document.addEventListener('visibilitychange', function() {
         animationId = null;
       }
     }
-    console.log('⏸️ Visualizador pausado - pestaña no visible');
   } else {
     if (isPlaying && analyzer && !isVisualizing) {
       isVisualizing = true;
       visualize();
     }
-    console.log('▶️ Visualizador reanudado - pestaña visible');
   }
 });
 
 window.addEventListener('load', function() {
-  updateAlbumArtBackground(); setupGlitchObservers(); initChatIframe();
-  initChatListeners(); initStaffListeners(); initAdListeners();
+  updateAlbumArtBackground(); setupGlitchObservers(); initChatListeners(); initStaffListeners(); initAdListeners();
   initRequestsListeners(); initPoemListeners(); adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
   setTimeout(() => { if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim()); }, 1000);
@@ -1441,7 +1451,7 @@ window.addEventListener('load', function() {
     const artObserver = new MutationObserver(() => { setTimeout(() => updateAlbumArtBackground(), 300); });
     artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
   }
-  console.log(" Nexus Zone cargado correctamente.");
+  console.log("🎧 Nexus Zone cargado correctamente.");
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
