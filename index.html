@@ -151,7 +151,7 @@ h1 {
   z-index: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  contain: layout style; /* ⚡ OPTIMIZACIÓN */
+  contain: layout style;
 }
 .player-section, .dj-section {
   flex: 1;
@@ -162,7 +162,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  contain: layout paint; /* ⚡ OPTIMIZACIÓN */
+  contain: layout paint;
 }
 .section-title {
   font-family: 'Orbitron', sans-serif;
@@ -190,7 +190,7 @@ h1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  contain: layout paint; /* ⚡ OPTIMIZACIÓN */
+  contain: layout paint;
 }
 .cassette-player::before {
   content: '';
@@ -647,9 +647,7 @@ h1 {
   width: auto !important;
   height: auto !important;
 }
-.ad-overlay.active {
-  display: flex !important;
-}
+.ad-overlay.active { display: flex !important; }
 .ad-overlay img.ad-image {
   width: 100%;
   max-width: 432.73px;
@@ -719,8 +717,6 @@ h1 {
 @media (max-width: 768px) {
   .ad-overlay { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: auto !important; height: auto !important; z-index: 1000 !important; }
   .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; max-width: 90vw !important; }
-  
-  /* ⚡ OPTIMIZACIÓN: LEDs estáticos en móvil para ahorrar CPU/GPU */
   .led-strip-top, .led-strip-bottom {
     background: linear-gradient(90deg, #bd00ff, #00ff41) !important;
     box-shadow: 0 0 8px rgba(189, 0, 255, 0.5), 0 0 8px rgba(0, 255, 65, 0.5) !important;
@@ -977,7 +973,7 @@ footer {
   flex-direction: column;
   font-family: 'Orbitron', sans-serif;
   -webkit-overflow-scrolling: touch;
-  contain: strict; /* ⚡ OPTIMIZACIÓN */
+  contain: strict;
 }
 .chat-panel.visible { right: 0; }
 .chat-header {
@@ -1119,7 +1115,7 @@ footer {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ✅ STAFF: 10% más pequeñas y con fade-in (sin display:none para evitar cortes) */
+/* ✅ STAFF: 10% más pequeñas, con desplazamiento suave (slide-in) y fade-in */
 .staff-photo {
   width: 90%;
   max-width: 90%;
@@ -1128,25 +1124,30 @@ footer {
   object-fit: cover;
   border: 3px solid #00ff41;
   box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
-  transition: opacity 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  /* Estado inicial: invisible y desplazada hacia abajo */
   opacity: 0;
-  visibility: hidden;
-  margin: 0 auto;
+  transform: translateY(20px) scale(0.9);
+  /* Transición suave para el desplazamiento + fade */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+  /* Ocupa su espacio desde el inicio para evitar saltos en el grid */
   display: block;
+  margin: 0 auto;
+  visibility: hidden; /* Oculta visualmente pero mantiene el espacio */
 }
 .staff-photo:hover {
-  transform: scale(1.05);
+  transform: translateY(0) scale(1.05);
   box-shadow: 0 0 25px rgba(0, 255, 65, 0.7), 0 0 40px rgba(189, 0, 255, 0.5);
   border-color: #bd00ff;
 }
+/* ✅ Cuando carga: aparece con desplazamiento suave hacia arriba + fade */
 .staff-photo.loaded {
   opacity: 1;
+  transform: translateY(0) scale(1);
   visibility: visible;
-  animation: staffFadeIn 0.5s ease;
 }
-@keyframes staffFadeIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+/* ✅ Las que fallan se ocultan completamente */
+.staff-photo.error {
+  display: none;
 }
 .staff-overlay {
   position: fixed;
@@ -1274,7 +1275,6 @@ footer {
   .poem-image { border-radius: 8px; }
 }
 
-/* Responsive - Solo agrego lo nuevo */
 @media (min-width: 2560px) {
   .cassette-player { max-width: 650px !important; }
   .header-logo { max-height: 120px; max-width: 250px; }
@@ -1842,7 +1842,6 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 
-// ⚡ OPTIMIZACIÓN: Timer para destruir chat a los 30 minutos
 let chatDestroyTimer = null;
 const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
 
@@ -1971,6 +1970,7 @@ function updateVolumeDisplay() {
 function updateGlitchDataText(el) { if(el && el.classList.contains('cyber-glitch')) el.setAttribute('data-text', el.textContent.trim()); }
 function triggerRandomGlitch(el) {
   if (!el || !el.classList.contains('cyber-glitch')) return;
+  if (isMobile && Math.random() > 0.1) return;
   const effects = ['flash', 'pulse', 'chaos'];
   const randomEffect = effects[Math.floor(Math.random() * effects.length)];
   el.classList.remove('flash', 'pulse', 'chaos');
@@ -2018,7 +2018,13 @@ function initAdListeners() {
   setTimeout(showAdOverlay, 1000);
 }
 
-// ⚡ OPTIMIZACIÓN: Inyección dinámica del iframe del chat
+function adjustChatIframeForMobile() {
+  if (window.innerWidth <= 768 && isChatVisible) {
+    chatPanel.style.height = window.visualViewport ? window.visualViewport.height + 'px' : window.innerHeight + 'px';
+    if (chatIframeContainer) chatIframeContainer.style.paddingBottom = (window.innerWidth < 480 ? 55 : 60) + 'px';
+  }
+}
+
 function toggleChat() {
   isChatVisible = !isChatVisible;
   if(isChatVisible) {
@@ -2030,7 +2036,6 @@ function toggleChat() {
     chatPanel.classList.remove('hidden'); chatPanel.classList.add('visible'); chatOverlay.classList.add('active'); 
     setTimeout(adjustChatIframeForMobile, 300); document.body.style.overflow = 'hidden';
     
-    // ⚡ PAUSAR VISUALIZADOR PARA QUE EL CHAT VAYA FLUIDO
     if (isVisualizing) {
       isVisualizing = false;
       if (animationId) cancelAnimationFrame(animationId);
@@ -2044,7 +2049,6 @@ function toggleChat() {
     chatPanel.classList.remove('visible'); chatPanel.classList.add('hidden'); chatOverlay.classList.remove('active'); 
     chatPanel.style.height = ''; document.body.style.overflow = '';
     
-    // ⚡ REANUDAR VISUALIZADOR SI LA MÚSICA SIGUE SONANDO
     if (isPlaying && analyzer && !isVisualizing) {
       isVisualizing = true;
       visualize();
@@ -2058,22 +2062,40 @@ function initChatListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isChatVisible) toggleChat(); });
 }
 
-// ⚡ OPTIMIZACIÓN: Staff con fade-in y 10% más pequeñas
+// ✅ STAFF: Carga con desplazamiento suave (slide-in) + fade-in
 function loadStaffImages() {
-  staffGrid.innerHTML = ''; let loaded = 0;
-  for(let i=1; i<=50; i++) {
+  staffGrid.innerHTML = '';
+  for(let i = 1; i <= 50; i++) {
     const img = document.createElement('img');
-    img.src = `staff/dj${i}.png`; img.alt = `Staff ${i}`; img.classList.add('staff-photo');
+    img.src = `staff/dj${i}.png`;
+    img.alt = `Staff ${i}`;
+    img.classList.add('staff-photo');
     img.decoding = 'async';
-    img.onload = function() { loaded++; this.classList.add('loaded'); this.style.display='block'; };
-    img.onerror = function() { this.style.display='none'; };
+    // ✅ Cuando carga: añade clase 'loaded' que activa el desplazamiento suave
+    img.onload = function() { 
+      this.classList.add('loaded'); 
+    };
+    // ✅ Cuando falla: añade clase 'error' que la oculta completamente
+    img.onerror = function() { 
+      this.classList.add('error'); 
+    };
     staffGrid.appendChild(img);
   }
 }
 function toggleStaffPanel() {
   isStaffVisible = !isStaffVisible;
-  if(isStaffVisible) { staffPanel.classList.remove('hidden'); staffPanel.classList.add('visible'); staffOverlay.classList.add('active'); document.body.style.overflow='hidden'; if(!staffLoaded){loadStaffImages(); staffLoaded=true;} }
-  else { staffPanel.classList.remove('visible'); staffPanel.classList.add('hidden'); staffOverlay.classList.remove('active'); document.body.style.overflow=''; }
+  if(isStaffVisible) { 
+    staffPanel.classList.remove('hidden'); 
+    staffPanel.classList.add('visible'); 
+    staffOverlay.classList.add('active'); 
+    document.body.style.overflow='hidden'; 
+    if(!staffLoaded){ loadStaffImages(); staffLoaded=true; } 
+  } else { 
+    staffPanel.classList.remove('visible'); 
+    staffPanel.classList.add('hidden'); 
+    staffOverlay.classList.remove('active'); 
+    document.body.style.overflow=''; 
+  }
 }
 function initStaffListeners() {
   staffBtn.addEventListener('click', (e) => { e.preventDefault(); toggleStaffPanel(); });
@@ -2325,11 +2347,10 @@ function stopVisualizer() {
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
 }
 
-// ⚡ OPTIMIZACIÓN: Frame skipping en móvil y LEDs estáticos
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   
-  const frameSkip = isMobile ? 4 : 1; // 15 FPS en móvil en lugar de 60
+  const frameSkip = isMobile ? 4 : 1;
   visualizerFrameCount++;
   if(visualizerFrameCount % frameSkip !== 0) { 
     animationId = requestAnimationFrame(visualize); 
@@ -2348,7 +2369,7 @@ function visualize() {
     bars[i].style.background = height>20 ? 'linear-gradient(to top, #00ff41, #bd00ff)' : height>10 ? 'linear-gradient(to top, #00cc33, #9900ff)' : 'linear-gradient(to top, #008822, #7a00cc)';
   }
   
-  if (!isMobile) updateLedStrips(); // ⚡ No calcular LEDs en móvil
+  if (!isMobile) updateLedStrips();
   
   animationId = requestAnimationFrame(visualize);
 }
@@ -2473,7 +2494,7 @@ window.addEventListener('load', function() {
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
-document.body.addEventListener('touchstart', function initMobile(){ if(!audioContext && window.AudioContext){ audioContext = new AudioContext(); audioContext.suspend(); } document.body.removeEventListener('touchstart', initMobile); }, {once:true});
+document.body.addEventListener('touchstart', function initMobile(){ if(!audioContext && window.AudioContext){ audioContext = new AudioContext(); audioContext.suspend(); } document.body.removeEventListener('touchstart', initMobile); }, {once:true, passive: true});
 </script>
 </body>
 </html>
