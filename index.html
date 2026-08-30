@@ -39,7 +39,7 @@ body {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
   background-image: url('img/fondo.png'); background-size: cover;
   background-position: center; background-repeat: no-repeat; pointer-events: none;
-  filter: brightness(0.35) contrast(0.9); opacity: 0.5; will-change: transform;
+  filter: brightness(0.35) contrast(0.9); opacity: 0.5;
 }
 .background-image::after {
   content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -85,12 +85,10 @@ h1 {
 .main-container {
   display: flex; flex: 1; padding: clamp(1rem, 3vw, 2rem); gap: clamp(1rem, 2vw, 2rem);
   position: relative; z-index: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-  contain: layout style;
 }
 .player-section, .dj-section {
   flex: 1; background: transparent; border-radius: 10px; padding: clamp(1rem, 2vw, 2rem);
   display: flex; flex-direction: column; justify-content: center; align-items: center;
-  contain: layout paint;
 }
 .section-title {
   font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: clamp(1rem, 1.8vw, 1.4rem);
@@ -101,7 +99,6 @@ h1 {
   width: 95%; max-width: 575px; height: auto; min-height: 340px;
   background: linear-gradient(145deg, #2a2a2a, #1a1a1a); border: 3px solid #8b8b8b; border-radius: 20px;
   padding: 1.5rem; position: relative; overflow: hidden; display: flex; flex-direction: column;
-  contain: layout paint;
 }
 .cassette-player::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px;
@@ -307,7 +304,6 @@ h1 {
   width: 6px; height: 2px; background: linear-gradient(to top, #00ff41, #bd00ff);
   border-radius: 2px 2px 0 0; box-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
   transform-origin: bottom; position: relative; transition: height 0.03s ease-out; flex: 1;
-  will-change: height, box-shadow, background;
 }
 .equalizer-container::after {
   content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -398,10 +394,6 @@ h1 {
 @media (max-width: 768px) {
   .ad-overlay { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: auto !important; height: auto !important; z-index: 1000 !important; }
   .ad-overlay img.ad-image { width: 384.57px !important; height: 384.57px !important; max-width: 90vw !important; }
-  .led-strip-top, .led-strip-bottom {
-    background: linear-gradient(90deg, #bd00ff, #00ff41) !important;
-    box-shadow: 0 0 8px rgba(189, 0, 255, 0.5), 0 0 8px rgba(0, 255, 65, 0.5) !important;
-  }
 }
 @media (max-width: 480px) { .ad-overlay img.ad-image { width: 258.64px !important; height: 258.64px !important; max-width: 85vw !important; } }
 @media (max-width: 320px) { .ad-overlay img.ad-image { width: 195.32px !important; height: 195.32px !important; max-width: 80vw !important; } }
@@ -495,7 +487,7 @@ footer {
   background: #0a0a0a; border-left: 3px solid #bd00ff;
   box-shadow: -5px 0 25px rgba(189, 0, 255, 0.4), 0 0 30px rgba(0, 0, 0, 0.8);
   z-index: 1000; transition: right 0.3s ease-out; display: flex; flex-direction: column;
-  font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch; contain: strict;
+  font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch;
 }
 .chat-panel.visible { right: 0; }
 .chat-header {
@@ -521,7 +513,6 @@ footer {
 }
 .chat-overlay.active { opacity: 1; visibility: visible; }
 
-/* ✅ PANEL STAFF: Desplazamiento desde la derecha igual que el chat */
 .staff-panel {
   position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; height: 100dvh;
   background: #0a0a0a; border-left: 3px solid #00ff41;
@@ -530,8 +521,6 @@ footer {
   font-family: 'Orbitron', sans-serif; overflow: hidden; -webkit-overflow-scrolling: touch;
 }
 .staff-panel.visible { right: 0; }
-/* ✅ ELIMINADO: .staff-panel.hidden { display: none; } para que la transición funcione */
-
 .staff-header {
   padding: 1rem; background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
   border-bottom: 2px solid #00ff41; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
@@ -547,8 +536,6 @@ footer {
   flex: 1; overflow-y: auto; padding: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem; align-content: start; -webkit-overflow-scrolling: touch;
 }
-
-/* ✅ STAFF: 10% más pequeñas, con desplazamiento suave (slide-in) y fade-in */
 .staff-photo {
   width: 90%; max-width: 90%; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover;
   border: 3px solid #00ff41; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
@@ -563,7 +550,6 @@ footer {
 }
 .staff-photo.loaded { opacity: 1; transform: translateY(0) scale(1); visibility: visible; }
 .staff-photo.error { display: none; }
-
 .staff-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.7); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
@@ -925,7 +911,7 @@ footer {
     </div>
     <div id="requests-main" class="requests-main" style="display:none;">
       <input type="text" id="request-nick" class="request-input" placeholder="🎤 Tu Nick (máx 20 chars)" maxlength="20">
-      <input type="text" id="request-input" class="request-input" placeholder="🎵 Canción - Artista (máx 80 chars)" maxlength="80">
+      <input type="text" id="request-input" class="request-input" placeholder=" Canción - Artista (máx 80 chars)" maxlength="80">
       <button id="request-submit-btn" class="request-submit-btn">Enviar Petición</button>
       <div class="request-list-container">
         <div id="request-list"></div>
@@ -938,6 +924,7 @@ footer {
 
 <audio id="radio-player" crossorigin="anonymous" preload="metadata"></audio>
 <script>
+// ✅ SOLUCIÓN DEFINITIVA: Page Visibility API para pausar todo cuando la pestaña no está activa
 const djCountryMap = {
   'adharacanis': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
   'Amatista': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
@@ -958,6 +945,10 @@ let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 let chatDestroyTimer = null;
 const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
+
+// ✅ Variables para controlar el estado de visibilidad
+let isPageVisible = true;
+let pausedIntervals = [];
 
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return djCountryMap['autodj'];
@@ -1306,9 +1297,9 @@ function initRequestsListeners() {
   requestSubmitBtn.addEventListener('click', handleRequestSubmit);
   requestInput.addEventListener('keydown', (e) => { if(e.key==='Enter') handleRequestSubmit(); });
   requestList.addEventListener('click', (e) => { const btn = e.target.closest('.request-delete-btn'); if (btn) deleteRequest(parseInt(btn.dataset.idx)); });
-  requestLogoutBtn.addEventListener('click', () => { userRole = null; requestsMain.style.display = 'none'; requestsAuth.style.display = 'flex'; requestPassInput.value = ''; stopRefresh(); });
+  requestLogoutBtn.addEventListener('click', () => { userRole = null; requestsMain.style.display='none'; requestsAuth.style.display='flex'; requestPassInput.value=''; stopRefresh(); });
 }
-function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.display = 'flex'; renderRequests().then(() => startRefresh()); }
+function enterPanel() { requestsAuth.style.display='none'; requestsMain.style.display='flex'; renderRequests().then(() => startRefresh()); }
 
 function setupAudioGraph() {
   if(audioGraphSetup || !audioContext) return;
@@ -1322,7 +1313,7 @@ function setupAudioGraph() {
 function startVisualizer() { if(isVisualizing || !analyzer) return; isVisualizing = true; visualize(); }
 function stopVisualizer() {
   isVisualizing = false; if(animationId) cancelAnimationFrame(animationId); animationId = null;
-  bars.forEach(b => { b.style.height='2px'; b.style.boxShadow='0 0 5px rgba(0,255,65,0.5)'; b.style.background='linear-gradient(to top, #00ff41, #bd00ff)'; });
+  bars.forEach(b => { b.style.transform = 'scaleY(0.07)'; b.style.boxShadow = '0 0 5px rgba(0,255,65,0.5)'; b.style.background = 'linear-gradient(to top, #00ff41, #bd00ff)'; });
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
 }
@@ -1338,7 +1329,7 @@ function visualize() {
     for(let j=Math.floor(i*binsPerBar); j<Math.floor((i+1)*binsPerBar) && j<totalBins; j++) { sum += dataArray[j] * (i<4?1.4:i>=8?1.5:1.15); count++; }
     const avg = count>0 ? sum/count : 0;
     let height = Math.min(Math.sqrt(avg)*2.0, 28); height = Math.max(height, 2);
-    bars[i].style.height = height+'px';
+    bars[i].style.transform = `scaleY(${height/28})`;
     const gf = Math.min(height/28,1);
     bars[i].style.boxShadow = `0 0 ${8*gf}px rgba(0,255,65,${0.4+gf*0.6}), 0 0 ${12*gf}px rgba(189,0,255,${0.4*gf})`;
     bars[i].style.background = height>20 ? 'linear-gradient(to top, #00ff41, #bd00ff)' : height>10 ? 'linear-gradient(to top, #00cc33, #9900ff)' : 'linear-gradient(to top, #008822, #7a00cc)';
@@ -1424,8 +1415,36 @@ function setupGlitchObservers() {
 }
 function updateAlbumArtBackground() { setTimeout(()=>{ const c=document.getElementById('sonic_art_full'); if(c&&c.querySelector('img')){ const s=c.querySelector('img').src; if(s){ albumArtBg.style.backgroundImage=`url('${s}')`; albumArtBg.style.opacity='0.4'; } } }, 500); }
 
+// ✅ SOLUCIÓN DEFINITIVA: Page Visibility API
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    // ✅ Pestaña oculta: pausar todo
+    isPageVisible = false;
+    if (isVisualizing) {
+      isVisualizing = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+    }
+    // Pausar animaciones CSS
+    document.body.style.animationPlayState = 'paused';
+    console.log('⏸️ Página pausada - pestaña no visible');
+  } else {
+    // ✅ Pestaña visible: reanudar todo
+    isPageVisible = true;
+    document.body.style.animationPlayState = 'running';
+    if (isPlaying && analyzer && !isVisualizing) {
+      isVisualizing = true;
+      visualize();
+    }
+    console.log('▶️ Página reanudada - pestaña visible');
+  }
+});
+
 window.addEventListener('load', function() {
-  updateAlbumArtBackground(); setupGlitchObservers(); initChatListeners(); initStaffListeners(); initAdListeners();
+  updateAlbumArtBackground(); setupGlitchObservers(); initChatIframe();
+  initChatListeners(); initStaffListeners(); initAdListeners();
   initRequestsListeners(); initPoemListeners(); adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
   setTimeout(() => { if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim()); }, 1000);
@@ -1434,7 +1453,7 @@ window.addEventListener('load', function() {
     const artObserver = new MutationObserver(() => { setTimeout(() => updateAlbumArtBackground(), 300); });
     artObserver.observe(artContainer, { childList: true, subtree: true, attributes: true });
   }
-  console.log("🎧 Nexus Zone cargado correctamente con optimizaciones de rendimiento.");
+  console.log("🎧 Nexus Zone cargado correctamente con Page Visibility API.");
 });
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
