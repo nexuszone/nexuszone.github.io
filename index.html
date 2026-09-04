@@ -885,7 +885,8 @@ let audioContext = null, analyzer = null, dataArray = null, animationId = null;
 let isVisualizing = false, audioGraphSetup = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
-const ledColors = ['#bd00ff', '#00ff41'];
+// ✅ Restaurados los 3 colores originales (incluyendo el Gris Neón)
+const ledColors = ['#8b8b8b', '#bd00ff', '#00ff41'];
 let ledColorIndex = 0, lastBeatTime = 0, beatCount = 0, visualizerFrameCount = 0;
 const beatThreshold = 175;
 const colorChangeThreshold = 3;
@@ -1225,10 +1226,14 @@ function updateLedStrips() {
       beatCount = 0; 
     }
     const currentColor = ledColors[ledColorIndex];
+    const shadowGlow = currentColor === '#8b8b8b'
+      ? '0 0 16px #8b8b8b, 0 0 28px rgba(220, 220, 220, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.7)'
+      : `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80, inset 0 0 8px rgba(255, 255, 255, 0.4)`;
+
     ledTop.style.background = currentColor;
-    ledTop.style.boxShadow = `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80`;
+    ledTop.style.boxShadow = shadowGlow;
     ledBottom.style.background = currentColor;
-    ledBottom.style.boxShadow = `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80`;
+    ledBottom.style.boxShadow = shadowGlow;
     ledIsLit = true;
   } else if (ledIsLit && (now - lastBeatTime) > 140) {
     ledIsLit = false;
@@ -1340,7 +1345,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone cargado con LEDs reactivos.");
+  console.log("🎧 Nexus Zone cargado con 3 colores LED reactivos.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
