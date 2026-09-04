@@ -603,10 +603,14 @@ footer {
 .social-link:hover { transform: scale(1.1); }
 .copyright { color: #666; font-size: 0.6rem; margin-top: 0.2rem; }
 
-/* PANELES LATERALES */
+/* =========================================================
+   PANELES LATERALES: DESPLAZAMIENTO SUAVE DE DERECHA A IZQUIERDA
+   ========================================================= */
 .requests-panel, .chat-panel, .staff-panel, .poem-panel {
   position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; height: 100dvh;
-  background: #0a0a0a; z-index: 1000; transition: right 0.3s ease-out; display: flex; flex-direction: column;
+  background: #0a0a0a; z-index: 1000;
+  transition: right 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex; flex-direction: column;
   font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch;
 }
 .requests-panel { border-left: 3px solid #bd00ff; }
@@ -614,8 +618,10 @@ footer {
 .staff-panel { border-left: 3px solid #00ff41; }
 .poem-panel { border-left: 3px solid #bd00ff; }
 
-.requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { right: 0; }
-.requests-panel.hidden, .chat-panel.hidden, .poem-panel.hidden { display: none; }
+/* Al abrirse, todos los paneles se deslizan a la vista exactamente igual */
+.requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { 
+  right: 0 !important; 
+}
 
 .requests-header, .chat-header, .staff-header, .poem-header {
   padding: 1rem; background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
@@ -931,7 +937,8 @@ footer {
 </div>
 </footer>
 
-<div class="poem-panel hidden" id="poem-panel">
+<!-- PANELES CON DESPLAZAMIENTO SUAVE EXACTO AL DE STAFF -->
+<div class="poem-panel" id="poem-panel">
   <div class="poem-header">
     <h3>✨ Poema / Frase de la Semana ✨</h3>
     <button class="poem-close-btn" id="poem-close" aria-label="Cerrar">×</button>
@@ -942,7 +949,7 @@ footer {
 </div>
 <div class="poem-overlay" id="poem-overlay"></div>
 
-<div class="chat-panel hidden" id="chat-panel">
+<div class="chat-panel" id="chat-panel">
 <div class="chat-header"><h3>💬 Chat Nexus</h3><button class="chat-close-btn" id="chat-close">×</button></div>
 <div class="chat-iframe-container" id="chat-iframe-container"></div>
 </div>
@@ -954,7 +961,7 @@ footer {
 </div>
 <div class="staff-overlay" id="staff-overlay"></div>
 
-<div class="requests-panel hidden" id="requests-panel">
+<div class="requests-panel" id="requests-panel">
   <div class="requests-header"><h3>🎵 Peticiones</h3><button class="requests-close-btn" id="requests-close">×</button></div>
   <div class="requests-content">
     <div id="requests-auth" class="requests-auth">
@@ -1094,18 +1101,14 @@ let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 
 /* =========================================================
-   TIRAS LED: DETECTOR POR SALTO SOBRE LÍNEA BASE (SUB-BASS)
+   TIRAS LED: SEGUIDOR DE ENVOLVENTE ADAPTATIVO (ANTI-SATURACIÓN EN DROPS)
    ========================================================= */
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
 let ledIsLit = false;
 let lastKickTime = 0;
 let beatIntensity = 0;
-
-// Ventana deslizante para registrar los valles entre bombos
-const historySize = 12;
-const bar0History = new Float32Array(historySize);
-let historyIdx = 0;
+let kickThreshold = 135; // Umbral con decaimiento con fugas
 
 window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 900; }, { passive: true });
 
@@ -1229,6 +1232,7 @@ function destroyChatIframe() {
   if (chatIframeContainer) chatIframeContainer.innerHTML = '';
 }
 
+/* DESPLAZAMIENTO SUAVE EXACTO A STAFF PANEL */
 function toggleChat() {
   isChatVisible = !isChatVisible;
   if(isChatVisible) {
@@ -1237,13 +1241,17 @@ function toggleChat() {
       const num = Math.floor(Math.random() * 1000);
       chatIframeContainer.innerHTML = `<iframe id="chat-iframe" src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`;
     }
-    chatPanel.classList.remove('hidden'); chatPanel.classList.add('visible'); chatOverlay.classList.add('active'); 
-    setTimeout(adjustChatIframeForMobile, 300); document.body.style.overflow = 'hidden';
+    chatPanel.classList.add('visible');
+    chatOverlay.classList.add('active'); 
+    setTimeout(adjustChatIframeForMobile, 300);
+    document.body.style.overflow = 'hidden';
     if (isVisualizing) { isVisualizing = false; if (animationId) cancelAnimationFrame(animationId); }
   } else {
     chatDestroyTimer = setTimeout(() => { destroyChatIframe(); chatDestroyTimer = null; }, CHAT_DESTROY_DELAY);
-    chatPanel.classList.remove('visible'); chatPanel.classList.add('hidden'); chatOverlay.classList.remove('active'); 
-    chatPanel.style.height = ''; document.body.style.overflow = '';
+    chatPanel.classList.remove('visible');
+    chatOverlay.classList.remove('active'); 
+    chatPanel.style.height = '';
+    document.body.style.overflow = '';
     if (isPlaying && analyzer && !isVisualizing) { isVisualizing = true; visualize(); }
   }
 }
@@ -1288,12 +1296,17 @@ function initStaffListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isStaffVisible) toggleStaffPanel(); });
 }
 
+/* DESPLAZAMIENTO SUAVE EXACTO A STAFF PANEL */
 function togglePoemPanel() {
   isPoemVisible = !isPoemVisible;
   if (isPoemVisible) {
-    poemPanel.classList.remove('hidden'); poemPanel.classList.add('visible'); poemOverlay.classList.add('active'); document.body.style.overflow = 'hidden';
+    poemPanel.classList.add('visible');
+    poemOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
   } else {
-    poemPanel.classList.remove('visible'); poemPanel.classList.add('hidden'); poemOverlay.classList.remove('active'); document.body.style.overflow = '';
+    poemPanel.classList.remove('visible');
+    poemOverlay.classList.remove('active');
+    document.body.style.overflow = '';
   }
 }
 function initPoemListeners() {
@@ -1387,10 +1400,10 @@ async function deleteRequest(idx) {
 function toggleRequestsPanel() {
   const isVisible = requestsPanel.classList.contains('visible');
   if (!isVisible) {
-    requestsPanel.classList.remove('hidden'); requestsPanel.classList.add('visible'); requestsOverlay.classList.add('active'); document.body.style.overflow = 'hidden';
+    requestsPanel.classList.add('visible'); requestsOverlay.classList.add('active'); document.body.style.overflow = 'hidden';
     if (!userRole) { requestPassInput.focus(); } else { renderRequests().then(() => startRefresh()); }
   } else {
-    requestsPanel.classList.remove('visible'); requestsPanel.classList.add('hidden'); requestsOverlay.classList.remove('active'); document.body.style.overflow = ''; stopRefresh();
+    requestsPanel.classList.remove('visible'); requestsOverlay.classList.remove('active'); document.body.style.overflow = ''; stopRefresh();
   }
 }
 function startRefresh() {
@@ -1424,7 +1437,7 @@ function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.
 function setupAudioGraph() {
   if(audioGraphSetup || !audioContext) return;
   try {
-    analyzer = audioContext.createAnalyser(); analyzer.fftSize = 512; analyzer.smoothingTimeConstant = 0.82;
+    analyzer = audioContext.createAnalyser(); analyzer.fftSize = 512; analyzer.smoothingTimeConstant = 0.78;
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
     const source = audioContext.createMediaElementSource(audio);
     source.connect(analyzer); analyzer.connect(audioContext.destination); audioGraphSetup = true;
@@ -1441,7 +1454,7 @@ function stopVisualizer() {
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledIsLit = false;
   beatIntensity = 0;
-  bar0History.fill(0);
+  kickThreshold = 135;
 }
 
 /* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA DE BAJOS A AGUDOS */
@@ -1460,7 +1473,7 @@ const freqSpectrumBands = [
   { start: 165, end: 200, mult: 2.85 } // Air (Armónicos de aire)
 ];
 
-/* SINCRONIZACIÓN DE TIRAS LED: AISLAMIENTO DE SUB-GRAVES Y LÍNEA BASE DINÁMICA */
+/* DETECTOR DE BOMBO ROBUSTO PARA DROPS DE EDM Y GÉNEROS LATINOS */
 function updateLedsDirectKick() {
   if (!isPlaying || !analyzer || !dataArray) {
     if (ledIsLit) {
@@ -1474,42 +1487,38 @@ function updateLedsDirectKick() {
     return;
   }
 
-  // Aislamos el núcleo sub-grave del bombo (40-90Hz) inmune a melodías y voces
-  const rawSub = (dataArray[1] * 1.6 + dataArray[2] * 0.7) / 2.3;
-  const kickEnergy = Math.pow(Math.min(1, (rawSub / 235) * 0.9), 1.3);
+  // Sub-graves puros (Bin 1) + Ataque de pegada/click del bombo (Bins 2 y 3: 100-250Hz)
+  // En los drops de electrónica el sub-bajo se satura, pero el click del bombo siempre destaca en 100-250Hz
+  const sub = dataArray[1];
+  const punch = (dataArray[2] * 1.25 + dataArray[3] * 1.0) / 2.25;
+  const rawKick = (sub * 1.1 + punch * 1.4) / 2.5;
 
-  // Registro de ventana deslizante para conocer el nivel base de la música
-  bar0History[historyIdx] = kickEnergy;
-  historyIdx = (historyIdx + 1) % historySize;
-
-  let minBaseline = 1.0;
-  for (let k = 0; k < historySize; k++) {
-    if (bar0History[k] < minBaseline) minBaseline = bar0History[k];
-  }
-
-  // Salto real de energía que produce el bombo sobre cualquier melodía o voz
-  const kickJump = kickEnergy - minBaseline;
   const now = Date.now();
 
-  // Detección garantizada del bombo (salto por encima del fondo continuo)
-  const isKickHit = (kickJump > 0.07 || (kickEnergy > 0.32 && kickJump > 0.04)) && (now - lastKickTime > 200);
+  // El umbral decae continuamente por fugas (leaky peak follower)
+  // Permite detectar el siguiente bombo incluso si el bajo sostenido del drop es enorme
+  kickThreshold = Math.max(122, kickThreshold * 0.952);
+
+  // Detección garantizada del bombo
+  const isKickHit = (rawKick > kickThreshold) && (now - lastKickTime > 195);
 
   if (isKickHit) {
     lastKickTime = now;
-    // Rotación de color rítmica en cada impacto
+    // Salta el umbral para evitar dobles disparos en el cuerpo del mismo bombo
+    kickThreshold = Math.min(252, rawKick * 1.14);
+    // Rota al siguiente color entre los 3
     ledColorIndex = (ledColorIndex + 1) % ledColors.length;
-    // Flash proporcional a la fuerza del bombo
-    beatIntensity = Math.min(1.0, Math.max(0.65, kickJump * 2.6 + kickEnergy * 0.35));
+    // Flash de potencia máxima
+    beatIntensity = Math.min(1.0, Math.max(0.65, (rawKick - 95) / 130));
   } else {
-    // Decaimiento limpio entre bombos para marcar el ritmo
-    beatIntensity *= 0.84;
+    // Decaimiento limpio para acentuar el pulso rítmico
+    beatIntensity *= 0.85;
   }
 
-  // Destello con contraste visual en cada bombo
   if (beatIntensity > 0.05) {
     const currentColor = ledColors[ledColorIndex];
-    const glow1 = Math.round(12 + beatIntensity * 18); // 12px a 30px
-    const glow2 = Math.round(20 + beatIntensity * 28); // 20px a 48px
+    const glow1 = Math.round(12 + beatIntensity * 18);
+    const glow2 = Math.round(20 + beatIntensity * 28);
     const alpha = (0.4 + beatIntensity * 0.6).toFixed(2);
 
     if (currentColor === '#ffffff') {
@@ -1572,7 +1581,7 @@ function visualize() {
     }
   }
   
-  // Actualización inmune a voces/melodías de las tiras LED superior e inferior
+  // Actualización inmune a saturación en drops y melodías
   updateLedsDirectKick();
   
   animationId = requestAnimationFrame(visualize);
