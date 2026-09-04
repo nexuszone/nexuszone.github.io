@@ -92,7 +92,7 @@ h1 {
 
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #8b8b8b; position: relative; z-index: 10;
-  transition: background 0.12s ease-out, box-shadow 0.22s ease-out;
+  transition: background 0.1s ease-out, box-shadow 0.15s ease-out;
   box-shadow: 0 0 0 rgba(139, 139, 139, 0); flex-shrink: 0;
 }
 
@@ -115,7 +115,7 @@ h1 {
 .player-title, .dj-title { color: #bd00ff; padding-bottom: 0.2rem; }
 
 /* =========================================================
-   CASETE REALISTA - ADAPTABILIDAD TOTAL
+   CASETE REALISTA CON DISEÑO FLUIDO
    ========================================================= */
 .cassette-player {
   width: 100%; max-width: 550px;
@@ -340,7 +340,7 @@ h1 {
 @keyframes reelSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* =========================================================
-   ECUALIZADOR CENTRADO: DINÁMICO Y CALIBRADO
+   ECUALIZADOR REACTIVO AL KICK CON 3 COLORES DINÁMICOS
    ========================================================= */
 .equalizer-center-box {
   flex: 1; min-width: 0;
@@ -360,6 +360,7 @@ h1 {
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 0 8px rgba(0, 255, 65, 0.15);
+  transition: box-shadow 0.12s ease-out;
 }
 
 /* FILTRO SCANLINES CRT */
@@ -373,17 +374,60 @@ h1 {
 .bar {
   width: 100%; height: 3px; border-radius: 1.5px 1.5px 0 0;
   transform-origin: bottom; position: relative; flex: 1; will-change: height;
-  background: linear-gradient(to top, #008822, #7a00cc);
-  box-shadow: 0 0 4px rgba(0, 255, 65, 0.6);
-  transition: height 0.05s ease-out;
+  transition: height 0.04s ease-out, background 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s ease-out;
 }
-.bar.bar-mid {
-  background: linear-gradient(to top, #00cc33, #9900ff);
-  box-shadow: 0 0 7px rgba(0, 255, 65, 0.8), 0 0 9px rgba(189, 0, 255, 0.6);
+
+/* COLOR 0: VERDE NEÓN PRINCIPAL */
+.equalizer-container.color-mode-0 .bar {
+  background: linear-gradient(to top, #004415, #00992a);
+  box-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
 }
-.bar.bar-high {
-  background: linear-gradient(to top, #00ff41, #bd00ff);
-  box-shadow: 0 0 10px rgba(0, 255, 65, 1), 0 0 14px rgba(189, 0, 255, 0.95);
+.equalizer-container.color-mode-0 .bar.bar-mid {
+  background: linear-gradient(to top, #008825, #00cc38);
+  box-shadow: 0 0 7px rgba(0, 255, 65, 0.8);
+}
+.equalizer-container.color-mode-0 .bar.bar-high {
+  background: linear-gradient(to top, #00cc38, #55ff88);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 1), 0 0 16px rgba(85, 255, 136, 0.9);
+}
+
+/* COLOR 1: VIOLETA / MAGENTA NEÓN */
+.equalizer-container.color-mode-1 .bar {
+  background: linear-gradient(to top, #38004d, #7a00aa);
+  box-shadow: 0 0 4px rgba(189, 0, 255, 0.5);
+}
+.equalizer-container.color-mode-1 .bar.bar-mid {
+  background: linear-gradient(to top, #6b0099, #b300f0);
+  box-shadow: 0 0 7px rgba(189, 0, 255, 0.8);
+}
+.equalizer-container.color-mode-1 .bar.bar-high {
+  background: linear-gradient(to top, #bd00ff, #f28aff);
+  box-shadow: 0 0 10px rgba(189, 0, 255, 1), 0 0 16px rgba(242, 138, 255, 0.9);
+}
+
+/* COLOR 2: CIAN ELÉCTRICO NEÓN */
+.equalizer-container.color-mode-2 .bar {
+  background: linear-gradient(to top, #003e5c, #0088cc);
+  box-shadow: 0 0 4px rgba(0, 240, 255, 0.5);
+}
+.equalizer-container.color-mode-2 .bar.bar-mid {
+  background: linear-gradient(to top, #0077b3, #00c8ff);
+  box-shadow: 0 0 7px rgba(0, 240, 255, 0.8);
+}
+.equalizer-container.color-mode-2 .bar.bar-high {
+  background: linear-gradient(to top, #00e5ff, #b3f7ff);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 1), 0 0 16px rgba(179, 247, 255, 0.9);
+}
+
+/* EFECTO DE GOLPE DE BOMBO (KICK FLASH): DESTELLO POTENCIADO */
+.equalizer-container.kick-flash {
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.95), 0 0 14px var(--kick-color, #00ff41);
+}
+.equalizer-container.kick-flash .bar {
+  filter: brightness(1.45) contrast(1.15);
+}
+.equalizer-container.kick-flash .bar.bar-high {
+  box-shadow: 0 0 14px var(--kick-color, #00ff41), 0 0 24px var(--kick-color, #00ff41);
 }
 
 /* =========================================================
@@ -715,7 +759,6 @@ footer {
   .cassette-head-area { height: 20px; }
   .volume-control { max-width: 380px; padding: 6px 12px 5px 12px; margin-top: 6px; }
   
-  /* La imagen del DJ mantiene su tamaño sin achicarse */
   #dj-profile-img, .ad-overlay img.ad-image { max-width: 340px; width: 340px; height: 340px; }
   .dj-image-container { gap: 12px; }
   .dj-country-info { padding: 5px 12px; font-size: 0.8rem; }
@@ -737,7 +780,6 @@ footer {
   .cassette-head-area { height: 16px; }
   .volume-control { max-width: 320px; padding: 5px 10px; margin-top: 5px; }
   
-  /* Se conserva proporcionada e idéntica a 1080p, sin deformar ni verse enana */
   #dj-profile-img, .ad-overlay img.ad-image { max-width: 300px; width: 300px; height: 300px; }
   .dj-image-container { gap: 8px; }
   footer { min-height: 46px; padding: 0.1rem; }
@@ -839,9 +881,9 @@ footer {
           </div>
         </div>
 
-        <!-- ECUALIZADOR (12 BANDAS DE BAJOS A AGUDOS CON SCANLINES) -->
+        <!-- ECUALIZADOR REACTIVO AL BOMBO CON 3 MODOS DE COLOR -->
         <div class="equalizer-center-box">
-          <div class="equalizer-container" id="equalizer">
+          <div class="equalizer-container color-mode-0" id="equalizer">
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -874,7 +916,7 @@ footer {
   </div>
 </div>
 
-<!-- NUEVO MÓDULO DE VOLUMEN CIBERNÉTICO HI-FI -->
+<!-- MÓDULO DE VOLUMEN CIBERNÉTICO HI-FI -->
 <div class="volume-control">
   <div class="volume-header">
     <div class="volume-title">
@@ -1091,12 +1133,15 @@ let audioContext = null, analyzer = null, dataArray = null, animationId = null;
 let isVisualizing = false, audioGraphSetup = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
-const ledColors = ['#8b8b8b', '#bd00ff', '#00ff41'];
-let ledColorIndex = 0, lastBeatTime = 0, beatCount = 0, visualizerFrameCount = 0;
-const beatThreshold = 175;
-const colorChangeThreshold = 3;
+let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 let ledIsLit = false;
+
+/* DETECTOR DE BOMBO (KICK) Y 3 PALETAS DE COLOR NEÓN */
+let bassAvgEnergy = 110;
+let lastKickTime = 0;
+let activeColorMode = 0; // 0: Verde, 1: Violeta, 2: Cian
+const kickPaletteColors = ['#00ff41', '#bd00ff', '#00f0ff'];
 
 window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 900; }, { passive: true });
 
@@ -1428,12 +1473,16 @@ function stopVisualizer() {
     bars[i].style.height='3px'; 
     bars[i].className = 'bar';
   }
+  if (equalizer) {
+    equalizer.className = 'equalizer-container color-mode-0';
+    equalizer.style.removeProperty('--kick-color');
+  }
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledIsLit = false;
 }
 
-/* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA SIN SATURARSE ARRIBA */
+/* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA */
 const freqSpectrumBands = [
   { start: 1, end: 3, mult: 0.82 },    // Sub-Bass (Bombos)
   { start: 3, end: 6, mult: 0.84 },    // Bass (Bajo eléctrico/sintetizado)
@@ -1449,6 +1498,28 @@ const freqSpectrumBands = [
   { start: 165, end: 200, mult: 2.85 } // Air (Armónicos de aire)
 ];
 
+/* DETECTOR DE BOMBO (KICK ADAPTATIVO) */
+function checkKickBeat() {
+  if (!analyzer || !dataArray) return false;
+  // Bins 1, 2 y 3 corresponden a la pegada fundamental del kick (~43Hz - 170Hz)
+  const currentKickEnergy = (dataArray[1] * 1.5 + dataArray[2] * 1.2 + dataArray[3] * 0.9) / 3.6;
+  
+  // Promedio móvil adaptativo (se ajusta dinámicamente al volumen de cualquier canción)
+  bassAvgEnergy = bassAvgEnergy * 0.93 + currentKickEnergy * 0.07;
+  
+  const now = Date.now();
+  const kickThreshold = Math.max(130, bassAvgEnergy * 1.16);
+  
+  // Intervalo antirrebote: 185ms (evita dobles disparos en un mismo bombo hasta ritmos de 150 BPM)
+  if (currentKickEnergy > kickThreshold && (now - lastKickTime > 185)) {
+    lastKickTime = now;
+    return true;
+  }
+  return false;
+}
+
+let kickFlashTimer = null;
+
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   const frameSkip = isMobileDevice ? 2 : 1;
@@ -1460,6 +1531,37 @@ function visualize() {
   const containerHeight = equalizer.clientHeight || 42;
   const maxHeight = containerHeight - 5;
   const minHeight = 3;
+  
+  // COMPROBACIÓN DEL GOLPE DE BOMBO (KICK)
+  const isKickHit = checkKickBeat();
+  if (isKickHit) {
+    // Salto al siguiente de los 3 colores neón con cada bombo
+    activeColorMode = (activeColorMode + 1) % 3;
+    const activeKickColor = kickPaletteColors[activeColorMode];
+    
+    // Asignar color y efecto de destello al ecualizador
+    equalizer.style.setProperty('--kick-color', activeKickColor);
+    equalizer.className = `equalizer-container color-mode-${activeColorMode} kick-flash`;
+    
+    // Iluminación sincronizada de las tiras LED superior e inferior
+    const ledGlow = `0 0 16px ${activeKickColor}, 0 0 28px ${activeKickColor}aa, inset 0 0 8px rgba(255, 255, 255, 0.6)`;
+    ledTop.style.background = activeKickColor;
+    ledTop.style.boxShadow = ledGlow;
+    ledBottom.style.background = activeKickColor;
+    ledBottom.style.boxShadow = ledGlow;
+    ledIsLit = true;
+
+    if (kickFlashTimer) clearTimeout(kickFlashTimer);
+    kickFlashTimer = setTimeout(() => {
+      if (equalizer) equalizer.classList.remove('kick-flash');
+    }, 120);
+  } else if (ledIsLit && (Date.now() - lastKickTime > 130)) {
+    ledIsLit = false;
+    ledTop.style.background = '#8b8b8b';
+    ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+    ledBottom.style.background = '#8b8b8b';
+    ledBottom.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+  }
   
   for(let i=0; i<barCount; i++) {
     const band = freqSpectrumBands[i];
@@ -1490,49 +1592,7 @@ function visualize() {
     }
   }
   
-  updateLedStrips();
   animationId = requestAnimationFrame(visualize);
-}
-
-function getBassIntensity() {
-  if (!analyzer || !dataArray) return 0;
-  return (dataArray[1] + dataArray[2] + dataArray[3] + dataArray[4]) / 4;
-}
-
-function updateLedStrips() {
-  if (!isPlaying || !analyzer) {
-    if (ledIsLit) {
-      ledIsLit = false;
-      ledTop.style.background = '#8b8b8b'; ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
-      ledBottom.style.background = '#8b8b8b'; ledBottom.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
-    }
-    return;
-  }
-  const bassIntensity = getBassIntensity(); 
-  const now = Date.now();
-  if (bassIntensity > beatThreshold && (now - lastBeatTime) > 150) {
-    lastBeatTime = now; beatCount++;
-    if (beatCount >= colorChangeThreshold) { 
-      ledColorIndex = (ledColorIndex + 1) % ledColors.length; 
-      beatCount = 0; 
-    }
-    const currentColor = ledColors[ledColorIndex];
-    const shadowGlow = currentColor === '#8b8b8b'
-      ? '0 0 16px #8b8b8b, 0 0 28px rgba(220, 220, 220, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.7)'
-      : `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80, inset 0 0 8px rgba(255, 255, 255, 0.4)`;
-
-    ledTop.style.background = currentColor;
-    ledTop.style.boxShadow = shadowGlow;
-    ledBottom.style.background = currentColor;
-    ledBottom.style.boxShadow = shadowGlow;
-    ledIsLit = true;
-  } else if (ledIsLit && (now - lastBeatTime) > 140) {
-    ledIsLit = false;
-    ledTop.style.background = '#8b8b8b';
-    ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
-    ledBottom.style.background = '#8b8b8b';
-    ledBottom.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
-  }
 }
 
 function togglePlayPause() {
