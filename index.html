@@ -79,7 +79,7 @@ h1 {
 }
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #8b8b8b; position: relative; z-index: 10;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.12s ease-out, box-shadow 0.22s ease-out;
   box-shadow: 0 0 0 rgba(139, 139, 139, 0); flex-shrink: 0;
 }
 .main-container {
@@ -620,10 +620,6 @@ footer {
   .equalizer-container { height: 23px; } .bar { width: 5px; }
   #dj-profile-img { width: 340px !important; height: 340px !important; }
   .staff-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
-  .led-strip-top, .led-strip-bottom {
-    background: linear-gradient(90deg, #bd00ff, #00ff41) !important;
-    box-shadow: 0 0 8px rgba(189, 0, 255, 0.5), 0 0 8px rgba(0, 255, 65, 0.5) !important;
-  }
   .ad-overlay { position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: auto !important; height: auto !important; z-index: 1000 !important; }
   .ad-overlay img.ad-image { width: 340px !important; height: 340px !important; max-width: 90vw !important; }
 }
@@ -794,7 +790,7 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 let chatDestroyTimer = null;
-const CHAT_DESTROY_DELAY = 30 * 60 * 1000; // 30 minutos de aguante antes de liberar la RAM
+const CHAT_DESTROY_DELAY = 30 * 60 * 1000; // 30 minutos
 
 function getDjCountryInfo(djName) {
   if (!djName || djName.trim() === '') return FALLBACK_COUNTRY;
@@ -889,11 +885,12 @@ let audioContext = null, analyzer = null, dataArray = null, animationId = null;
 let isVisualizing = false, audioGraphSetup = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
-const ledColors = ['#8b8b8b', '#bd00ff', '#00ff41'];
+const ledColors = ['#bd00ff', '#00ff41'];
 let ledColorIndex = 0, lastBeatTime = 0, beatCount = 0, visualizerFrameCount = 0;
-const beatThreshold = 180;
+const beatThreshold = 175;
 const colorChangeThreshold = 3;
 let isMobileDevice = window.innerWidth <= 768;
+let ledIsLit = false;
 
 window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 768; }, { passive: true });
 
@@ -1166,7 +1163,7 @@ function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.
 function setupAudioGraph() {
   if(audioGraphSetup || !audioContext) return;
   try {
-    analyzer = audioContext.createAnalyser(); analyzer.fftSize = 256; analyzer.smoothingTimeConstant = 0.75;
+    analyzer = audioContext.createAnalyser(); analyzer.fftSize = 512; analyzer.smoothingTimeConstant = 0.7;
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
     const source = audioContext.createMediaElementSource(audio);
     source.connect(analyzer); analyzer.connect(audioContext.destination); audioGraphSetup = true;
@@ -1176,15 +1173,14 @@ function startVisualizer() { if(isVisualizing || !analyzer) return; isVisualizin
 function stopVisualizer() {
   isVisualizing = false; if(animationId) cancelAnimationFrame(animationId); animationId = null;
   for(let i=0; i<barCount; i++) { bars[i].style.height='2px'; }
-  if (!isMobileDevice) {
-    ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
-    ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
-  }
+  ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
+  ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
+  ledIsLit = false;
 }
 
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
-  const frameSkip = isMobileDevice ? 3 : 1;
+  const frameSkip = isMobileDevice ? 2 : 1;
   visualizerFrameCount++;
   if(visualizerFrameCount % frameSkip !== 0) { animationId = requestAnimationFrame(visualize); return; }
   
@@ -1202,30 +1198,44 @@ function visualize() {
     bars[i].style.height = height + 'px';
   }
   
-  if (!isMobileDevice) updateLedStrips();
+  updateLedStrips();
   animationId = requestAnimationFrame(visualize);
 }
 
 function getBassIntensity() {
   if (!analyzer || !dataArray) return 0;
-  return (dataArray[0] + dataArray[1] + dataArray[2] + dataArray[3]) / 4;
+  return (dataArray[1] + dataArray[2] + dataArray[3] + dataArray[4]) / 4;
 }
 
 function updateLedStrips() {
-  if (!isPlaying || !analyzer) return;
+  if (!isPlaying || !analyzer) {
+    if (ledIsLit) {
+      ledIsLit = false;
+      ledTop.style.background = '#8b8b8b'; ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+      ledBottom.style.background = '#8b8b8b'; ledBottom.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+    }
+    return;
+  }
   const bassIntensity = getBassIntensity(); 
   const now = Date.now();
-  if (bassIntensity > beatThreshold && (now - lastBeatTime) > 160) {
+  if (bassIntensity > beatThreshold && (now - lastBeatTime) > 150) {
     lastBeatTime = now; beatCount++;
-    if (beatCount >= colorChangeThreshold) { ledColorIndex = (ledColorIndex + 1) % ledColors.length; beatCount = 0; }
+    if (beatCount >= colorChangeThreshold) { 
+      ledColorIndex = (ledColorIndex + 1) % ledColors.length; 
+      beatCount = 0; 
+    }
     const currentColor = ledColors[ledColorIndex];
     ledTop.style.background = currentColor;
-    ledTop.style.boxShadow = `0 0 16px ${currentColor}`;
+    ledTop.style.boxShadow = `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80`;
     ledBottom.style.background = currentColor;
-    ledBottom.style.boxShadow = `0 0 16px ${currentColor}`;
-  } else if ((now - lastBeatTime) > 300) {
-    ledTop.style.boxShadow = 'none';
-    ledBottom.style.boxShadow = 'none';
+    ledBottom.style.boxShadow = `0 0 16px ${currentColor}, 0 0 28px ${currentColor}80`;
+    ledIsLit = true;
+  } else if (ledIsLit && (now - lastBeatTime) > 140) {
+    ledIsLit = false;
+    ledTop.style.background = '#8b8b8b';
+    ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
+    ledBottom.style.background = '#8b8b8b';
+    ledBottom.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
   }
 }
 
@@ -1249,7 +1259,6 @@ function togglePlayPause() {
     });
   } else {
     audio.pause(); 
-    // Liberación estricta de buffer del streaming para evitar fuga de memoria
     audio.removeAttribute('src'); 
     audio.load();
     isPlaying = false;
@@ -1298,7 +1307,7 @@ function updateAlbumArtBackground() {
   } 
 }
 
-// PREVENCIÓN DE ERROR DE MEMORIA: Pausar visualizador si la pestaña se oculta
+// PREVENCIÓN DE ERROR DE MEMORIA: Pausar si la pestaña se oculta
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     if (isVisualizing) {
@@ -1331,7 +1340,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone optimizado correctamente.");
+  console.log("🎧 Nexus Zone cargado con LEDs reactivos.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
