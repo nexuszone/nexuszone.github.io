@@ -90,10 +90,10 @@ h1 {
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.5); margin: 0; display: inline-block; line-height: 1.1;
 }
 
-/* TIRAS LED (REACTIVAS AL BOMBO) */
+/* TIRAS LED: CONEXIÓN AL BOMBO */
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #8b8b8b; position: relative; z-index: 10;
-  transition: background 0.08s ease-out, box-shadow 0.08s ease-out;
+  transition: background 0.05s ease-out, box-shadow 0.05s ease-out;
   box-shadow: 0 0 0 rgba(139, 139, 139, 0); flex-shrink: 0;
 }
 
@@ -341,7 +341,7 @@ h1 {
 @keyframes reelSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* =========================================================
-   ECUALIZADOR ORIGINAL RESTAURADO (CON CURVA DINÁMICA)
+   ECUALIZADOR ORIGINAL DEL CASETE (INTACTO)
    ========================================================= */
 .equalizer-center-box {
   flex: 1; min-width: 0;
@@ -1094,13 +1094,12 @@ let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 
 /* =========================================================
-   TIRAS LED: 3 COLORES ORIGINALES Y RESPUESTA AL BOMBO
+   TIRAS LED: 3 COLORES ORIGINALES Y CONEXIÓN A LA BARRA 1
    ========================================================= */
 const ledColors = ['#00ff41', '#bd00ff', '#8b8b8b'];
 let ledColorIndex = 0;
-let ledIntensity = 0;
 let ledIsLit = false;
-let bassAvgEnergy = 115;
+let wasBar0Active = false;
 let lastKickTime = 0;
 
 window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 900; }, { passive: true });
@@ -1435,13 +1434,13 @@ function stopVisualizer() {
   }
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
-  ledIntensity = 0;
   ledIsLit = false;
+  wasBar0Active = false;
 }
 
 /* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA DE BAJOS A AGUDOS */
 const freqSpectrumBands = [
-  { start: 1, end: 3, mult: 0.82 },    // Sub-Bass (Bombos)
+  { start: 1, end: 3, mult: 0.82 },    // Sub-Bass (Bombos) -> BARRA 1
   { start: 3, end: 6, mult: 0.84 },    // Bass (Bajo eléctrico/sintetizado)
   { start: 6, end: 10, mult: 0.88 },   // Low-Mid (Pegada de bombo/caja)
   { start: 10, end: 16, mult: 0.94 },  // Mid-Low (Cuerpo vocal)
@@ -1455,31 +1454,11 @@ const freqSpectrumBands = [
   { start: 165, end: 200, mult: 2.85 } // Air (Armónicos de aire)
 ];
 
-/* DETECTOR DE BOMBO (KICK) PARA LAS TIRAS LED */
-function checkKickBeat() {
-  if (!analyzer || !dataArray) return false;
-  // Bins 1, 2 y 3 corresponden a la pegada fundamental del kick (~43Hz - 170Hz)
-  const currentKickEnergy = (dataArray[1] * 1.5 + dataArray[2] * 1.2 + dataArray[3] * 0.9) / 3.6;
-  
-  // Promedio móvil adaptativo (se ajusta dinámicamente al volumen de cualquier canción)
-  bassAvgEnergy = bassAvgEnergy * 0.93 + currentKickEnergy * 0.07;
-  
-  const now = Date.now();
-  const kickThreshold = Math.max(128, bassAvgEnergy * 1.15);
-  
-  // Intervalo antirrebote calibrado para detectar cada bombo sin dobles disparos
-  if (currentKickEnergy > kickThreshold && (now - lastKickTime > 175)) {
-    lastKickTime = now;
-    return true;
-  }
-  return false;
-}
-
-function updateLedStrips() {
-  if (!isPlaying || !analyzer) {
+/* SINCRONIZACIÓN DE LAS TIRAS LED CON LA BARRA 1 */
+function updateLedsFromBar0(bar0Power) {
+  if (!isPlaying) {
     if (ledIsLit) {
       ledIsLit = false;
-      ledIntensity = 0;
       ledTop.style.background = '#8b8b8b';
       ledTop.style.boxShadow = '0 0 0 rgba(0,0,0,0)';
       ledBottom.style.background = '#8b8b8b';
@@ -1488,33 +1467,30 @@ function updateLedStrips() {
     return;
   }
 
-  const isKickHit = checkKickBeat();
-  if (isKickHit) {
-    // Cambia de color al ritmo del bombo entre sus 3 colores originales
+  const now = Date.now();
+  // Sensibilidad ajustada a la subida de la primera barra (bombonazo)
+  const kickThreshold = 0.22;
+  
+  if (bar0Power > kickThreshold && !wasBar0Active && (now - lastKickTime > 140)) {
+    // Cambio de color al ritmo exacto de la primera barra
     ledColorIndex = (ledColorIndex + 1) % ledColors.length;
-    
-    // Potencia del bombo: modula el brillo según la pegada real
-    const currentKickEnergy = (dataArray[1] * 1.5 + dataArray[2] * 1.2 + dataArray[3] * 0.9) / 3.6;
-    const power = Math.min(1.0, Math.max(0.35, (currentKickEnergy - 105) / 145));
-    ledIntensity = power;
-    ledIsLit = true;
-  } else if (ledIntensity > 0.04) {
-    // Decaimiento suave entre bombos
-    ledIntensity *= 0.86;
-  } else {
-    ledIntensity = 0;
+    lastKickTime = now;
+    wasBar0Active = true;
+  } else if (bar0Power < kickThreshold * 0.7) {
+    wasBar0Active = false;
   }
 
-  if (ledIntensity > 0.04) {
+  // Si la primera barra está activa, se ilumina según la potencia exacta de esa barra
+  if (bar0Power > 0.08) {
     const currentColor = ledColors[ledColorIndex];
-    const glow1 = Math.round(8 + ledIntensity * 16);  // 8px a 24px de resplandor
-    const glow2 = Math.round(16 + ledIntensity * 24); // 16px a 40px de halo
-    const alpha = (0.35 + ledIntensity * 0.65).toFixed(2);
+    const glow1 = Math.round(8 + bar0Power * 18);  // 8px a 26px
+    const glow2 = Math.round(16 + bar0Power * 28); // 16px a 44px
+    const alpha = Math.min(1, (0.35 + bar0Power * 0.65)).toFixed(2);
 
     if (currentColor === '#8b8b8b') {
       // Color 3 original: Blanco / Plateado brillante al bombo
-      ledTop.style.background = `rgba(235, 235, 235, ${alpha})`;
-      ledTop.style.boxShadow = `0 0 ${glow1}px #ffffff, 0 0 ${glow2}px rgba(240, 240, 240, ${alpha}), inset 0 0 6px rgba(255, 255, 255, 0.85)`;
+      ledTop.style.background = `rgba(240, 240, 240, ${alpha})`;
+      ledTop.style.boxShadow = `0 0 ${glow1}px #ffffff, 0 0 ${glow2}px rgba(255, 255, 255, ${alpha}), inset 0 0 6px rgba(255, 255, 255, 0.85)`;
     } else {
       // Colores 1 y 2 originales: Verde (#00ff41) y Violeta (#bd00ff)
       ledTop.style.background = currentColor;
@@ -1522,6 +1498,7 @@ function updateLedStrips() {
     }
     ledBottom.style.background = ledTop.style.background;
     ledBottom.style.boxShadow = ledTop.style.boxShadow;
+    ledIsLit = true;
   } else if (ledIsLit) {
     ledIsLit = false;
     ledTop.style.background = '#8b8b8b';
@@ -1542,6 +1519,8 @@ function visualize() {
   const containerHeight = equalizer.clientHeight || 42;
   const maxHeight = containerHeight - 5;
   const minHeight = 3;
+
+  let bar0Power = 0; // Almacenará la energía exacta de la primera barra
   
   for(let i=0; i<barCount; i++) {
     const band = freqSpectrumBands[i];
@@ -1561,6 +1540,11 @@ function visualize() {
     let dynamicNorm = Math.pow(norm, 1.35);
     let height = Math.round(minHeight + dynamicNorm * (maxHeight - minHeight));
     
+    // Guardamos la potencia de la primera barra (i === 0)
+    if (i === 0) {
+      bar0Power = dynamicNorm;
+    }
+
     bars[i].style.height = height + 'px';
     
     if (height >= maxHeight * 0.78) {
@@ -1572,7 +1556,9 @@ function visualize() {
     }
   }
   
-  updateLedStrips();
+  // Las tiras LED superior e inferior responden directamente a la primera barra
+  updateLedsFromBar0(bar0Power);
+  
   animationId = requestAnimationFrame(visualize);
 }
 
