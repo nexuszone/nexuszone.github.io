@@ -93,7 +93,7 @@ h1 {
 /* TIRAS LED: FLASH RÍTMICO EN EL BOMBO */
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #8b8b8b; position: relative; z-index: 10;
-  transition: background 0.04s ease-out, box-shadow 0.04s ease-out;
+  transition: background 0.05s ease-out, box-shadow 0.05s ease-out;
   box-shadow: 0 0 0 rgba(139, 139, 139, 0); flex-shrink: 0;
 }
 
@@ -1094,15 +1094,18 @@ let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 
 /* =========================================================
-   TIRAS LED: DETECCIÓN POR CRESTA DE BOMBO Y DESTELLO FLASH
+   TIRAS LED: DETECTOR POR SALTO SOBRE LÍNEA BASE (SUB-BASS)
    ========================================================= */
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
 let ledIsLit = false;
-let p0 = 0, p1 = 0, p2 = 0;
-let bar0Avg = 0.18;
-let lastBeatTime = 0;
+let lastKickTime = 0;
 let beatIntensity = 0;
+
+// Ventana deslizante para registrar los valles entre bombos
+const historySize = 12;
+const bar0History = new Float32Array(historySize);
+let historyIdx = 0;
 
 window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 900; }, { passive: true });
 
@@ -1437,9 +1440,8 @@ function stopVisualizer() {
   ledTop.style.background='#8b8b8b'; ledTop.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledBottom.style.background='#8b8b8b'; ledBottom.style.boxShadow='0 0 0 rgba(139,139,139,0)';
   ledIsLit = false;
-  p0 = 0; p1 = 0; p2 = 0;
-  bar0Avg = 0.18;
   beatIntensity = 0;
+  bar0History.fill(0);
 }
 
 /* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA DE BAJOS A AGUDOS */
@@ -1458,9 +1460,9 @@ const freqSpectrumBands = [
   { start: 165, end: 200, mult: 2.85 } // Air (Armónicos de aire)
 ];
 
-/* SINCRONIZACIÓN ESTROBOSCÓPICA AL RITMO DEL BOMBO */
-function updateLedsFromBar0(bar0Power) {
-  if (!isPlaying) {
+/* SINCRONIZACIÓN DE TIRAS LED: AISLAMIENTO DE SUB-GRAVES Y LÍNEA BASE DINÁMICA */
+function updateLedsDirectKick() {
+  if (!isPlaying || !analyzer || !dataArray) {
     if (ledIsLit) {
       ledIsLit = false;
       beatIntensity = 0;
@@ -1472,32 +1474,38 @@ function updateLedsFromBar0(bar0Power) {
     return;
   }
 
-  // Registro de últimos 3 fotogramas para detectar la cresta máxima de la onda
-  p2 = p1;
-  p1 = p0;
-  p0 = bar0Power;
+  // Aislamos el núcleo sub-grave del bombo (40-90Hz) inmune a melodías y voces
+  const rawSub = (dataArray[1] * 1.6 + dataArray[2] * 0.7) / 2.3;
+  const kickEnergy = Math.pow(Math.min(1, (rawSub / 235) * 0.9), 1.3);
 
-  // Promedio móvil adaptativo
-  bar0Avg = bar0Avg * 0.90 + bar0Power * 0.10;
+  // Registro de ventana deslizante para conocer el nivel base de la música
+  bar0History[historyIdx] = kickEnergy;
+  historyIdx = (historyIdx + 1) % historySize;
 
-  const now = Date.now();
-  // Se dispara cuando la primera barra forma una cresta de pico y supera el umbral
-  const isPeakCrest = p1 > p2 && p1 >= p0;
-  const isPowerful = p1 > 0.16 && p1 > (bar0Avg * 1.16);
-  const isTempoPaced = (now - lastBeatTime) > 230; // Ventana antirrebote calibrada al tempo
-
-  if (isPeakCrest && isPowerful && isTempoPaced) {
-    lastBeatTime = now;
-    // Cambio exacto de color al ritmo del bombo
-    ledColorIndex = (ledColorIndex + 1) % ledColors.length;
-    // Disparo a máxima intensidad para flash instantáneo
-    beatIntensity = Math.min(1.0, Math.max(0.65, p1 * 1.35));
-  } else {
-    // Decaimiento rápido entre golpes para acentuar el ritmo
-    beatIntensity *= 0.85;
+  let minBaseline = 1.0;
+  for (let k = 0; k < historySize; k++) {
+    if (bar0History[k] < minBaseline) minBaseline = bar0History[k];
   }
 
-  // Iluminación con contraste dinámico (Flash en el bombo -> Fade out)
+  // Salto real de energía que produce el bombo sobre cualquier melodía o voz
+  const kickJump = kickEnergy - minBaseline;
+  const now = Date.now();
+
+  // Detección garantizada del bombo (salto por encima del fondo continuo)
+  const isKickHit = (kickJump > 0.07 || (kickEnergy > 0.32 && kickJump > 0.04)) && (now - lastKickTime > 200);
+
+  if (isKickHit) {
+    lastKickTime = now;
+    // Rotación de color rítmica en cada impacto
+    ledColorIndex = (ledColorIndex + 1) % ledColors.length;
+    // Flash proporcional a la fuerza del bombo
+    beatIntensity = Math.min(1.0, Math.max(0.65, kickJump * 2.6 + kickEnergy * 0.35));
+  } else {
+    // Decaimiento limpio entre bombos para marcar el ritmo
+    beatIntensity *= 0.84;
+  }
+
+  // Destello con contraste visual en cada bombo
   if (beatIntensity > 0.05) {
     const currentColor = ledColors[ledColorIndex];
     const glow1 = Math.round(12 + beatIntensity * 18); // 12px a 30px
@@ -1534,8 +1542,6 @@ function visualize() {
   const containerHeight = equalizer.clientHeight || 42;
   const maxHeight = containerHeight - 5;
   const minHeight = 3;
-
-  let bar0Power = 0;
   
   for(let i=0; i<barCount; i++) {
     const band = freqSpectrumBands[i];
@@ -1554,11 +1560,6 @@ function visualize() {
     norm = Math.min(1, Math.max(0, norm));
     let dynamicNorm = Math.pow(norm, 1.35);
     let height = Math.round(minHeight + dynamicNorm * (maxHeight - minHeight));
-    
-    // Guardamos la potencia exacta de la primera barra (i === 0)
-    if (i === 0) {
-      bar0Power = dynamicNorm;
-    }
 
     bars[i].style.height = height + 'px';
     
@@ -1571,8 +1572,8 @@ function visualize() {
     }
   }
   
-  // Las tiras LED superior e inferior responden directamente a la primera barra
-  updateLedsFromBar0(bar0Power);
+  // Actualización inmune a voces/melodías de las tiras LED superior e inferior
+  updateLedsDirectKick();
   
   animationId = requestAnimationFrame(visualize);
 }
