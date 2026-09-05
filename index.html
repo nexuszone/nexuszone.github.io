@@ -123,7 +123,7 @@ h1 {
   filter: drop-shadow(0 0 8px rgba(0, 255, 65, 0.7)); margin: 0; display: inline-block; line-height: 1.1;
 }
 
-/* TIRAS LED: CON ACELERACIÓN GPU */
+/* TIRAS LED */
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #26262e; position: relative; z-index: 10;
   transition: background 0.05s ease-out, box-shadow 0.05s ease-out;
@@ -605,15 +605,9 @@ h1 {
 }
 
 @keyframes case3DLevitation {
-  0% {
-    transform: rotateY(-6deg) rotateX(3deg) translateY(0px);
-  }
-  50% {
-    transform: rotateY(1deg) rotateX(1deg) translateY(-8px);
-  }
-  100% {
-    transform: rotateY(6deg) rotateX(-2deg) translateY(-3px);
-  }
+  0% { transform: rotateY(-6deg) rotateX(3deg) translateY(0px); }
+  50% { transform: rotateY(1deg) rotateX(1deg) translateY(-8px); }
+  100% { transform: rotateY(6deg) rotateX(-2deg) translateY(-3px); }
 }
 
 .cassette-case:hover {
@@ -686,7 +680,6 @@ h1 {
 .case-plastic-clip.clip-top { top: 86px; }
 .case-plastic-clip.clip-bottom { bottom: 86px; }
 
-/* DESTELLO HOLOGRÁFICO CON ACELERACIÓN */
 .case-shimmer-sweep {
   position: absolute; top: -70%; left: -100%; width: 120%; height: 240%;
   background: linear-gradient(65deg, 
@@ -921,7 +914,7 @@ footer {
 .copyright { color: #666; font-size: 0.6rem; margin-top: 0.2rem; }
 
 /* =========================================================
-   PANELES LATERALES (OPTIMIZACIÓN DE MEMORIA CON CONTENT-VISIBILITY)
+   PANELES LATERALES
    ========================================================= */
 .requests-panel, .chat-panel, .staff-panel, .poem-panel {
   position: fixed; top: 0; height: 100vh; height: 100dvh;
@@ -931,7 +924,7 @@ footer {
   font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch;
   box-shadow: none;
   contain: layout paint;
-  content-visibility: hidden; /* LIBERA 100% DE VRAM CUANDO ESTÁ CERRADO */
+  content-visibility: hidden;
 }
 
 /* Staff, peticiones y poema conservan 50vw */
@@ -943,7 +936,7 @@ footer {
 .staff-panel { border-left: 3px solid #00ff41; }
 .poem-panel { border-left: 3px solid #bd00ff; }
 
-/* EL CHAT EN PC: 40vw */
+/* CHAT EN PC: 40vw */
 .chat-panel { 
   width: 40vw;
   right: -40vw;
@@ -954,7 +947,7 @@ footer {
 .requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { 
   right: 0 !important;
   box-shadow: -15px 0 40px rgba(0, 0, 0, 0.88);
-  content-visibility: visible; /* SOLO CONSUME MEMORIA CUANDO SE ABRE */
+  content-visibility: visible;
 }
 
 .requests-header, .chat-header, .staff-header, .poem-header {
@@ -994,7 +987,7 @@ footer {
   transform: scale(1.15) rotate(90deg);
 }
 
-/* BOTÓN ALTERNAR TEMA DE CHAT */
+/* BOTÓN TEMA CHAT */
 .chat-theme-btn {
   background: linear-gradient(165deg, #2a2a36 0%, #16161f 55%, #0e0e13 100%);
   width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
@@ -1009,12 +1002,17 @@ footer {
   border-color: #33ff77;
 }
 
-/* MODO OSCURO CHAT CON REALCE SUAVE */
+/* =========================================================
+   CHAT: MODO OSCURO Y PANTALLA COMPLETA EN MÓVIL
+   ========================================================= */
 .chat-iframe-container { 
   flex: 1; 
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   overflow: hidden; 
   position: relative; 
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: 0 !important; /* Elimina la franja inferior vacía */
   background: #111116;
 }
 
@@ -1032,7 +1030,7 @@ footer {
 }
 
 /* =========================================================
-   STAFF (OPTIMIZADO PARA NO SATURAR LA GPU)
+   STAFF
    ========================================================= */
 .staff-grid {
   flex: 1; overflow-y: auto;
@@ -1079,7 +1077,6 @@ footer {
   backface-visibility: hidden;
 }
 
-/* OPTIMIZACIÓN CLAVE: No ejecutar 50 destellos infinitos a la vez */
 .staff-case .case-shimmer-sweep {
   animation: none;
   opacity: 0;
@@ -1115,7 +1112,31 @@ footer {
   transform: scale(1.04);
 }
 
-/* Peticiones y Poema */
+/* =========================================================
+   POEMA / FRASE SEMANAL: VISUALIZACIÓN COMPLETA SIN CORTES
+   ========================================================= */
+.poem-content { 
+  flex: 1; 
+  min-height: 0; /* Permite que el contenedor respete los límites flexibles */
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: clamp(0.6rem, 1.8vw, 1.2rem);
+  overflow: auto; /* Evita que la imagen se corte en pantallas bajas */
+}
+.poem-image { 
+  max-width: 100%; 
+  max-height: 100%; 
+  width: auto; 
+  height: auto; 
+  object-fit: contain; 
+  border-radius: 12px; 
+  border: 2px solid rgba(189, 0, 255, 0.4); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(189, 0, 255, 0.25);
+  display: block;
+}
+
+/* Peticiones */
 .requests-content { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
 .requests-auth, .requests-main { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
 .request-input {
@@ -1146,9 +1167,6 @@ footer {
   background: none; border: 1px solid #ff3333; color: #ff3333; width: 22px; height: 22px; border-radius: 50%;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
-
-.poem-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-.poem-image { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; border: 2px solid rgba(189, 0, 255, 0.4); }
 
 .requests-overlay, .chat-overlay, .staff-overlay, .poem-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1624,7 +1642,7 @@ let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffL
 const barCount = bars.length;
 let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
-let cachedContainerHeight = 42; // OPTIMIZACIÓN: Cache de altura para evitar reflows continuos
+let cachedContainerHeight = 42;
 
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
@@ -1747,10 +1765,12 @@ function initAdListeners() {
   setTimeout(showAdOverlay, 1000);
 }
 
+/* AJUSTE DE CHAT MÓVIL: SIN FRANJAS INFERIORES */
 function adjustChatIframeForMobile() {
   if (window.innerWidth <= 900 && isChatVisible) {
-    chatPanel.style.height = window.visualViewport ? window.visualViewport.height + 'px' : window.innerHeight + 'px';
-    if (chatIframeContainer) chatIframeContainer.style.paddingBottom = (window.innerWidth < 480 ? 55 : 60) + 'px';
+    if (window.visualViewport) {
+      chatPanel.style.height = window.visualViewport.height + 'px';
+    }
   }
 }
 
@@ -1787,7 +1807,7 @@ function toggleChat() {
     }
     chatPanel.classList.add('visible');
     chatOverlay.classList.add('active'); 
-    setTimeout(adjustChatIframeForMobile, 300);
+    setTimeout(adjustChatIframeForMobile, 200);
     document.body.style.overflow = '';
     if (isVisualizing) { isVisualizing = false; if (animationId) cancelAnimationFrame(animationId); }
   } else {
@@ -1806,6 +1826,10 @@ function initChatListeners() {
   chatOverlay.addEventListener('click', toggleChat);
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isChatVisible) toggleChat(); });
   
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustChatIframeForMobile, { passive: true });
+  }
+
   const themeBtn = document.getElementById('chat-theme-btn');
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
@@ -1815,12 +1839,12 @@ function initChatListeners() {
   }
 }
 
-/* CARGA DE STAFF */
+/* CARGA DE STAFF: AJUSTADA A 20 DJS PARA AHORRO DIRECTO DE MEMORIA */
 function loadStaffImages() {
   staffGrid.innerHTML = '';
   const fragment = document.createDocumentFragment();
 
-  for(let i = 1; i <= 50; i++) {
+  for(let i = 1; i <= 20; i++) {
     const wrapper = document.createElement('div');
     wrapper.className = 'staff-case-wrapper';
     
@@ -2122,7 +2146,6 @@ function updateLedsDirectKick() {
   }
 }
 
-/* VISUALIZADOR OPTIMIZADO: SIN LAYOUT REFLOWS EN EL BUCLE */
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   const frameSkip = isMobileDevice ? 2 : 1;
