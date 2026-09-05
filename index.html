@@ -90,7 +90,7 @@ h1 {
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.5); margin: 0; display: inline-block; line-height: 1.1;
 }
 
-/* TIRAS LED: CALIBRACIÓN FIRME */
+/* TIRAS LED */
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #8b8b8b; position: relative; z-index: 10;
   transition: background 0.06s ease-out, box-shadow 0.06s ease-out;
@@ -116,7 +116,7 @@ h1 {
 .player-title, .dj-title { color: #bd00ff; padding-bottom: 0.2rem; }
 
 /* =========================================================
-   CASETE REALISTA - DISEÑO FLUIDO
+   CASETE REALISTA (REPRODUCTOR)
    ========================================================= */
 .cassette-player {
   width: 100%; max-width: 550px;
@@ -147,7 +147,6 @@ h1 {
   pointer-events: none;
 }
 
-/* Tornillos de estrella metálicos */
 .cassette-screw {
   position: absolute; width: clamp(11px, 2.2vw, 14px); height: clamp(11px, 2.2vw, 14px); border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #9e9e9e 0%, #525252 50%, #292929 100%);
@@ -204,7 +203,6 @@ h1 {
   letter-spacing: 2px;
 }
 
-/* Banda de título con líneas rayadas */
 .cassette-write-strip {
   background: repeating-linear-gradient(
     180deg,
@@ -259,7 +257,7 @@ h1 {
   z-index: 5; height: clamp(75px, 19vw, 105px); width: 100%; gap: clamp(4px, 1.2vw, 10px);
 }
 
-/* CARRETES CON CINTA Y DIENTES NEÓN */
+/* CARRETES */
 .tape-reel {
   width: clamp(56px, 16.5vw, 84px);
   height: clamp(56px, 16.5vw, 84px);
@@ -269,7 +267,6 @@ h1 {
   aspect-ratio: 1 / 1;
 }
 
-/* Carrete izquierdo (Violeta Neón) */
 #tape-left {
   background: radial-gradient(circle at center, #2e103d 0%, #1c0926 48%, #361f14 52%, #1a0f0a 100%);
   border: 3px solid #bd00ff;
@@ -292,7 +289,6 @@ h1 {
   100% { box-shadow: 0 0 20px rgba(189, 0, 255, 1), inset 0 0 14px rgba(189, 0, 255, 0.85); }
 }
 
-/* Carrete derecho (Verde Neón) */
 #tape-right {
   background: radial-gradient(circle at center, #0e3318 0%, #08210f 48%, #361f14 52%, #1a0f0a 100%);
   border: 3px solid #00ff41;
@@ -340,9 +336,7 @@ h1 {
 .reel-sprocket .tooth:nth-child(6) { transform: rotate(300deg) translateY(-140%); }
 @keyframes reelSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* =========================================================
-   ECUALIZADOR ORIGINAL DEL CASETE (INTACTO)
-   ========================================================= */
+/* ECUALIZADOR ORIGINAL */
 .equalizer-center-box {
   flex: 1; min-width: 0;
   display: flex; align-items: center; justify-content: center;
@@ -363,7 +357,6 @@ h1 {
   box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 0 8px rgba(0, 255, 65, 0.15);
 }
 
-/* FILTRO SCANLINES CRT */
 .equalizer-container::after {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -387,9 +380,7 @@ h1 {
   box-shadow: 0 0 10px rgba(0, 255, 65, 1), 0 0 14px rgba(189, 0, 255, 0.95);
 }
 
-/* =========================================================
-   ZONA INFERIOR: BOTÓN PLAY / STOP Y CABEZAL
-   ========================================================= */
+/* CONTROLES CASETE */
 .cassette-deck-controls {
   position: relative; z-index: 4;
   display: flex; justify-content: center; align-items: center;
@@ -434,9 +425,7 @@ h1 {
   border-radius: 2px; border: 1px solid #24242a;
 }
 
-/* =========================================================
-   MÓDULO DE VOLUMEN CIBERNÉTICO HI-FI
-   ========================================================= */
+/* VOLUMEN */
 .volume-control {
   width: 100%; max-width: 440px; margin: 10px auto 0 auto;
   background: linear-gradient(180deg, rgba(24, 24, 30, 0.96) 0%, rgba(13, 13, 16, 0.96) 100%);
@@ -496,8 +485,232 @@ h1 {
 }
 
 /* =========================================================
-   GLITCH ORIGINAL DE LA PÁGINA (CYBER-GLITCH)
+   ESTUCHE DE CASETE 3D (BASE COMPARTIDA)
    ========================================================= */
+.case-3d-wrapper {
+  perspective: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.cassette-case {
+  width: 100%;
+  max-width: 325px;
+  aspect-ratio: 1 / 1.42;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(45, 45, 55, 0.85) 15%, rgba(14, 14, 18, 0.96) 100%);
+  border: 5px solid rgba(255, 255, 255, 0.28);
+  border-left: 13px solid rgba(255, 255, 255, 0.46);
+  border-right: 7px solid rgba(255, 255, 255, 0.32);
+  border-radius: 12px;
+  position: relative;
+  padding: 8px 9px 8px 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  user-select: none;
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow;
+  box-shadow: 
+    0 20px 42px rgba(0, 0, 0, 0.95),
+    -14px 0 30px rgba(189, 0, 255, 0.42),
+    14px 0 30px rgba(0, 255, 65, 0.42),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.18),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  animation: case3DLevitation 6s ease-in-out infinite alternate;
+}
+
+@keyframes case3DLevitation {
+  0% {
+    transform: rotateY(-6deg) rotateX(3deg) translateY(0px);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.95), -14px 0 30px rgba(189, 0, 255, 0.42), 14px 0 30px rgba(0, 255, 65, 0.42);
+  }
+  50% {
+    transform: rotateY(1deg) rotateX(1deg) translateY(-8px);
+    box-shadow: 0 28px 52px rgba(0, 0, 0, 0.9), -18px 0 38px rgba(189, 0, 255, 0.55), 18px 0 38px rgba(0, 255, 65, 0.55);
+  }
+  100% {
+    transform: rotateY(6deg) rotateX(-2deg) translateY(-3px);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.95), -14px 0 32px rgba(189, 0, 255, 0.45), 14px 0 32px rgba(0, 255, 65, 0.45);
+  }
+}
+
+.cassette-case:hover {
+  animation-play-state: paused;
+  transform: rotateY(0deg) rotateX(0deg) translateY(-6px) scale(1.02);
+  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.98), -20px 0 42px rgba(189, 0, 255, 0.65), 20px 0 42px rgba(0, 255, 65, 0.65);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.case-acrylic-bezel {
+  position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px; pointer-events: none; z-index: 9;
+}
+
+.case-hinge-lug {
+  position: absolute; left: -5px; width: 8px; height: 28px; border-radius: 4px;
+  background: linear-gradient(to right, #ffffff, #888888);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6), inset 0 1px 1px #fff; z-index: 12;
+}
+.case-hinge-lug.top { top: 28px; }
+.case-hinge-lug.bottom { bottom: 28px; }
+
+.case-hinge-stop-tab {
+  position: absolute; left: 5px; width: 6px; height: 22px; border-radius: 2px;
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8), 1px 0 4px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  z-index: 11; pointer-events: none;
+}
+.case-hinge-stop-tab.stop-top { top: 58px; }
+.case-hinge-stop-tab.stop-bottom { bottom: 58px; }
+
+.case-finger-notch {
+  position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
+  width: 5px; height: 38px; border-radius: 3px 0 0 3px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.4), rgba(160, 160, 160, 0.2));
+  border: 1px solid rgba(255, 255, 255, 0.3); border-right: none;
+  box-shadow: -1px 0 4px rgba(0, 0, 0, 0.6); z-index: 12; pointer-events: none;
+}
+
+.case-pocket-shelf {
+  position: absolute; left: 4px; right: 4px; bottom: 38px; height: 3px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.35) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  z-index: 8; pointer-events: none;
+}
+
+.case-spool-peg {
+  position: absolute; right: 20px; width: 26px; height: 26px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 30%, rgba(0,0,0,0.7) 75%, rgba(255,255,255,0.3) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.85), 0 1px 3px rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5; pointer-events: none;
+}
+.case-spool-peg.spool-top { top: 86px; }
+.case-spool-peg.spool-bottom { bottom: 86px; }
+.spool-peg-teeth {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.5);
+}
+
+.case-plastic-clip {
+  position: absolute; left: 14px; width: 7px; height: 18px; border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.7); z-index: 11; pointer-events: none;
+}
+.case-plastic-clip.clip-top { top: 86px; }
+.case-plastic-clip.clip-bottom { bottom: 86px; }
+
+.case-shimmer-sweep {
+  position: absolute; top: -70%; left: -100%; width: 120%; height: 240%;
+  background: linear-gradient(65deg, 
+    transparent 38%, 
+    rgba(255, 255, 255, 0.28) 48%, 
+    rgba(0, 255, 65, 0.2) 51%, 
+    rgba(189, 0, 255, 0.2) 54%, 
+    transparent 64%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  z-index: 10;
+  animation: glassShimmerSweep 7s ease-in-out infinite;
+}
+@keyframes glassShimmerSweep {
+  0%, 25% { transform: translateX(-120%) rotate(25deg); opacity: 0; }
+  35% { opacity: 1; }
+  50%, 100% { transform: translateX(230%) rotate(25deg); opacity: 0; }
+}
+
+.case-glass-bevel-highlight {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 45%, rgba(255,255,255,0.04) 100%);
+  pointer-events: none; z-index: 8;
+}
+
+.case-jcard {
+  position: relative; z-index: 2; width: 100%; height: 100%;
+  display: flex; flex-direction: column; overflow: hidden; border-radius: 6px;
+  background: #0b0b10;
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.98), 0 1px 4px rgba(0,0,0,0.85);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.jcard-header {
+  height: 34px;
+  background: linear-gradient(90deg, #111116 0%, #1a1a24 50%, #111116 100%);
+  border-bottom: 2px solid #bd00ff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 10px; flex-shrink: 0; z-index: 4; overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+#sonic_dj {
+  font-family: 'Orbitron', sans-serif; font-weight: 900;
+  font-size: clamp(0.8rem, 1.8vw, 1.05rem); color: #00ff41;
+  text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%; text-transform: none !important;
+}
+
+.jcard-main-cover {
+  position: relative; width: 100%; flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+}
+
+.jcard-art-window {
+  position: relative; width: 100%; height: 100%; flex: 1; min-height: 0; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+#dj-profile-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.cassette-case:hover #dj-profile-img {
+  transform: scale(1.04);
+}
+.jcard-surface-texture {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  box-shadow: inset 0 0 16px rgba(0,0,0,0.65); pointer-events: none;
+}
+
+.jcard-footer-strip {
+  height: 34px;
+  background: linear-gradient(90deg, #111116 0%, #171724 50%, #111116 100%);
+  border-top: 2px solid #00ff41;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 10px; flex-shrink: 0; z-index: 4;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.8);
+}
+
+.dj-country-info {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 0; background: transparent; border: none;
+  font-family: 'Orbitron', sans-serif; font-weight: 700;
+  font-size: clamp(0.75rem, 1.6vw, 0.85rem); color: #00ff41;
+}
+.dj-flag-img {
+  width: 24px; height: 16px; border-radius: 2px;
+  object-fit: cover; box-shadow: 0 0 4px rgba(0,0,0,0.6);
+  transition: opacity 0.2s ease;
+}
+.dj-country-name {
+  color: #00ff41; font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+  font-weight: 700; letter-spacing: 0.8px; white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.ad-overlay img.ad-image {
+  width: 100%; max-width: 325px; height: auto; aspect-ratio: 1 / 1.42; border-radius: 12px;
+  border: 3px solid #bd00ff; object-fit: cover;
+  box-shadow: -15px 0 25px rgba(189, 0, 255, 0.6), 15px 0 25px rgba(0, 255, 65, 0.6); display: block;
+}
+
+/* GLITCH CYBER */
 :root { --pink-neon: #bd00ff; --green-neon: #00ff41; }
 .cyber-glitch {
   position: relative; display: inline-block; max-width: 100%; word-break: break-word;
@@ -537,31 +750,9 @@ h1 {
 @keyframes glitch-chaos { 0%, 100% { transform: translate(0,0); } 30% { transform: translate(-3px, 2px); } 70% { transform: translate(3px, -2px); } }
 
 #sonic_title { font-family: 'Orbitron', sans-serif; font-weight: 900; word-break: break-word; font-size: clamp(0.85rem, 2vw, 1.25rem); text-align: center; }
-#sonic_dj { text-transform: none !important; }
 
-/* =========================================================
-   SECCIÓN DJ (TAMAÑO 1080P CONSERVADO EN CUALQUIER PC)
-   ========================================================= */
-#dj-profile-img {
-  width: 100%; max-width: 380px; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; border: 3px solid #8b8b8b;
-  object-fit: cover;
-  box-shadow: -15px 0 25px rgba(189, 0, 255, 0.6), 15px 0 25px rgba(0, 255, 65, 0.6), 0 0 30px rgba(139, 139, 139, 0.4);
-  animation: dj-breathing 3s ease-in-out infinite; display: block; margin: 0 auto;
-  flex-shrink: 0;
-}
-@keyframes dj-breathing {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-}
-#sonic_dj.cyber-glitch { font-size: clamp(1rem, 1.8vw, 1.4rem); margin-left: 10px; display: inline-block; vertical-align: middle; }
-.dj-image-container { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 18px; width: 100%; }
-.dj-country-info {
-  display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 18px;
-  background: rgba(26, 26, 26, 0.5); border: 1px solid rgba(139, 139, 139, 0.3); border-radius: 20px;
-  font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.9rem; color: #00ff41;
-}
-.dj-flag-img { width: 30px; height: 20px; border-radius: 3px; object-fit: cover; }
-.dj-country-name { color: #00ff41; font-size: 1rem; font-weight: 700; }
+/* SECCIÓN DJ */
+.dj-image-container { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%; }
 
 .ad-overlay {
   position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%) !important;
@@ -569,10 +760,6 @@ h1 {
   align-items: center; justify-content: center; padding: 10px; width: auto !important; height: auto !important;
 }
 .ad-overlay.active { display: flex !important; }
-.ad-overlay img.ad-image {
-  width: 100%; max-width: 380px; height: auto; aspect-ratio: 1 / 1; border-radius: 20px; border: 3px solid #bd00ff; object-fit: cover;
-  box-shadow: -15px 0 25px rgba(189, 0, 255, 0.6), 15px 0 25px rgba(0, 255, 65, 0.6); display: block;
-}
 .ad-close-btn {
   position: absolute; top: 10px; right: 10px; background: #0a0a0a; border: 2px solid #bd00ff; color: #bd00ff;
   width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-family: 'Orbitron', sans-serif;
@@ -604,7 +791,7 @@ footer {
 .copyright { color: #666; font-size: 0.6rem; margin-top: 0.2rem; }
 
 /* =========================================================
-   PANELES LATERALES: DESPLAZAMIENTO SUAVE EXACTO A STAFF
+   PANELES LATERALES
    ========================================================= */
 .requests-panel, .chat-panel, .staff-panel, .poem-panel {
   position: fixed; top: 0; right: -50vw; width: 50vw; height: 100vh; height: 100dvh;
@@ -618,7 +805,6 @@ footer {
 .staff-panel { border-left: 3px solid #00ff41; }
 .poem-panel { border-left: 3px solid #bd00ff; }
 
-/* Al activarse, todos se deslizan a la pantalla exactamente igual */
 .requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { 
   right: 0 !important; 
 }
@@ -643,6 +829,78 @@ footer {
 .requests-close-btn, .chat-close-btn, .poem-close-btn { border: 2px solid #bd00ff; color: #bd00ff; }
 .staff-close-btn { border: 2px solid #00ff41; color: #00ff41; }
 
+/* =========================================================
+   STAFF: EN PC TAMAÑO AMPLIADO EN 2 COLUMNAS (PROPORCIONAL)
+   ========================================================= */
+.staff-grid {
+  flex: 1; overflow-y: auto;
+  padding: clamp(1rem, 2vw, 2rem);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.2rem, 2.2vw, 2.2rem);
+  align-content: start;
+  justify-items: center;
+}
+
+.staff-case-wrapper {
+  perspective: 1100px;
+  width: 100%;
+  max-width: 335px; /* Tamaño real y generoso en PC */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+.staff-case-wrapper.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.staff-case {
+  width: 100%;
+  max-width: 335px;
+  aspect-ratio: 1 / 1.42;
+  animation: none;
+  transform: rotateY(-3deg) rotateX(2deg);
+  padding: 8px 9px 8px 12px;
+  border-width: 5px;
+  border-left-width: 13px;
+  border-right-width: 7px;
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.92),
+    -10px 0 25px rgba(189, 0, 255, 0.35),
+    10px 0 25px rgba(0, 255, 65, 0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.staff-case:hover {
+  transform: rotateY(0deg) rotateX(0deg) translateY(-6px) scale(1.03);
+  box-shadow: 
+    0 24px 45px rgba(0, 0, 0, 0.98),
+    -15px 0 32px rgba(189, 0, 255, 0.6),
+    15px 0 32px rgba(0, 255, 65, 0.6);
+}
+
+.staff-case .jcard-main-cover {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+}
+
+.staff-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.staff-case:hover .staff-photo {
+  transform: scale(1.04);
+}
+
+/* Peticiones, Chat y Poema */
 .requests-content { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
 .requests-auth, .requests-main { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
 .request-input {
@@ -674,18 +932,6 @@ footer {
 .chat-iframe-container { flex: 1; overflow: hidden; position: relative; padding-bottom: env(safe-area-inset-bottom); }
 #chat-iframe { width: 100%; height: 100%; border: none; background: transparent; display: block; }
 
-.staff-grid {
-  flex: 1; overflow-y: auto; padding: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem; align-content: start;
-}
-.staff-photo {
-  width: 90%; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover;
-  border: 3px solid #00ff41; opacity: 0; transform: translateY(20px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out; display: block; margin: 0 auto;
-}
-.staff-photo.loaded { opacity: 1; transform: translateY(0); }
-.staff-photo.error { display: none; }
-
 .poem-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1rem; }
 .poem-image { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; border: 2px solid rgba(189, 0, 255, 0.4); }
 
@@ -695,9 +941,7 @@ footer {
 }
 .requests-overlay.active, .chat-overlay.active, .staff-overlay.active, .poem-overlay.active { opacity: 1; visibility: visible; }
 
-/* =========================================================
-   PANTALLA FIJA EN PC (PRESERVANDO TAMAÑOS REALES EN 720P/1080P)
-   ========================================================= */
+/* PC / PANTALLA FIJA */
 @media (min-width: 901px) {
   html, body {
     height: 100vh;
@@ -705,7 +949,6 @@ footer {
   }
 }
 
-/* Portátiles y pantallas de altura media (850px) */
 @media (min-width: 901px) and (max-height: 850px) {
   header { padding: 0.35rem 1.2rem; }
   .header-logo { max-height: 60px; max-width: 130px; }
@@ -722,13 +965,14 @@ footer {
   .cassette-head-area { height: 20px; }
   .volume-control { max-width: 380px; padding: 6px 12px 5px 12px; margin-top: 6px; }
   
-  #dj-profile-img, .ad-overlay img.ad-image { max-width: 340px; width: 340px; height: 340px; }
-  .dj-image-container { gap: 12px; }
-  .dj-country-info { padding: 5px 12px; font-size: 0.8rem; }
+  .cassette-case, .ad-overlay img.ad-image { max-width: 265px; }
+  .staff-case-wrapper, .staff-case { max-width: 280px; }
+  .case-spool-peg { width: 22px; height: 22px; right: 16px; }
+  .case-spool-peg.spool-top { top: 70px; }
+  .case-spool-peg.spool-bottom { bottom: 70px; }
   footer { min-height: 58px; padding: 0.2rem 1rem; }
 }
 
-/* Portátiles y monitores de 720p (altura ~560-680px) */
 @media (min-width: 901px) and (max-height: 700px) {
   header { padding: 0.2rem 1rem; }
   .header-logo { max-height: 48px; max-width: 105px; }
@@ -743,13 +987,17 @@ footer {
   .cassette-head-area { height: 16px; }
   .volume-control { max-width: 320px; padding: 5px 10px; margin-top: 5px; }
   
-  #dj-profile-img, .ad-overlay img.ad-image { max-width: 300px; width: 300px; height: 300px; }
-  .dj-image-container { gap: 8px; }
+  .cassette-case, .ad-overlay img.ad-image { max-width: 215px; }
+  .staff-case-wrapper, .staff-case { max-width: 230px; }
+  .jcard-header { height: 28px; }
+  .jcard-footer-strip { height: 28px; }
+  .dj-country-name { font-size: 0.7rem; }
+  .case-spool-peg { display: none; }
   footer { min-height: 46px; padding: 0.1rem; }
 }
 
 /* =========================================================
-   MÓVILES (REALME 14X, REDMI 10 Y CUALQUIER PANTALLA)
+   MÓVILES (SE MANTIENE TAL CUAL EN 1 COLUMNA EXACTA)
    ========================================================= */
 @media (max-width: 900px) {
   body { overflow-y: auto; }
@@ -764,15 +1012,28 @@ footer {
   .player-section, .dj-section { flex: none; width: 100%; max-width: 480px; padding: 0; }
   .cassette-player { width: 100%; max-width: 100%; }
   .volume-control { width: 100%; max-width: 100%; }
-  #dj-profile-img, .ad-overlay img.ad-image { width: 250px; height: 250px; max-width: 250px; }
+  
+  .cassette-case, .ad-overlay img.ad-image { width: 270px; max-width: 270px; }
 
   .requests-panel, .chat-panel, .staff-panel, .poem-panel { width: 100vw !important; right: -100vw; }
   .requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { right: 0 !important; }
-  .staff-grid { grid-template-columns: 1fr; }
+  
+  /* En móviles se mantiene en 1 columna centrada y el tamaño que te gustó */
+  .staff-grid { 
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.2rem 1rem;
+  }
+  .staff-case-wrapper, .staff-case {
+    max-width: 250px;
+    border-width: 4px;
+    border-left-width: 10px;
+    border-right-width: 6px;
+    padding: 6px 7px 6px 10px;
+  }
   
   .background-image { filter: none !important; opacity: 0.25 !important; }
   .album-art-bg { filter: none !important; }
-  #dj-profile-img { animation: none !important; }
 }
 
 @media (max-width: 360px) {
@@ -782,7 +1043,8 @@ footer {
   .tape-reel { width: 54px; height: 54px; }
   .equalizer-container { height: 32px; gap: 1.5px; padding: 3px 4px; }
   .play-btn { width: 68px; height: 25px; font-size: 0.85rem; }
-  #dj-profile-img, .ad-overlay img.ad-image { width: 200px; height: 200px; }
+  .cassette-case, .ad-overlay img.ad-image { width: 220px; max-width: 220px; }
+  .staff-case-wrapper, .staff-case { max-width: 215px; }
 }
 </style>
 <script type="application/ld+json">
@@ -807,7 +1069,7 @@ footer {
 <section class="player-section">
 <h2 class="section-title player-title">Reproductor</h2>
 
-<!-- CASETE REALISTA (INTACTO) -->
+<!-- CASETE REALISTA -->
 <div class="cassette-player">
   <div class="cassette-screw top-left"></div>
   <div class="cassette-screw top-center"></div>
@@ -830,12 +1092,11 @@ footer {
       </div>
     </div>
 
-    <!-- VENTANA TRANSPARENTE: CARRETES Y ECUALIZADOR -->
+    <!-- VENTANA TRANSPARENTE -->
     <div class="cassette-window-frame">
       <div class="tape-ribbon-track"></div>
       
       <div class="cassette-tapes">
-        <!-- CARRETE IZQUIERDO (VIOLETA NEÓN) -->
         <div class="tape-reel" id="tape-left">
           <div class="reel-sprocket">
             <div class="tape-clamp-notch"></div>
@@ -844,7 +1105,6 @@ footer {
           </div>
         </div>
 
-        <!-- ECUALIZADOR ORIGINAL RESTAURADO (INTACTO) -->
         <div class="equalizer-center-box">
           <div class="equalizer-container" id="equalizer">
             <div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -854,7 +1114,6 @@ footer {
           </div>
         </div>
 
-        <!-- CARRETE DERECHO (VERDE NEÓN) -->
         <div class="tape-reel" id="tape-right">
           <div class="reel-sprocket">
             <div class="tape-clamp-notch"></div>
@@ -866,12 +1125,10 @@ footer {
     </div>
   </div>
 
-  <!-- PARTE BAJA: BOTÓN PLAY / STOP -->
   <div class="cassette-deck-controls">
     <button class="play-btn" id="play-pause-btn" aria-label="Reproducir o Pausar">▶</button>
   </div>
 
-  <!-- BASE TRAPEZOIDAL DEL CABEZAL -->
   <div class="cassette-head-area">
     <div class="head-hole"></div>
     <div class="head-center-notch"></div>
@@ -879,7 +1136,7 @@ footer {
   </div>
 </div>
 
-<!-- MÓDULO DE VOLUMEN CIBERNÉTICO HI-FI -->
+<!-- VOLUMEN -->
 <div class="volume-control">
   <div class="volume-header">
     <div class="volume-title">
@@ -904,13 +1161,54 @@ footer {
 </section>
 
 <section class="dj-section">
-<h2 class="section-title dj-title">Emite: <div id='sonic_dj' class="cyber-glitch" data-text="" style="color: #00ff41; display: inline; margin-left: 10px; font-weight: 900;"></div></h2>
+<h2 class="section-title dj-title">DJ en Vivo</h2>
 <div class="dj-image-container">
-  <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
-  <div class="dj-country-info" id="dj-country-info">
-  <img src="https://flagcdn.com/w40/sv.webp" alt="El Salvador" class="dj-flag-img" id="dj-flag-img">
-  <span class="dj-country-name" id="dj-country-name">El Salvador</span>
+  
+  <div class="case-3d-wrapper">
+    <div class="cassette-case">
+      <div class="case-acrylic-bezel"></div>
+      <div class="case-hinge-lug top"></div>
+      <div class="case-hinge-lug bottom"></div>
+      <div class="case-hinge-stop-tab stop-top"></div>
+      <div class="case-hinge-stop-tab stop-bottom"></div>
+      <div class="case-finger-notch"></div>
+      <div class="case-pocket-shelf"></div>
+
+      <div class="case-spool-peg spool-top">
+        <div class="spool-peg-teeth"></div>
+      </div>
+      <div class="case-spool-peg spool-bottom">
+        <div class="spool-peg-teeth"></div>
+      </div>
+
+      <div class="case-shimmer-sweep"></div>
+      <div class="case-glass-bevel-highlight"></div>
+
+      <div class="case-plastic-clip clip-top"></div>
+      <div class="case-plastic-clip clip-bottom"></div>
+
+      <div class="case-jcard">
+        <div class="jcard-header">
+          <div id='sonic_dj' class="cyber-glitch" data-text="">Cargando DJ...</div>
+        </div>
+
+        <div class="jcard-main-cover">
+          <div class="jcard-art-window">
+            <img id='dj-profile-img' src='portadasdjs/autodj.png' alt='Perfil del DJ en vivo'>
+            <div class="jcard-surface-texture"></div>
+          </div>
+
+          <div class="jcard-footer-strip">
+            <div class="dj-country-info" id="dj-country-info">
+              <img src="https://flagcdn.com/w40/sv.webp" alt="El Salvador" class="dj-flag-img" id="dj-flag-img">
+              <span class="dj-country-name" id="dj-country-name">El Salvador</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
   <div class="ad-overlay" id="ad-overlay">
     <button class="ad-close-btn" id="ad-close-btn" aria-label="Cerrar publicidad">×</button>
     <img src="img/publicidad.png" alt="Publicidad" class="ad-image" id="ad-image">
@@ -937,7 +1235,7 @@ footer {
 </div>
 </footer>
 
-<!-- PANELES LATERALES: DESPLAZAMIENTO SUAVE -->
+<!-- PANELES LATERALES -->
 <div class="poem-panel" id="poem-panel">
   <div class="poem-header">
     <h3>✨ Poema / Frase de la Semana ✨</h3>
@@ -1100,16 +1398,12 @@ const barCount = bars.length;
 let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 
-/* =========================================================
-   TIRAS LED: CALIBRACIÓN EQUILIBRADA (SUB-BASS PURO)
-   ========================================================= */
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
 let ledIsLit = false;
 let lastKickTime = 0;
 let beatIntensity = 0;
 
-// Ventana para conocer el nivel base de la música
 const historySize = 10;
 const bar0History = new Float32Array(historySize);
 let historyIdx = 0;
@@ -1160,7 +1454,6 @@ volumeSlider.addEventListener('pointercancel', () => { isDraggingVolume = false;
 
 updateVolumeDisplay();
 
-/* SISTEMA GLITCH ORIGINAL */
 function updateGlitchDataText(el) {
   if (el && el.classList.contains('cyber-glitch')) {
     el.setAttribute('data-text', el.textContent.trim());
@@ -1236,7 +1529,6 @@ function destroyChatIframe() {
   if (chatIframeContainer) chatIframeContainer.innerHTML = '';
 }
 
-/* DESPLAZAMIENTO SUAVE EXACTO A STAFF PANEL */
 function toggleChat() {
   isChatVisible = !isChatVisible;
   if(isChatVisible) {
@@ -1248,7 +1540,7 @@ function toggleChat() {
     chatPanel.classList.add('visible');
     chatOverlay.classList.add('active'); 
     setTimeout(adjustChatIframeForMobile, 300);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = '';
     if (isVisualizing) { isVisualizing = false; if (animationId) cancelAnimationFrame(animationId); }
   } else {
     chatDestroyTimer = setTimeout(() => { destroyChatIframe(); chatDestroyTimer = null; }, CHAT_DESTROY_DELAY);
@@ -1266,26 +1558,58 @@ function initChatListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isChatVisible) toggleChat(); });
 }
 
+/* CARGA DE STAFF */
 function loadStaffImages() {
   staffGrid.innerHTML = '';
   const fragment = document.createDocumentFragment();
+
   for(let i = 1; i <= 50; i++) {
-    const img = document.createElement('img');
-    img.src = `staff/dj${i}.png`; img.alt = `Staff ${i}`; img.classList.add('staff-photo');
-    img.decoding = 'async';
-    img.loading = 'lazy';
-    img.onload = function() { this.classList.add('loaded'); };
-    img.onerror = function() { this.classList.add('error'); };
-    fragment.appendChild(img);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'staff-case-wrapper';
+    
+    wrapper.innerHTML = `
+      <div class="cassette-case staff-case">
+        <div class="case-acrylic-bezel"></div>
+        <div class="case-hinge-lug top"></div>
+        <div class="case-hinge-lug bottom"></div>
+        <div class="case-hinge-stop-tab stop-top"></div>
+        <div class="case-hinge-stop-tab stop-bottom"></div>
+        <div class="case-finger-notch"></div>
+        <div class="case-pocket-shelf"></div>
+        <div class="case-shimmer-sweep"></div>
+        <div class="case-glass-bevel-highlight"></div>
+        <div class="case-plastic-clip clip-top"></div>
+        <div class="case-plastic-clip clip-bottom"></div>
+        <div class="case-jcard">
+          <div class="jcard-main-cover staff-cover">
+            <div class="jcard-art-window">
+              <img class="staff-photo" src="staff/dj${i}.png" alt="Staff DJ" loading="lazy" decoding="async">
+              <div class="jcard-surface-texture"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const img = wrapper.querySelector('.staff-photo');
+    img.onload = function() {
+      wrapper.classList.add('loaded');
+    };
+    img.onerror = function() {
+      wrapper.remove();
+    };
+
+    fragment.appendChild(wrapper);
   }
   staffGrid.appendChild(fragment);
 }
+
 function toggleStaffPanel() {
   isStaffVisible = !isStaffVisible;
   if(isStaffVisible) { 
     staffPanel.classList.add('visible'); 
     staffOverlay.classList.add('active'); 
-    document.body.style.overflow='hidden'; 
+    document.body.style.overflow = ''; 
     if(!staffLoaded){ loadStaffImages(); staffLoaded=true; } 
   } else { 
     staffPanel.classList.remove('visible'); 
@@ -1300,13 +1624,12 @@ function initStaffListeners() {
   document.addEventListener('keydown', (e) => { if(e.key==='Escape'&&isStaffVisible) toggleStaffPanel(); });
 }
 
-/* DESPLAZAMIENTO SUAVE EXACTO A STAFF PANEL */
 function togglePoemPanel() {
   isPoemVisible = !isPoemVisible;
   if (isPoemVisible) {
     poemPanel.classList.add('visible');
     poemOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = '';
   } else {
     poemPanel.classList.remove('visible');
     poemOverlay.classList.remove('active');
@@ -1461,23 +1784,21 @@ function stopVisualizer() {
   bar0History.fill(0);
 }
 
-/* 12 BANDAS CALIBRADAS PARA MÁXIMA DINÁMICA DE BAJOS A AGUDOS */
 const freqSpectrumBands = [
-  { start: 1, end: 3, mult: 0.82 },    // Sub-Bass (Bombos) -> BARRA 1
-  { start: 3, end: 6, mult: 0.84 },    // Bass (Bajo eléctrico/sintetizado)
-  { start: 6, end: 10, mult: 0.88 },   // Low-Mid (Pegada de bombo/caja)
-  { start: 10, end: 16, mult: 0.94 },  // Mid-Low (Cuerpo vocal)
-  { start: 16, end: 24, mult: 1.02 },  // Mid (Vocales y teclados)
-  { start: 24, end: 36, mult: 1.12 },  // Upper-Mid (Claridad y ataque)
-  { start: 36, end: 52, mult: 1.25 },  // Presence (Guitarras/Snare)
-  { start: 52, end: 72, mult: 1.42 },  // High-Presence (Platillos ataque)
-  { start: 72, end: 98, mult: 1.65 },  // Treble Low (Brillo medio)
-  { start: 98, end: 130, mult: 1.95 }, // Treble (Charles/Hi-Hats)
-  { start: 130, end: 165, mult: 2.35 },// Highs (Brillo superior)
-  { start: 165, end: 200, mult: 2.85 } // Air (Armónicos de aire)
+  { start: 1, end: 3, mult: 0.82 },
+  { start: 3, end: 6, mult: 0.84 },
+  { start: 6, end: 10, mult: 0.88 },
+  { start: 10, end: 16, mult: 0.94 },
+  { start: 16, end: 24, mult: 1.02 },
+  { start: 24, end: 36, mult: 1.12 },
+  { start: 36, end: 52, mult: 1.25 },
+  { start: 52, end: 72, mult: 1.42 },
+  { start: 72, end: 98, mult: 1.65 },
+  { start: 98, end: 130, mult: 1.95 },
+  { start: 130, end: 165, mult: 2.35 },
+  { start: 165, end: 200, mult: 2.85 }
 ];
 
-/* SINCRONIZACIÓN DE TIRAS LED: FILTRADO SUB-GRAVE PURO CON LÍNEA BASE DINÁMICA */
 function updateLedsDirectKick() {
   if (!isPlaying || !analyzer || !dataArray) {
     if (ledIsLit) {
@@ -1491,11 +1812,9 @@ function updateLedsDirectKick() {
     return;
   }
 
-  // Aislamos únicamente 40-120Hz (inmune a voces, cajas y agudos)
   const rawSub = (dataArray[1] * 1.6 + dataArray[2] * 0.7) / 2.3;
   const kickEnergy = Math.pow(Math.min(1, (rawSub / 235) * 0.9), 1.3);
 
-  // Registro en ventana para calcular el nivel continuo
   bar0History[historyIdx] = kickEnergy;
   historyIdx = (historyIdx + 1) % historySize;
 
@@ -1507,7 +1826,6 @@ function updateLedsDirectKick() {
   const kickJump = kickEnergy - minBaseline;
   const now = Date.now();
 
-  // Pequeño ajuste equilibrado: estabilidad en salsa/reggaeton y detección fluida en drops de electrónica
   const isKickHit = (
     kickJump > 0.06 || 
     (kickEnergy > 0.28 && kickJump > 0.035) || 
@@ -1571,7 +1889,6 @@ function visualize() {
     }
     const avg = count > 0 ? sum / count : 0;
     
-    // Curva de respuesta con rango dinámico amplio (evita quedarse pegado arriba)
     let norm = (avg / 255) * band.mult;
     norm = Math.min(1, Math.max(0, norm));
     let dynamicNorm = Math.pow(norm, 1.35);
@@ -1588,9 +1905,7 @@ function visualize() {
     }
   }
   
-  // Tiras LED con calibración precisa y equilibrada
   updateLedsDirectKick();
-  
   animationId = requestAnimationFrame(visualize);
 }
 
