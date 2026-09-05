@@ -56,6 +56,7 @@ body {
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* FONDOS AMBIENTALES */
@@ -63,7 +64,8 @@ body {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
   background-image: url('img/fondo.png'); background-size: cover;
   background-position: center; background-repeat: no-repeat; pointer-events: none;
-  filter: brightness(0.32) contrast(1.05); opacity: 0.52; will-change: opacity;
+  filter: brightness(0.32) contrast(1.05); opacity: 0.52;
+  transform: translateZ(0);
 }
 .background-image::after {
   content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -78,6 +80,7 @@ body {
     linear-gradient(rgba(189, 0, 255, 0.07) 1px, transparent 1px), 
     linear-gradient(90deg, rgba(0, 255, 65, 0.07) 1px, transparent 1px);
   background-size: 38px 38px; pointer-events: none;
+  transform: translateZ(0);
 }
 
 /* CABECERA */
@@ -120,13 +123,14 @@ h1 {
   filter: drop-shadow(0 0 8px rgba(0, 255, 65, 0.7)); margin: 0; display: inline-block; line-height: 1.1;
 }
 
-/* TIRAS LED */
+/* TIRAS LED: CON ACELERACIÓN GPU */
 .led-strip-top, .led-strip-bottom {
   height: 8px; background: #26262e; position: relative; z-index: 10;
   transition: background 0.05s ease-out, box-shadow 0.05s ease-out;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9); flex-shrink: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+  transform: translateZ(0);
 }
 .led-strip-top::after, .led-strip-bottom::after {
   content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -151,7 +155,7 @@ h1 {
   margin-bottom: 0.8rem; text-align: center; text-transform: uppercase; letter-spacing: 2px;
 }
 
-/* TÍTULOS EN COLOR MORADO NEÓN */
+/* TÍTULOS EN MORADO NEÓN */
 .player-title, .dj-title {
   color: #bd00ff;
   text-shadow: 0 0 12px rgba(189, 0, 255, 0.75);
@@ -181,6 +185,7 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   user-select: none;
+  transform: translateZ(0);
 }
 
 .cassette-player::after {
@@ -326,6 +331,7 @@ h1 {
   display: flex; align-items: center; justify-content: center;
   position: relative; flex-shrink: 0;
   aspect-ratio: 1 / 1;
+  backface-visibility: hidden;
 }
 
 #tape-left {
@@ -344,6 +350,7 @@ h1 {
 #tape-left .tape-clamp-notch { background: #bd00ff; }
 #tape-left.animated {
   animation: reelSpin 2.4s linear infinite, purpleReelPulse 1.6s ease-in-out infinite alternate;
+  will-change: transform;
 }
 @keyframes purpleReelPulse {
   0% { box-shadow: 0 0 10px rgba(189, 0, 255, 0.7), inset 0 0 8px rgba(189, 0, 255, 0.5); }
@@ -366,6 +373,7 @@ h1 {
 #tape-right .tape-clamp-notch { background: #00ff41; }
 #tape-right.animated {
   animation: reelSpin 2.4s linear infinite, greenReelPulse 1.6s ease-in-out infinite alternate;
+  will-change: transform;
 }
 @keyframes greenReelPulse {
   0% { box-shadow: 0 0 10px rgba(0, 255, 65, 0.7), inset 0 0 8px rgba(0, 255, 65, 0.5); }
@@ -418,6 +426,7 @@ h1 {
     inset 0 0 14px rgba(0,0,0,0.98), 
     0 0 10px rgba(0, 255, 65, 0.2),
     0 0 0 1px rgba(189, 0, 255, 0.2);
+  transform: translateZ(0);
 }
 
 .equalizer-container::after {
@@ -429,10 +438,9 @@ h1 {
 
 .bar {
   width: 100%; height: 3px; border-radius: 1.5px 1.5px 0 0;
-  transform-origin: bottom; position: relative; flex: 1; will-change: height;
+  transform-origin: bottom; position: relative; flex: 1;
   background: linear-gradient(to top, #009926, #8500df);
   box-shadow: 0 0 5px rgba(0, 255, 65, 0.65);
-  transition: height 0.05s ease-out;
 }
 .bar.bar-mid {
   background: linear-gradient(to top, #00e639, #a819ff);
@@ -460,7 +468,7 @@ h1 {
     0 0 14px rgba(0, 255, 65, 0.45), 
     inset 0 1px 2px rgba(255, 255, 255, 0.25),
     inset 0 -2px 4px rgba(0,0,0,0.8);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .play-btn:hover {
   transform: translateY(-2px); 
@@ -584,7 +592,7 @@ h1 {
   flex-shrink: 0;
   user-select: none;
   transform-style: preserve-3d;
-  will-change: transform, box-shadow;
+  backface-visibility: hidden;
   box-shadow: 
     0 22px 46px rgba(0, 0, 0, 0.96),
     -15px 0 32px rgba(189, 0, 255, 0.45),
@@ -593,20 +601,18 @@ h1 {
     inset 0 0 0 4px rgba(255, 255, 255, 0.2),
     inset 0 2px 4px rgba(255, 255, 255, 0.55);
   animation: case3DLevitation 6s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 @keyframes case3DLevitation {
   0% {
     transform: rotateY(-6deg) rotateX(3deg) translateY(0px);
-    box-shadow: 0 22px 46px rgba(0, 0, 0, 0.96), -15px 0 32px rgba(189, 0, 255, 0.45), 15px 0 32px rgba(0, 255, 65, 0.45);
   }
   50% {
     transform: rotateY(1deg) rotateX(1deg) translateY(-8px);
-    box-shadow: 0 30px 56px rgba(0, 0, 0, 0.92), -19px 0 40px rgba(189, 0, 255, 0.6), 19px 0 40px rgba(0, 255, 65, 0.6);
   }
   100% {
     transform: rotateY(6deg) rotateX(-2deg) translateY(-3px);
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.96), -15px 0 34px rgba(189, 0, 255, 0.48), 15px 0 34px rgba(0, 255, 65, 0.48);
   }
 }
 
@@ -680,6 +686,7 @@ h1 {
 .case-plastic-clip.clip-top { top: 86px; }
 .case-plastic-clip.clip-bottom { bottom: 86px; }
 
+/* DESTELLO HOLOGRÁFICO CON ACELERACIÓN */
 .case-shimmer-sweep {
   position: absolute; top: -70%; left: -100%; width: 120%; height: 240%;
   background: linear-gradient(65deg, 
@@ -693,6 +700,7 @@ h1 {
   pointer-events: none;
   z-index: 10;
   animation: glassShimmerSweep 7s ease-in-out infinite;
+  will-change: transform;
 }
 @keyframes glassShimmerSweep {
   0%, 25% { transform: translateX(-120%) rotate(25deg); opacity: 0; }
@@ -841,7 +849,7 @@ h1 {
 }
 
 /* =========================================================
-   FOOTER Y BOTONES ESTILO CONSOLA HI-FI CYBER
+   FOOTER Y BOTONES CONSOLA
    ========================================================= */
 footer {
   background: linear-gradient(180deg, rgba(26, 26, 34, 0.95) 0%, rgba(10, 10, 14, 0.98) 100%);
@@ -875,7 +883,7 @@ footer {
     0 4px 10px rgba(0, 0, 0, 0.85),
     inset 0 1px 1px rgba(255, 255, 255, 0.3),
     inset 0 -2px 4px rgba(0, 0, 0, 0.7);
-  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .social-link::after {
@@ -887,7 +895,7 @@ footer {
 .social-link svg {
   width: 19px; height: 19px; fill: #ececf4;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
-  transition: all 0.22s ease;
+  transition: fill 0.22s ease, filter 0.22s ease;
 }
 
 .social-link:hover {
@@ -913,7 +921,7 @@ footer {
 .copyright { color: #666; font-size: 0.6rem; margin-top: 0.2rem; }
 
 /* =========================================================
-   PANELES LATERALES
+   PANELES LATERALES (OPTIMIZACIÓN DE MEMORIA CON CONTENT-VISIBILITY)
    ========================================================= */
 .requests-panel, .chat-panel, .staff-panel, .poem-panel {
   position: fixed; top: 0; height: 100vh; height: 100dvh;
@@ -922,6 +930,8 @@ footer {
   display: flex; flex-direction: column;
   font-family: 'Orbitron', sans-serif; -webkit-overflow-scrolling: touch;
   box-shadow: none;
+  contain: layout paint;
+  content-visibility: hidden; /* LIBERA 100% DE VRAM CUANDO ESTÁ CERRADO */
 }
 
 /* Staff, peticiones y poema conservan 50vw */
@@ -933,7 +943,7 @@ footer {
 .staff-panel { border-left: 3px solid #00ff41; }
 .poem-panel { border-left: 3px solid #bd00ff; }
 
-/* EL CHAT EN PC: EXACTAMENTE UN 20% MENOS DE ANCHO QUE LOS 50vw (40vw) */
+/* EL CHAT EN PC: 40vw */
 .chat-panel { 
   width: 40vw;
   right: -40vw;
@@ -944,6 +954,7 @@ footer {
 .requests-panel.visible, .chat-panel.visible, .staff-panel.visible, .poem-panel.visible { 
   right: 0 !important;
   box-shadow: -15px 0 40px rgba(0, 0, 0, 0.88);
+  content-visibility: visible; /* SOLO CONSUME MEMORIA CUANDO SE ABRE */
 }
 
 .requests-header, .chat-header, .staff-header, .poem-header {
@@ -990,7 +1001,7 @@ footer {
   border: 1.5px solid #00ff41; color: #00ff41;
   font-size: 0.95rem; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .chat-theme-btn:hover {
   transform: scale(1.15);
@@ -998,9 +1009,7 @@ footer {
   border-color: #33ff77;
 }
 
-/* =========================================================
-   MODO OSCURO BASE RESTAURADO CON REALCE SUAVE DE COLOR
-   ========================================================= */
+/* MODO OSCURO CHAT CON REALCE SUAVE */
 .chat-iframe-container { 
   flex: 1; 
   overflow: hidden; 
@@ -1023,7 +1032,7 @@ footer {
 }
 
 /* =========================================================
-   STAFF
+   STAFF (OPTIMIZADO PARA NO SATURAR LA GPU)
    ========================================================= */
 .staff-grid {
   flex: 1; overflow-y: auto;
@@ -1044,7 +1053,8 @@ footer {
   align-items: center;
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+  contain: layout paint;
 }
 .staff-case-wrapper.loaded {
   opacity: 1;
@@ -1065,7 +1075,19 @@ footer {
     0 18px 38px rgba(0, 0, 0, 0.94),
     -12px 0 28px rgba(189, 0, 255, 0.4),
     12px 0 28px rgba(0, 255, 65, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  backface-visibility: hidden;
+}
+
+/* OPTIMIZACIÓN CLAVE: No ejecutar 50 destellos infinitos a la vez */
+.staff-case .case-shimmer-sweep {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.staff-case:hover .case-shimmer-sweep {
+  animation: glassShimmerSweep 3s ease-in-out infinite;
+  opacity: 1;
 }
 
 .staff-case:hover {
@@ -1131,7 +1153,7 @@ footer {
 .requests-overlay, .chat-overlay, .staff-overlay, .poem-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+  z-index: 999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .requests-overlay.active, .chat-overlay.active, .staff-overlay.active, .poem-overlay.active { opacity: 1; visibility: visible; }
 
@@ -1209,7 +1231,6 @@ footer {
   
   .cassette-case, .ad-overlay img.ad-image { width: 270px; max-width: 270px; }
 
-  /* En móviles se expande a pantalla completa */
   .requests-panel, .chat-panel, .staff-panel, .poem-panel { 
     width: 100vw !important; 
     right: -100vw !important; 
@@ -1505,7 +1526,7 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 let chatDestroyTimer = null;
-const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
+const CHAT_DESTROY_DELAY = 10 * 60 * 1000;
 let isChatDarkMode = true;
 
 function getDjCountryInfo(djName) {
@@ -1603,6 +1624,7 @@ let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffL
 const barCount = bars.length;
 let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
+let cachedContainerHeight = 42; // OPTIMIZACIÓN: Cache de altura para evitar reflows continuos
 
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
@@ -1614,7 +1636,13 @@ const historySize = 10;
 const bar0History = new Float32Array(historySize);
 let historyIdx = 0;
 
-window.addEventListener('resize', () => { isMobileDevice = window.innerWidth <= 900; }, { passive: true });
+function updateCachedLayout() {
+  isMobileDevice = window.innerWidth <= 900;
+  if (equalizer) {
+    cachedContainerHeight = equalizer.clientHeight || 42;
+  }
+}
+window.addEventListener('resize', updateCachedLayout, { passive: true });
 
 audio.volume = 1.0; volumeSlider.value = 1.0; audio.crossOrigin = 'anonymous';
 
@@ -1631,8 +1659,8 @@ function handleVolumeInput(val) {
   updateVolumeDisplay();
 }
 
-volumeSlider.addEventListener('input', (e) => handleVolumeInput(e.target.value));
-volumeSlider.addEventListener('change', (e) => handleVolumeInput(e.target.value));
+volumeSlider.addEventListener('input', (e) => handleVolumeInput(e.target.value), { passive: true });
+volumeSlider.addEventListener('change', (e) => handleVolumeInput(e.target.value), { passive: true });
 
 let isDraggingVolume = false;
 function setVolumeFromPointer(e) {
@@ -2094,6 +2122,7 @@ function updateLedsDirectKick() {
   }
 }
 
+/* VISUALIZADOR OPTIMIZADO: SIN LAYOUT REFLOWS EN EL BUCLE */
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   const frameSkip = isMobileDevice ? 2 : 1;
@@ -2102,8 +2131,7 @@ function visualize() {
   
   analyzer.getByteFrequencyData(dataArray); 
   const totalBins = dataArray.length;
-  const containerHeight = equalizer.clientHeight || 42;
-  const maxHeight = containerHeight - 5;
+  const maxHeight = cachedContainerHeight - 5;
   const minHeight = 3;
   
   for(let i=0; i<barCount; i++) {
@@ -2119,18 +2147,15 @@ function visualize() {
     const avg = count > 0 ? sum / count : 0;
     
     let norm = (avg / 255) * band.mult;
-    norm = Math.min(1, Math.max(0, norm));
+    if (norm > 1) norm = 1;
     let dynamicNorm = Math.pow(norm, 1.35);
     let height = Math.round(minHeight + dynamicNorm * (maxHeight - minHeight));
 
     bars[i].style.height = height + 'px';
     
-    if (height >= maxHeight * 0.78) {
-      bars[i].className = 'bar bar-high';
-    } else if (height >= maxHeight * 0.42) {
-      bars[i].className = 'bar bar-mid';
-    } else {
-      bars[i].className = 'bar';
+    const targetClass = height >= maxHeight * 0.78 ? 'bar bar-high' : (height >= maxHeight * 0.42 ? 'bar bar-mid' : 'bar');
+    if (bars[i].className !== targetClass) {
+      bars[i].className = targetClass;
     }
   }
   
@@ -2222,6 +2247,7 @@ document.addEventListener('visibilitychange', function() {
 });
 
 window.addEventListener('load', function() {
+  updateCachedLayout();
   updateAlbumArtBackground(); setupGlitchObservers(); initChatListeners(); initStaffListeners(); initAdListeners();
   initRequestsListeners(); initPoemListeners(); adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
@@ -2236,7 +2262,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone cargado con éxito.");
+  console.log("🎧 Nexus Zone cargado con éxito y optimizado.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
