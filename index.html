@@ -252,7 +252,7 @@ h1 {
 }
 
 /* =========================================================
-   CONTENEDOR DEL TÍTULO Y MARQUEE FLUIDO (SIN CORTES)
+   CONTENEDOR DEL TÍTULO Y MARQUEE SIEMPRE EN BUCLE CONTINUO
    ========================================================= */
 .cassette-write-strip {
   background: 
@@ -277,10 +277,9 @@ h1 {
   min-height: 26px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
   position: relative;
-  /* Suave difuminado en bordes */
   mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
 }
@@ -291,26 +290,34 @@ h1 {
   white-space: nowrap;
   width: max-content;
   flex-shrink: 0;
-  transform: translate3d(0, 0, 0);
+  animation: marqueeAlwaysLoop 16s linear infinite;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
-.marquee-track.scrolling {
-  animation: marqueeContinuousLoop var(--marquee-duration, 14s) linear infinite;
-  animation-delay: 2s; /* Pausa inicial para lectura antes de rodar */
+.marquee-content {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-@keyframes marqueeContinuousLoop {
+.marquee-sep {
+  color: #bd00ff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin: 0 28px;
+  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(189, 0, 255, 0.8);
+  user-select: none;
+}
+
+@keyframes marqueeAlwaysLoop {
   0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(var(--marquee-distance, -50%), 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
-.marquee-clone {
-  display: none;
-  margin-left: 60px; /* Separación estética entre repeticiones */
-}
-
-/* El texto dentro de la pista del casete no se corta con puntos suspensivos */
 .marquee-track .cyber-glitch {
   max-width: none !important;
   overflow: visible !important;
@@ -864,7 +871,7 @@ h1 {
   60% { clip-path: inset(12px 0 1px 0); transform: translate(-2px, 1px); }
 }
 @keyframes title-glow {
-  from { text-shadow: 0 0 8px rgba(0, 255, 65, 0.9), 0 0 15px rgba(189, 0, 255, 0.7); }
+  from { text-shadow: 0 0 8px rgba(0, 255, 65, 0.9), 0 0 15px rgba(0, 255, 65, 0.7); }
   to { text-shadow: 0 0 14px rgba(0, 255, 65, 1), 0 0 24px rgba(189, 0, 255, 0.95); }
 }
 
@@ -875,7 +882,7 @@ h1 {
 @keyframes glitch-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); text-shadow: 0 0 25px #00ff41, 0 0 35px #bd00ff; } }
 @keyframes glitch-chaos { 0%, 100% { transform: translate(0,0); } 30% { transform: translate(-3px, 2px); } 70% { transform: translate(3px, -2px); } }
 
-#sonic_title, .marquee-clone {
+#sonic_title, #sonic_title_clone {
   font-family: 'Orbitron', sans-serif;
   font-weight: 900;
   font-size: clamp(0.85rem, 2.2vw, 1.2rem);
@@ -1285,7 +1292,7 @@ footer {
 }
 
 /* =========================================================
-   OPTIMIZACIÓN MÓVILES (DESLIZAMIENTO Y 60 FPS ULTRA-SUAVE)
+   OPTIMIZACIÓN MÓVILES (DESLIZAMIENTO FLUIDO A 60 FPS)
    ========================================================= */
 @media (max-width: 900px) {
   body { 
@@ -1304,7 +1311,7 @@ footer {
   .cassette-player { width: 100%; max-width: 100%; }
   .volume-control { width: 100%; max-width: 100%; }
   
-  /* Animación vertical ligera en móviles */
+  /* Animación vertical ligera en móviles sin carga 3D pesada */
   .cassette-case {
     animation: caseFloatMobile 4s ease-in-out infinite alternate !important;
     transform: translateZ(0) !important;
@@ -1399,8 +1406,14 @@ footer {
     <div class="cassette-write-strip">
       <div class="song-info" id="song-info-container">
         <div class="marquee-track" id="marquee-track">
-          <span id="sonic_title" class="cyber-glitch" data-text="Cargando canción...">Cargando canción...</span>
-          <span id="sonic_title_clone" class="cyber-glitch marquee-clone" aria-hidden="true" data-text=""></span>
+          <div class="marquee-content">
+            <span id="sonic_title" class="cyber-glitch" data-text="Cargando canción...">Cargando canción...</span>
+            <span class="marquee-sep">//</span>
+          </div>
+          <div class="marquee-content" aria-hidden="true">
+            <span id="sonic_title_clone" class="cyber-glitch" data-text="Cargando canción...">Cargando canción...</span>
+            <span class="marquee-sep">//</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1692,7 +1705,6 @@ const streamUrl = 'https://mars.streamerr.co/8434/stream';
 const sonicTitle = document.getElementById('sonic_title');
 const sonicTitleClone = document.getElementById('sonic_title_clone');
 const marqueeTrack = document.getElementById('marquee-track');
-const songInfoContainer = document.getElementById('song-info-container');
 const sonicDj = document.getElementById('sonic_dj');
 const djProfileImg = document.getElementById('dj-profile-img');
 const chatPanel = document.getElementById('chat-panel');
@@ -1789,59 +1801,23 @@ volumeSlider.addEventListener('pointercancel', () => { isDraggingVolume = false;
 updateVolumeDisplay();
 
 // =========================================================
-// SISTEMA DE MARQUEE CONTINUO UNIVERSAL (MÓVIL Y PC)
+// MARQUEE EN BUCLE CONTINUO (DESPLAZAMIENTO SIEMPRE ACTIVO)
 // =========================================================
-let marqueeResizeTimeout = null;
-
-function updateMarquee() {
-  if (!songInfoContainer || !sonicTitle || !marqueeTrack) return;
+function syncMarqueeTitle() {
+  if (!sonicTitle || !marqueeTrack) return;
+  const txt = sonicTitle.textContent.trim();
+  sonicTitle.setAttribute('data-text', txt);
   
-  // Apagamos la animación momentáneamente para tomar la medida real
-  marqueeTrack.classList.remove('scrolling');
-  if (sonicTitleClone) sonicTitleClone.style.display = 'none';
-  songInfoContainer.style.justifyContent = 'center';
-  
-  // Medir el ancho disponible del casete y el ancho real sin límites del texto
-  const containerWidth = songInfoContainer.getBoundingClientRect().width;
-  const textWidth = sonicTitle.getBoundingClientRect().width;
-  
-  // Si en móvil (o en PC) el texto no cabe, se activa el desplazamiento continuo
-  if (textWidth > (containerWidth - 10)) {
-    songInfoContainer.style.justifyContent = 'flex-start';
-    
-    if (sonicTitleClone) {
-      sonicTitleClone.textContent = sonicTitle.textContent;
-      sonicTitleClone.setAttribute('data-text', sonicTitle.textContent);
-      sonicTitleClone.style.display = 'inline-block';
-    }
-    
-    // Distancia matemática exacta para un bucle infinito invisible
-    const distanceToScroll = textWidth + 60;
-    // Velocidad constante y cómoda de leer (33px por segundo)
-    const duration = Math.max(8, distanceToScroll / 33);
-    
-    marqueeTrack.style.setProperty('--marquee-distance', `-${distanceToScroll}px`);
-    marqueeTrack.style.setProperty('--marquee-duration', `${duration.toFixed(2)}s`);
-    
-    // Disparar animación en hilo GPU
-    void marqueeTrack.offsetWidth;
-    marqueeTrack.classList.add('scrolling');
-  } else {
-    // Si cabe entero (canciones cortas), permanece centrado y quieto
-    songInfoContainer.style.justifyContent = 'center';
-    marqueeTrack.classList.remove('scrolling');
-    if (sonicTitleClone) sonicTitleClone.style.display = 'none';
+  if (sonicTitleClone) {
+    sonicTitleClone.textContent = txt;
+    sonicTitleClone.setAttribute('data-text', txt);
   }
+  
+  // Velocidad de lectura cómoda adaptada a la longitud
+  const textWidth = sonicTitle.scrollWidth || 220;
+  const duration = Math.max(11, (textWidth + 80) / 32);
+  marqueeTrack.style.animationDuration = duration.toFixed(1) + 's';
 }
-
-window.addEventListener('resize', () => {
-  if (marqueeResizeTimeout) clearTimeout(marqueeResizeTimeout);
-  marqueeResizeTimeout = setTimeout(updateMarquee, 200);
-}, { passive: true });
-
-window.addEventListener('orientationchange', () => {
-  setTimeout(updateMarquee, 300);
-});
 
 // EFECTO GLITCH CYBER
 function updateGlitchDataText(el) {
@@ -1867,9 +1843,7 @@ setInterval(() => {
   if (!document.hidden) {
     if (Math.random() < 0.4) {
       triggerRandomGlitch(sonicTitle);
-      if (sonicTitleClone && sonicTitleClone.style.display !== 'none') {
-        triggerRandomGlitch(sonicTitleClone);
-      }
+      if (sonicTitleClone) triggerRandomGlitch(sonicTitleClone);
     }
     if (Math.random() < 0.4) triggerRandomGlitch(sonicDj);
   }
@@ -2204,7 +2178,7 @@ function setupAudioGraph() {
   try {
     analyzer = audioContext.createAnalyser(); 
     analyzer.fftSize = 512; 
-    analyzer.smoothingTimeConstant = 0.82; // Suavizado acústico natural original
+    analyzer.smoothingTimeConstant = 0.82; // Suavizado acústico natural
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
     const source = audioContext.createMediaElementSource(audio);
     source.connect(analyzer); 
@@ -2307,16 +2281,12 @@ playPauseBtn.addEventListener('click', togglePlayPause);
 function setupGlitchObservers() {
   if(sonicTitle) {
     const obs = new MutationObserver(() => { 
-      updateGlitchDataText(sonicTitle); 
+      syncMarqueeTitle();
       triggerRandomGlitch(sonicTitle);
-      if (sonicTitleClone && sonicTitleClone.style.display !== 'none') {
-        triggerRandomGlitch(sonicTitleClone);
-      }
-      updateMarquee();
+      if (sonicTitleClone) triggerRandomGlitch(sonicTitleClone);
     });
     obs.observe(sonicTitle, {childList: true, characterData: true, subtree: true}); 
-    updateGlitchDataText(sonicTitle);
-    updateMarquee();
+    syncMarqueeTitle();
   }
   if(sonicDj) {
     const obs = new MutationObserver(() => {
@@ -2385,14 +2355,8 @@ window.addEventListener('load', function() {
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
   setTimeout(() => { 
     if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim()); 
-    updateMarquee();
+    syncMarqueeTitle();
   }, 1000);
-  
-  if (document.fonts) {
-    document.fonts.ready.then(() => {
-      updateMarquee();
-    });
-  }
   
   const artContainer = document.getElementById('sonic_art_full');
   if (artContainer) {
@@ -2403,7 +2367,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone listo: Marquee universal fluido, ecualizador a 60 FPS sin tirones.");
+  console.log("🎧 Nexus Zone listo: Título en bucle continuo y 60 FPS ultra-fluidos.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
