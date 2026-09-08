@@ -252,7 +252,7 @@ h1 {
 }
 
 /* =========================================================
-   CONTENEDOR DEL TÍTULO Y MARQUEE SIEMPRE EN BUCLE CONTINUO
+   CONTENEDOR DEL TÍTULO Y MARQUEE CONTINUO
    ========================================================= */
 .cassette-write-strip {
   background: 
@@ -302,15 +302,15 @@ h1 {
   white-space: nowrap;
 }
 
+/* SEPARADOR VERTICAL CON LA MISMA ESTÉTICA Y COLOR QUE EL TÍTULO */
 .marquee-sep {
-  color: #bd00ff;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.1rem;
+  font-family: 'Orbitron', sans-serif;
   font-weight: 900;
-  margin: 0 28px;
-  opacity: 0.85;
-  text-shadow: 0 0 8px rgba(189, 0, 255, 0.8);
+  font-size: clamp(0.85rem, 2.2vw, 1.2rem);
+  color: #00ff41;
+  margin: 0 32px;
   user-select: none;
+  display: inline-block;
 }
 
 @keyframes marqueeAlwaysLoop {
@@ -1408,11 +1408,11 @@ footer {
         <div class="marquee-track" id="marquee-track">
           <div class="marquee-content">
             <span id="sonic_title" class="cyber-glitch" data-text="Cargando canción...">Cargando canción...</span>
-            <span class="marquee-sep">//</span>
+            <span class="cyber-glitch marquee-sep" data-text="|">|</span>
           </div>
           <div class="marquee-content" aria-hidden="true">
             <span id="sonic_title_clone" class="cyber-glitch" data-text="Cargando canción...">Cargando canción...</span>
-            <span class="marquee-sep">//</span>
+            <span class="cyber-glitch marquee-sep" data-text="|">|</span>
           </div>
         </div>
       </div>
@@ -1813,7 +1813,7 @@ function syncMarqueeTitle() {
     sonicTitleClone.setAttribute('data-text', txt);
   }
   
-  // Velocidad de lectura cómoda adaptada a la longitud
+  // Velocidad de lectura cómoda adaptada a la longitud del título
   const textWidth = sonicTitle.scrollWidth || 220;
   const duration = Math.max(11, (textWidth + 80) / 32);
   marqueeTrack.style.animationDuration = duration.toFixed(1) + 's';
@@ -2367,7 +2367,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone listo: Título en bucle continuo y 60 FPS ultra-fluidos.");
+  console.log("🎧 Nexus Zone listo: Título en bucle continuo con separador cyberpunk '|'.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
