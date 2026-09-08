@@ -162,9 +162,7 @@ h1 {
   padding-bottom: 0.2rem;
 }
 
-/* =========================================================
-   CASETE REALISTA (REPRODUCTOR)
-   ========================================================= */
+/* CASETE REALISTA (REPRODUCTOR) */
 .cassette-player {
   width: 100%; max-width: 550px;
   background: 
@@ -222,6 +220,7 @@ h1 {
 .album-art-bg {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover; background-position: center; opacity: 0.16; filter: blur(4px); z-index: 1;
+  transition: background-image 0.4s ease;
 }
 
 .cassette-label {
@@ -1521,7 +1520,7 @@ footer {
 </div>
 <div class="requests-overlay" id="requests-overlay"></div>
 
-<!-- REPRODUCTOR ÚNICO ORIGINAL CON LIMPIEZA DE BÚFER -->
+<!-- REPRODUCTOR ÚNICO CONTINUO (SIN CORTES DE MÚSICA) -->
 <audio id="radio-player" crossorigin="anonymous" preload="none"></audio>
 
 <script>
@@ -1543,8 +1542,10 @@ const AD_ENABLED = false;
 let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
+
+// EL CHAT SE CIERRA TRAS 30 MINUTOS DE INACTIVIDAD
 let chatDestroyTimer = null;
-const CHAT_DESTROY_DELAY = 10 * 60 * 1000;
+const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
 let isChatDarkMode = true;
 
 function getDjCountryInfo(djName) {
@@ -1643,11 +1644,6 @@ const barCount = bars.length;
 let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 let cachedContainerHeight = 42;
-
-// CONTROL SEGURO DE PURGA EN CAMBIO DE TEMA TRAS 1 HORA DE MÚSICA CONTINUA
-let playbackStartTime = 0;
-const SAFE_PURGE_WINDOW_MS = 60 * 60 * 1000; // 60 minutos
-let lastTrackSeen = '';
 
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
@@ -1804,7 +1800,11 @@ function updateChatThemeUI() {
 function toggleChat() {
   isChatVisible = !isChatVisible;
   if(isChatVisible) {
-    if (chatDestroyTimer) { clearTimeout(chatDestroyTimer); chatDestroyTimer = null; }
+    // Si se reabre antes de 30 minutos, se cancela el apagado para no perder la conexión
+    if (chatDestroyTimer) { 
+      clearTimeout(chatDestroyTimer); 
+      chatDestroyTimer = null; 
+    }
     if (!document.getElementById('chat-iframe')) {
       const num = Math.floor(Math.random() * 1000);
       chatIframeContainer.innerHTML = `<iframe id="chat-iframe" class="${isChatDarkMode ? 'dark-mode' : ''}" src="https://chat.chatzona.org/index.html#nick=nexus_user${num}&channel=Nexus_Zone" width="100%" height="100%" frameborder="0" loading="lazy" allow="microphone"></iframe>`;
@@ -1813,14 +1813,18 @@ function toggleChat() {
     chatOverlay.classList.add('active'); 
     setTimeout(adjustChatIframeForMobile, 200);
     document.body.style.overflow = '';
-    if (isVisualizing) { isVisualizing = false; if (animationId) cancelAnimationFrame(animationId); }
   } else {
-    chatDestroyTimer = setTimeout(() => { destroyChatIframe(); chatDestroyTimer = null; }, CHAT_DESTROY_DELAY);
     chatPanel.classList.remove('visible');
     chatOverlay.classList.remove('active'); 
     chatPanel.style.height = '';
     document.body.style.overflow = '';
-    if (isPlaying && analyzer && !isVisualizing) { isVisualizing = true; visualize(); }
+    
+    // Temporizador de 30 minutos antes de destruir el iframe
+    if (chatDestroyTimer) clearTimeout(chatDestroyTimer);
+    chatDestroyTimer = setTimeout(() => {
+      destroyChatIframe();
+      chatDestroyTimer = null;
+    }, CHAT_DESTROY_DELAY);
   }
 }
 
@@ -2189,7 +2193,7 @@ function visualize() {
   animationId = requestAnimationFrame(visualize);
 }
 
-// GESTIÓN DE REPRODUCCIÓN Y VACIADO PROFUNDO DE MEMORIA
+// AUDIO 100% CONTINUO SIN CORTES NI RECONEXIONES
 function togglePlayPause() {
   if(!isPlaying) {
     if(audio.src !== streamUrl) audio.src = streamUrl;
@@ -2202,7 +2206,6 @@ function togglePlayPause() {
     if(!audioGraphSetup) setupAudioGraph();
     audio.play().then(() => {
       isPlaying = true; 
-      playbackStartTime = Date.now();
       playPauseBtn.innerHTML = '■'; 
       playPauseBtn.classList.add('playing');
       tapeLeft.classList.add('animated'); 
@@ -2213,12 +2216,11 @@ function togglePlayPause() {
       alert(err.name==='NotAllowedError' ? 'Haz clic de nuevo para permitir audio.' : 'Error de conexión o reproducción.');
     });
   } else {
-    // VACIADO INMEDIATO DE MEMORIA RAM AL PAUSAR
+    // Vaciado completo de buffers al pausar manualmente
     audio.pause(); 
     audio.removeAttribute('src'); 
     audio.load();
     isPlaying = false;
-    playbackStartTime = 0;
     playPauseBtn.innerHTML = '▶'; 
     playPauseBtn.classList.remove('playing');
     tapeLeft.classList.remove('animated'); 
@@ -2231,21 +2233,8 @@ playPauseBtn.addEventListener('click', togglePlayPause);
 function setupGlitchObservers() {
   if(sonicTitle) {
     const obs = new MutationObserver(() => { 
-      const currentTrack = sonicTitle.textContent.trim();
       updateGlitchDataText(sonicTitle); 
       if(Math.random()<0.35) triggerRandomGlitch(sonicTitle); 
-
-      // PURGA INTELIGENTE SOLO AL CAMBIAR DE TEMA Y TRAS 1 HORA DE ESCUCHA CONTINUA
-      if (currentTrack && currentTrack !== lastTrackSeen && !currentTrack.toLowerCase().includes('cargando')) {
-        lastTrackSeen = currentTrack;
-        
-        if (isPlaying && playbackStartTime > 0 && (Date.now() - playbackStartTime > SAFE_PURGE_WINDOW_MS)) {
-          playbackStartTime = Date.now();
-          console.log("♻️ [Nexus Memory Guard] Vaciando búfer acumulado en la transición de pista...");
-          audio.src = streamUrl + '?t=' + Date.now();
-          audio.play().catch(e => console.warn(e));
-        }
-      }
     });
     obs.observe(sonicTitle, {childList:true, characterData:true}); 
     updateGlitchDataText(sonicTitle);
@@ -2264,6 +2253,7 @@ function setupGlitchObservers() {
   }
 }
 
+// CONTROL DE CARÁTULAS: EVITA LA ACUMULACIÓN EN LA GPU
 let lastArtUrl = '';
 function updateAlbumArtBackground() { 
   const c = document.getElementById('sonic_art_full'); 
@@ -2274,14 +2264,14 @@ function updateAlbumArtBackground() {
       albumArtBg.style.backgroundImage = `url('${img.src}')`; 
       albumArtBg.style.opacity = '0.2'; 
     } 
-    // Evitar acumulación de elementos img en memoria DOM
+    // Vaciado de imágenes duplicadas en el DOM
     while (c.children.length > 1) {
       c.removeChild(c.firstElementChild);
     }
   } 
 }
 
-// PAUSA DEL RENDERIZADO CUANDO LA PESTAÑA ESTÁ EN SEGUNDO PLANO PARA AHORRO TOTAL DE RECURSOS
+// PAUSA DEL RENDERIZADO CUANDO LA PESTAÑA NO ES VISIBLE
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     if (isVisualizing) {
@@ -2321,7 +2311,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone cargado con éxito y blindado contra fugas de memoria.");
+  console.log("🎧 Nexus Zone cargado con éxito. Audio continuo y memoria optimizada.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
