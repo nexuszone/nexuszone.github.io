@@ -399,7 +399,7 @@ h1 {
   z-index: 6; height: 100%;
 }
 
-/* AISLAMIENTO DE RENDERIZADO ESTRICTO (60 FPS FLUIDO EN MÓVIL) */
+/* ECUALIZADOR AISLADO POR HARDWARE (60 FPS FLUIDOS) */
 .equalizer-container {
   width: 100%; max-width: 200px; min-width: 0;
   height: clamp(34px, 8.5vw, 46px);
@@ -426,20 +426,25 @@ h1 {
   background-size: 100% 4px; pointer-events: none; z-index: 8; opacity: 0.9;
 }
 
+/* BARRAS ACELERADAS POR GPU CON DEGRADADO NATURAL */
 .bar {
-  width: 100%; height: 3px; border-radius: 1.5px 1.5px 0 0;
-  transform-origin: bottom; position: relative; flex: 1;
-  background: linear-gradient(to top, #009926, #8500df);
-  box-shadow: 0 0 5px rgba(0, 255, 65, 0.65);
-  will-change: height;
-}
-.bar.bar-mid {
-  background: linear-gradient(to top, #00e639, #a819ff);
-  box-shadow: 0 0 8px rgba(0, 255, 65, 0.85), 0 0 10px rgba(189, 0, 255, 0.7);
-}
-.bar.bar-high {
-  background: linear-gradient(to top, #00ff41, #d844ff);
-  box-shadow: 0 0 12px rgba(0, 255, 65, 1), 0 0 16px rgba(189, 0, 255, 0.95);
+  width: 100%;
+  height: calc(100% - 2px);
+  border-radius: 2px 2px 0 0;
+  transform-origin: bottom center;
+  position: relative;
+  flex: 1;
+  background: linear-gradient(
+    to top,
+    #009926 0%,
+    #00ff41 35%,
+    #a819ff 70%,
+    #d844ff 90%,
+    #ff3dfb 100%
+  );
+  box-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+  transform: scaleY(0.06);
+  will-change: transform;
 }
 
 .cassette-deck-controls {
@@ -1242,7 +1247,7 @@ footer {
 }
 
 /* =========================================================
-   OPTIMIZACIÓN MÓVILES (SIN TIRONES / 60 FPS)
+   OPTIMIZACIÓN MÓVILES (60 FPS FLUIDOS)
    ========================================================= */
 @media (max-width: 900px) {
   body { overflow-y: auto; }
@@ -1560,7 +1565,7 @@ let countryUpdateLock = false;
 let lastCountryUpdate = 0;
 const COUNTRY_UPDATE_DEBOUNCE = 800;
 
-// EL CHAT SE DESCARGA TRAS 30 MINUTOS DE CIERRE PARA AHORRAR RAM
+// EL CHAT SE DESCARGA TRAS 30 MINUTOS DE CIERRE
 let chatDestroyTimer = null;
 const CHAT_DESTROY_DELAY = 30 * 60 * 1000;
 let isChatDarkMode = true;
@@ -1656,17 +1661,41 @@ let audioContext = null, analyzer = null, dataArray = null, animationId = null;
 let isVisualizing = false, audioGraphSetup = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
-let visualizerFrameCount = 0;
-let isMobileDevice = window.innerWidth <= 900;
-let cachedContainerHeight = 42;
 
-function updateCachedLayout() {
-  isMobileDevice = window.innerWidth <= 900;
-  if (equalizer) {
-    cachedContainerHeight = equalizer.clientHeight || 42;
-  }
-}
-window.addEventListener('resize', updateCachedLayout, { passive: true });
+// ARRAY DE FÍSICA PARA CAÍDA SUAVE Y REBOTE VIVO DE BARRAS
+const barHeights = new Float32Array(barCount).fill(0.06);
+
+// COMPENSACIÓN NATURAL DEL ESPECTRO (BAJOS, MEDIOS Y AGUDOS EQUILIBRADOS)
+const spectrumWeights = [
+  1.02, // 1: Sub-Bass / Kick profundo
+  1.08, // 2: Punch de Bombo / Bajo
+  1.16, // 3: Línea de bajo / Graves
+  1.26, // 4: Medios bajos
+  1.38, // 5: Cuerpo de voz / Sintes
+  1.52, // 6: Claridad vocal
+  1.70, // 7: Cajas / Snares
+  1.92, // 8: Presencia / Guitarras
+  2.20, // 9: Percusiones altas
+  2.55, // 10: Charles / Hi-hats
+  2.95, // 11: Platos / Cymbals
+  3.40  // 12: Brillo / Aire ultra-alto
+];
+
+// BANDAS DE FRECUENCIA LOGARÍTMICAS
+const freqBands = [
+  { start: 1, end: 2 },
+  { start: 2, end: 4 },
+  { start: 4, end: 7 },
+  { start: 7, end: 11 },
+  { start: 11, end: 16 },
+  { start: 16, end: 23 },
+  { start: 23, end: 34 },
+  { start: 34, end: 50 },
+  { start: 50, end: 72 },
+  { start: 72, end: 102 },
+  { start: 102, end: 145 },
+  { start: 145, end: 200 }
+];
 
 audio.volume = 1.0; volumeSlider.value = 1.0; audio.crossOrigin = 'anonymous';
 
@@ -1727,13 +1756,12 @@ function triggerRandomGlitch(el) {
   const effects = ['flash', 'pulse', 'chaos'];
   const randomEffect = effects[Math.floor(Math.random() * effects.length)];
   el.classList.remove('flash', 'pulse', 'chaos');
-  // Forzar reflujo local eficiente
   void el.offsetWidth;
   el.classList.add(randomEffect);
   setTimeout(() => el.classList.remove(randomEffect), 800);
 }
 
-// Disparador periódico suave para mantener los efectos vivos en ambos títulos
+// Disparador de glitches aleatorios para mantener el efecto cyber vivo
 setInterval(() => {
   if (!document.hidden) {
     if (Math.random() < 0.4) triggerRandomGlitch(sonicTitle);
@@ -1836,7 +1864,6 @@ function toggleChat() {
     chatPanel.style.height = '';
     document.body.style.overflow = '';
     
-    // Temporizador de 30 minutos solicitado
     if (chatDestroyTimer) clearTimeout(chatDestroyTimer);
     chatDestroyTimer = setTimeout(() => {
       destroyChatIframe();
@@ -2071,7 +2098,7 @@ function setupAudioGraph() {
   try {
     analyzer = audioContext.createAnalyser(); 
     analyzer.fftSize = 512; 
-    analyzer.smoothingTimeConstant = 0.82;
+    analyzer.smoothingTimeConstant = 0.72; // Respuesta más rápida y viva
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
     const source = audioContext.createMediaElementSource(audio);
     source.connect(analyzer); 
@@ -2086,43 +2113,20 @@ function stopVisualizer() {
   if(animationId) cancelAnimationFrame(animationId); 
   animationId = null;
   for(let i = 0; i < barCount; i++) { 
-    bars[i].style.height = '3px'; 
-    bars[i].className = 'bar';
+    barHeights[i] = 0.06;
+    bars[i].style.transform = 'scaleY(0.06)';
   }
 }
 
-const freqSpectrumBands = [
-  { start: 1, end: 3, mult: 0.82 },
-  { start: 3, end: 6, mult: 0.84 },
-  { start: 6, end: 10, mult: 0.88 },
-  { start: 10, end: 16, mult: 0.94 },
-  { start: 16, end: 24, mult: 1.02 },
-  { start: 24, end: 36, mult: 1.12 },
-  { start: 36, end: 52, mult: 1.25 },
-  { start: 52, end: 72, mult: 1.42 },
-  { start: 72, end: 98, mult: 1.65 },
-  { start: 98, end: 130, mult: 1.95 },
-  { start: 130, end: 165, mult: 2.35 },
-  { start: 165, end: 200, mult: 2.85 }
-];
-
-// BUCLE DE VISUALIZACIÓN ULTRA-OPTIMIZADO (SIN TIRAS LED)
+// BUCLE DE VISUALIZACIÓN DINÁMICO A 60 FPS (CON TRANSFORM: SCALEY)
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
-  const frameSkip = isMobileDevice ? 2 : 1;
-  visualizerFrameCount++;
-  if(visualizerFrameCount % frameSkip !== 0) { 
-    animationId = requestAnimationFrame(visualize); 
-    return; 
-  }
   
-  analyzer.getByteFrequencyData(dataArray); 
+  analyzer.getByteFrequencyData(dataArray);
   const totalBins = dataArray.length;
-  const maxHeight = cachedContainerHeight - 5;
-  const minHeight = 3;
   
   for(let i = 0; i < barCount; i++) {
-    const band = freqSpectrumBands[i];
+    const band = freqBands[i];
     let sum = 0, count = 0;
     const start = Math.min(band.start, totalBins - 1);
     const end = Math.min(band.end, totalBins);
@@ -2133,17 +2137,27 @@ function visualize() {
     }
     const avg = count > 0 ? sum / count : 0;
     
-    let norm = (avg / 255) * band.mult;
-    if (norm > 1) norm = 1;
-    let dynamicNorm = Math.pow(norm, 1.35);
-    let height = Math.round(minHeight + dynamicNorm * (maxHeight - minHeight));
-
-    bars[i].style.height = height + 'px';
+    // Normalización con compensación del espectro acústico
+    let normalized = (avg / 255) * spectrumWeights[i];
     
-    const targetClass = height >= maxHeight * 0.78 ? 'bar bar-high' : (height >= maxHeight * 0.42 ? 'bar bar-mid' : 'bar');
-    if (bars[i].className !== targetClass) {
-      bars[i].className = targetClass;
+    // Rango dinámico y compresión suave (evita que se claven arriba en los clímax)
+    if (normalized > 0.82) {
+      normalized = 0.82 + (normalized - 0.82) * 0.38;
     }
+    if (normalized > 1.0) normalized = 1.0;
+    
+    // Contraste dinámico para que bombo, caja y platillos destaquen rítmicamente
+    let targetScale = Math.max(0.06, Math.pow(normalized, 1.25));
+
+    // Física de rebote: Subida instantánea con el beat y caída suave con inercia
+    if (targetScale >= barHeights[i]) {
+      barHeights[i] = targetScale;
+    } else {
+      barHeights[i] = Math.max(0.06, barHeights[i] * 0.84 - 0.008);
+    }
+
+    // Renderizado 100% acelerado por GPU (cero reflow, máxima fluidez en móvil)
+    bars[i].style.transform = `scaleY(${barHeights[i].toFixed(3)})`;
   }
   
   animationId = requestAnimationFrame(visualize);
@@ -2215,7 +2229,7 @@ function setupGlitchObservers() {
   }
 }
 
-// CONTROL DE CARÁTULAS: DESCARTE DE TEXTURAS EN GPU
+// CONTROL DE CARÁTULAS: EVITA LA ACUMULACIÓN DE IMÁGENES
 let lastArtUrl = '';
 function updateAlbumArtBackground() { 
   const c = document.getElementById('sonic_art_full'); 
@@ -2251,7 +2265,6 @@ document.addEventListener('visibilitychange', function() {
 });
 
 window.addEventListener('load', function() {
-  updateCachedLayout();
   updateAlbumArtBackground(); 
   setupGlitchObservers(); 
   initChatListeners(); 
@@ -2272,7 +2285,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone listo y optimizado a 60 FPS sin fugas.");
+  console.log("🎧 Nexus Zone listo: Ecualizador dinámico a 60 FPS y audio continuo.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
