@@ -927,7 +927,6 @@ footer {
   content-visibility: hidden;
 }
 
-/* Staff, peticiones y poema conservan 50vw */
 .requests-panel, .staff-panel, .poem-panel {
   width: 50vw;
   right: -50vw;
@@ -936,7 +935,6 @@ footer {
 .staff-panel { border-left: 3px solid #00ff41; }
 .poem-panel { border-left: 3px solid #bd00ff; }
 
-/* CHAT EN PC: 40vw */
 .chat-panel { 
   width: 40vw;
   right: -40vw;
@@ -1012,7 +1010,7 @@ footer {
   min-height: 0;
   overflow: hidden; 
   position: relative; 
-  padding-bottom: 0 !important; /* Elimina la franja inferior vacía */
+  padding-bottom: 0 !important;
   background: #111116;
 }
 
@@ -1113,16 +1111,16 @@ footer {
 }
 
 /* =========================================================
-   POEMA / FRASE SEMANAL: VISUALIZACIÓN COMPLETA SIN CORTES
+   POEMA / FRASE SEMANAL
    ========================================================= */
 .poem-content { 
   flex: 1; 
-  min-height: 0; /* Permite que el contenedor respete los límites flexibles */
+  min-height: 0;
   display: flex; 
   align-items: center; 
   justify-content: center; 
   padding: clamp(0.6rem, 1.8vw, 1.2rem);
-  overflow: auto; /* Evita que la imagen se corte en pantallas bajas */
+  overflow: auto;
 }
 .poem-image { 
   max-width: 100%; 
@@ -1523,7 +1521,9 @@ footer {
 </div>
 <div class="requests-overlay" id="requests-overlay"></div>
 
+<!-- REPRODUCTOR ÚNICO ORIGINAL CON LIMPIEZA DE BÚFER -->
 <audio id="radio-player" crossorigin="anonymous" preload="none"></audio>
+
 <script>
 const djCountryMap = {
   'adharacanis': { country: 'El Salvador', flagUrl: 'https://flagcdn.com/w40/sv.webp', code: 'SV' },
@@ -1643,6 +1643,11 @@ const barCount = bars.length;
 let visualizerFrameCount = 0;
 let isMobileDevice = window.innerWidth <= 900;
 let cachedContainerHeight = 42;
+
+// CONTROL SEGURO DE PURGA EN CAMBIO DE TEMA TRAS 1 HORA DE MÚSICA CONTINUA
+let playbackStartTime = 0;
+const SAFE_PURGE_WINDOW_MS = 60 * 60 * 1000; // 60 minutos
+let lastTrackSeen = '';
 
 const ledColors = ['#00ff41', '#bd00ff', '#ffffff'];
 let ledColorIndex = 0;
@@ -1765,7 +1770,6 @@ function initAdListeners() {
   setTimeout(showAdOverlay, 1000);
 }
 
-/* AJUSTE DE CHAT MÓVIL: SIN FRANJAS INFERIORES */
 function adjustChatIframeForMobile() {
   if (window.innerWidth <= 900 && isChatVisible) {
     if (window.visualViewport) {
@@ -1839,7 +1843,6 @@ function initChatListeners() {
   }
 }
 
-/* CARGA DE STAFF: AJUSTADA A 20 DJS PARA AHORRO DIRECTO DE MEMORIA */
 function loadStaffImages() {
   staffGrid.innerHTML = '';
   const fragment = document.createDocumentFragment();
@@ -2186,6 +2189,7 @@ function visualize() {
   animationId = requestAnimationFrame(visualize);
 }
 
+// GESTIÓN DE REPRODUCCIÓN Y VACIADO PROFUNDO DE MEMORIA
 function togglePlayPause() {
   if(!isPlaying) {
     if(audio.src !== streamUrl) audio.src = streamUrl;
@@ -2197,20 +2201,28 @@ function togglePlayPause() {
     if(audioContext.state==='suspended') audioContext.resume();
     if(!audioGraphSetup) setupAudioGraph();
     audio.play().then(() => {
-      isPlaying = true; playPauseBtn.innerHTML = '■'; playPauseBtn.classList.add('playing');
-      tapeLeft.classList.add('animated'); tapeRight.classList.add('animated');
+      isPlaying = true; 
+      playbackStartTime = Date.now();
+      playPauseBtn.innerHTML = '■'; 
+      playPauseBtn.classList.add('playing');
+      tapeLeft.classList.add('animated'); 
+      tapeRight.classList.add('animated');
       if(analyzer) startVisualizer();
     }).catch(err => {
       console.error("✗ Error play:", err);
       alert(err.name==='NotAllowedError' ? 'Haz clic de nuevo para permitir audio.' : 'Error de conexión o reproducción.');
     });
   } else {
+    // VACIADO INMEDIATO DE MEMORIA RAM AL PAUSAR
     audio.pause(); 
     audio.removeAttribute('src'); 
     audio.load();
     isPlaying = false;
-    playPauseBtn.innerHTML = '▶'; playPauseBtn.classList.remove('playing');
-    tapeLeft.classList.remove('animated'); tapeRight.classList.remove('animated');
+    playbackStartTime = 0;
+    playPauseBtn.innerHTML = '▶'; 
+    playPauseBtn.classList.remove('playing');
+    tapeLeft.classList.remove('animated'); 
+    tapeRight.classList.remove('animated');
     stopVisualizer();
   }
 }
@@ -2219,8 +2231,21 @@ playPauseBtn.addEventListener('click', togglePlayPause);
 function setupGlitchObservers() {
   if(sonicTitle) {
     const obs = new MutationObserver(() => { 
+      const currentTrack = sonicTitle.textContent.trim();
       updateGlitchDataText(sonicTitle); 
       if(Math.random()<0.35) triggerRandomGlitch(sonicTitle); 
+
+      // PURGA INTELIGENTE SOLO AL CAMBIAR DE TEMA Y TRAS 1 HORA DE ESCUCHA CONTINUA
+      if (currentTrack && currentTrack !== lastTrackSeen && !currentTrack.toLowerCase().includes('cargando')) {
+        lastTrackSeen = currentTrack;
+        
+        if (isPlaying && playbackStartTime > 0 && (Date.now() - playbackStartTime > SAFE_PURGE_WINDOW_MS)) {
+          playbackStartTime = Date.now();
+          console.log("♻️ [Nexus Memory Guard] Vaciando búfer acumulado en la transición de pista...");
+          audio.src = streamUrl + '?t=' + Date.now();
+          audio.play().catch(e => console.warn(e));
+        }
+      }
     });
     obs.observe(sonicTitle, {childList:true, characterData:true}); 
     updateGlitchDataText(sonicTitle);
@@ -2242,16 +2267,21 @@ function setupGlitchObservers() {
 let lastArtUrl = '';
 function updateAlbumArtBackground() { 
   const c = document.getElementById('sonic_art_full'); 
-  if(c && c.querySelector('img')) { 
-    const s = c.querySelector('img').src; 
-    if(s && s !== lastArtUrl) { 
-      lastArtUrl = s;
-      albumArtBg.style.backgroundImage = `url('${s}')`; 
+  if(c) { 
+    const img = c.querySelector('img');
+    if(img && img.src && img.src !== lastArtUrl) { 
+      lastArtUrl = img.src;
+      albumArtBg.style.backgroundImage = `url('${img.src}')`; 
       albumArtBg.style.opacity = '0.2'; 
     } 
+    // Evitar acumulación de elementos img en memoria DOM
+    while (c.children.length > 1) {
+      c.removeChild(c.firstElementChild);
+    }
   } 
 }
 
+// PAUSA DEL RENDERIZADO CUANDO LA PESTAÑA ESTÁ EN SEGUNDO PLANO PARA AHORRO TOTAL DE RECURSOS
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) {
     if (isVisualizing) {
@@ -2271,8 +2301,14 @@ document.addEventListener('visibilitychange', function() {
 
 window.addEventListener('load', function() {
   updateCachedLayout();
-  updateAlbumArtBackground(); setupGlitchObservers(); initChatListeners(); initStaffListeners(); initAdListeners();
-  initRequestsListeners(); initPoemListeners(); adjustChatIframeForMobile();
+  updateAlbumArtBackground(); 
+  setupGlitchObservers(); 
+  initChatListeners(); 
+  initStaffListeners(); 
+  initAdListeners();
+  initRequestsListeners(); 
+  initPoemListeners(); 
+  adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
   setTimeout(() => { if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim()); }, 1000);
   
@@ -2285,11 +2321,12 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true, subtree: true });
   }
-  console.log("🎧 Nexus Zone cargado con éxito y optimizado.");
+  console.log("🎧 Nexus Zone cargado con éxito y blindado contra fugas de memoria.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
 audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
+
 document.body.addEventListener('touchstart', function initMobile(){ 
   if(!audioContext && window.AudioContext){ 
     audioContext = new AudioContext(); 
