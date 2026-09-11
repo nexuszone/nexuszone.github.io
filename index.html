@@ -27,7 +27,10 @@
 
 html {
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
 /* BARRAS DE SCROLL */
@@ -171,6 +174,7 @@ h1 {
   user-select: none;
   transform: translateZ(0);
   contain: layout paint;
+  touch-action: pan-y;
 }
 
 .cassette-player::after {
@@ -457,6 +461,7 @@ h1 {
     0 0 0 1px rgba(189, 0, 255, 0.2);
   transform: translateZ(0);
   contain: strict;
+  isolation: isolate;
 }
 
 .equalizer-container::after {
@@ -538,7 +543,7 @@ h1 {
   border-radius: 2px; border: 1px solid #2d2d38;
 }
 
-/* CONTROL DE VOLUMEN */
+/* CONTROL DE VOLUMEN (CON DESLIZAMIENTO VERTICAL LIBRE) */
 .volume-control {
   width: 100%; max-width: 440px; margin: 10px auto 0 auto;
   background: linear-gradient(180deg, rgba(26, 26, 34, 0.96) 0%, rgba(14, 14, 18, 0.96) 100%);
@@ -549,6 +554,7 @@ h1 {
     inset 0 1px 2px rgba(255, 255, 255, 0.1),
     0 0 12px rgba(0, 255, 65, 0.12);
   position: relative; z-index: 10;
+  touch-action: pan-y;
 }
 .volume-header {
   display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
@@ -565,6 +571,7 @@ h1 {
 }
 .volume-slider-wrap {
   position: relative; width: 100%; display: flex; flex-direction: column; gap: 4px;
+  touch-action: pan-y;
 }
 .volume-slider {
   width: 100%; height: 8px;
@@ -573,7 +580,7 @@ h1 {
   background: linear-gradient(to right, #bd00ff 0%, #00ff41 100%, #202025 100%);
   border-radius: 6px; outline: none;
   cursor: pointer;
-  touch-action: none;
+  touch-action: pan-y;
   position: relative;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
 }
@@ -1229,7 +1236,7 @@ footer {
 }
 .requests-overlay.active, .chat-overlay.active, .staff-overlay.active, .poem-overlay.active { opacity: 1; visibility: visible; }
 
-/* PANTALLA FIJA DESKTOP */
+/* PANTALLA FIJA EN PC */
 @media (min-width: 901px) {
   html, body {
     height: 100vh;
@@ -1284,19 +1291,29 @@ footer {
   footer { min-height: 46px; padding: 0.1rem; }
 }
 
-/* OPTIMIZACIÓN MÓVILES */
+/* =========================================================
+   SCROLL SUAVE Y FLUIDO EN MÓVILES (SIN ATASCOS)
+   ========================================================= */
 @media (max-width: 900px) {
-  body { 
-    overflow-y: auto; 
-    -webkit-overflow-scrolling: touch;
+  html { 
+    overflow-y: auto !important; 
+    -webkit-overflow-scrolling: touch !important; 
+    height: auto !important;
   }
+  body { 
+    overflow-y: visible !important; 
+    min-height: 100dvh;
+    height: auto !important;
+    position: relative;
+  }
+  
   .header-content { flex-direction: row; justify-content: center; align-items: center; gap: 10px; }
   .header-logo { position: static; transform: none; max-height: 50px; max-width: 55px; flex-shrink: 0; }
   .header-text-group { align-items: flex-start; text-align: left; }
 
   .main-container {
     flex-direction: column; height: auto; flex: none;
-    padding: 1rem 0.6rem 2rem 0.6rem; gap: 1.6rem; justify-content: flex-start;
+    padding: 1rem 0.6rem 2.2rem 0.6rem; gap: 1.8rem; justify-content: flex-start;
   }
   .player-section, .dj-section { flex: none; width: 100%; max-width: 480px; padding: 0; }
   .cassette-player { width: 100%; max-width: 100%; }
@@ -1307,6 +1324,7 @@ footer {
     transform: translateZ(0) !important;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.9), 0 0 20px rgba(189, 0, 255, 0.35) !important;
     width: 270px; max-width: 270px;
+    contain: layout paint;
   }
   @keyframes caseFloatMobile {
     0% { transform: translateY(0px); }
@@ -1715,7 +1733,7 @@ let isVisualizing = false, audioGraphSetup = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
 
-// TUS 12 BANDAS Y MULTIPLICADORES ORIGINALES EXACTOS
+// BANDAS Y MULTIPLICADORES ORIGINALES
 const freqSpectrumBands = [
   { start: 1, end: 3, mult: 0.82 },
   { start: 3, end: 6, mult: 0.84 },
@@ -1750,31 +1768,6 @@ function handleVolumeInput(val) {
 
 volumeSlider.addEventListener('input', (e) => handleVolumeInput(e.target.value), { passive: true });
 volumeSlider.addEventListener('change', (e) => handleVolumeInput(e.target.value), { passive: true });
-
-let isDraggingVolume = false;
-function setVolumeFromPointer(e) {
-  const rect = volumeSlider.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const ratio = (clientX - rect.left) / rect.width;
-  handleVolumeInput(ratio);
-}
-
-volumeSlider.addEventListener('pointerdown', (e) => {
-  isDraggingVolume = true;
-  setVolumeFromPointer(e);
-  volumeSlider.setPointerCapture(e.pointerId);
-});
-volumeSlider.addEventListener('pointermove', (e) => {
-  if (isDraggingVolume) setVolumeFromPointer(e);
-});
-volumeSlider.addEventListener('pointerup', (e) => {
-  if (isDraggingVolume) {
-    isDraggingVolume = false;
-    try { volumeSlider.releasePointerCapture(e.pointerId); } catch(err){}
-  }
-});
-volumeSlider.addEventListener('pointercancel', () => { isDraggingVolume = false; });
-
 updateVolumeDisplay();
 
 /* MARQUEE CONTINUO */
@@ -2152,19 +2145,16 @@ function setupAudioGraph() {
   try {
     analyzer = audioContext.createAnalyser(); 
     analyzer.fftSize = 512; 
-    analyzer.smoothingTimeConstant = 0.82; // Suavizado acústico original
+    analyzer.smoothingTimeConstant = 0.82;
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
 
-    // Si el navegador soporta captureStream(), obtenemos el flujo en tiempo real sin retención PCM
     const capture = audio.captureStream || audio.mozCaptureStream;
     if (capture) {
       const stream = capture.call(audio);
       audioSourceNode = audioContext.createMediaStreamSource(stream);
       audioSourceNode.connect(analyzer);
-      // El audio suena por la etiqueta nativa; no se reconecta a destination evitando retención de memoria
       audioGraphSetup = true;
     } else {
-      // Fallback
       audioSourceNode = audioContext.createMediaElementSource(audio);
       audioSourceNode.connect(analyzer); 
       analyzer.connect(audioContext.destination); 
@@ -2195,7 +2185,7 @@ function stopVisualizer() {
   }
 }
 
-/* BUCLE DE VISUALIZACIÓN REAL CON LAS 12 BANDAS Y FÓRMULAS EXACTAS */
+/* BUCLE DE VISUALIZACIÓN REAL CON LAS 12 BANDAS */
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   
@@ -2216,7 +2206,6 @@ function visualize() {
     
     let norm = (avg / 255) * band.mult;
     
-    // Margen elástico original
     if (norm > 0.85) {
       norm = 0.85 + (norm - 0.85) * 0.35;
     }
@@ -2227,7 +2216,6 @@ function visualize() {
 
     bars[i].style.transform = `scaleY(${scale.toFixed(3)})`;
     
-    // ILUMINACIÓN REACTIVA NEÓN ORIGINAL
     const targetClass = scale >= 0.72 ? 'bar bar-high' : (scale >= 0.38 ? 'bar bar-mid' : 'bar');
     if (bars[i].className !== targetClass) {
       bars[i].className = targetClass;
@@ -2358,7 +2346,7 @@ window.addEventListener('load', function() {
     });
     artObserver.observe(artContainer, { childList: true });
   }
-  console.log("🎧 Nexus Zone listo con ecualizador real restaurado al 100%.");
+  console.log("🎧 Nexus Zone listo con scroll fluido y ecualizador real.");
 });
 
 audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
