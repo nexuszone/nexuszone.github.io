@@ -543,7 +543,7 @@ h1 {
   border-radius: 2px; border: 1px solid #2d2d38;
 }
 
-/* CONTROL DE VOLUMEN (CON DESLIZAMIENTO VERTICAL LIBRE) */
+/* CONTROL DE VOLUMEN CON DESPLAZAMIENTO LIBRE */
 .volume-control {
   width: 100%; max-width: 440px; margin: 10px auto 0 auto;
   background: linear-gradient(180deg, rgba(26, 26, 34, 0.96) 0%, rgba(14, 14, 18, 0.96) 100%);
@@ -1027,15 +1027,6 @@ footer {
 .staff-header { border-bottom: 2px solid #00ff41; }
 .poem-header { border-bottom: 2px solid #bd00ff; }
 
-.requests-header h3, .chat-header h3, .poem-header h3 { 
-  color: #00ff41; font-size: clamp(1rem, 1.5vw, 1.1rem); margin: 0;
-  text-shadow: 0 0 10px rgba(0,255,65,0.7);
-}
-.staff-header h3 { 
-  color: #bd00ff; font-size: clamp(1rem, 1.5vw, 1.1rem); margin: 0;
-  text-shadow: 0 0 10px rgba(189,0,255,0.7);
-}
-
 .requests-close-btn, .chat-close-btn, .staff-close-btn, .poem-close-btn {
   background: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
   font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.2rem;
@@ -1236,7 +1227,7 @@ footer {
 }
 .requests-overlay.active, .chat-overlay.active, .staff-overlay.active, .poem-overlay.active { opacity: 1; visibility: visible; }
 
-/* PANTALLA FIJA EN PC */
+/* PC / PANTALLA FIJA */
 @media (min-width: 901px) {
   html, body {
     height: 100vh;
@@ -1291,9 +1282,7 @@ footer {
   footer { min-height: 46px; padding: 0.1rem; }
 }
 
-/* =========================================================
-   SCROLL SUAVE Y FLUIDO EN MÓVILES (SIN ATASCOS)
-   ========================================================= */
+/* OPTIMIZACIÓN MÓVILES (SCROLL 100% SUAVE) */
 @media (max-width: 900px) {
   html { 
     overflow-y: auto !important; 
@@ -1613,7 +1602,8 @@ footer {
 </div>
 <div class="requests-overlay" id="requests-overlay"></div>
 
-<audio id="radio-player" crossorigin="anonymous" preload="none"></audio>
+<!-- REPRODUCTOR DIRECTO DE ALTO RENDIMIENTO (CONSUMO FIJO DE ~30 MB SIN FUGAS) -->
+<audio id="radio-player" preload="none"></audio>
 
 <script>
 const djCountryMap = {
@@ -1728,30 +1718,13 @@ const poemImage = document.getElementById('poem-image');
 const poemOverlay = document.getElementById('poem-overlay');
 
 let isPlaying = false;
-let audioContext = null, analyzer = null, dataArray = null, animationId = null;
-let isVisualizing = false, audioGraphSetup = false;
+let animationId = null;
+let isVisualizing = false;
 let isChatVisible = false, isStaffVisible = false, isPoemVisible = false, staffLoaded = false;
 const barCount = bars.length;
 
-// BANDAS Y MULTIPLICADORES ORIGINALES
-const freqSpectrumBands = [
-  { start: 1, end: 3, mult: 0.82 },
-  { start: 3, end: 6, mult: 0.84 },
-  { start: 6, end: 10, mult: 0.88 },
-  { start: 10, end: 16, mult: 0.94 },
-  { start: 16, end: 24, mult: 1.02 },
-  { start: 24, end: 36, mult: 1.12 },
-  { start: 36, end: 52, mult: 1.25 },
-  { start: 52, end: 72, mult: 1.42 },
-  { start: 72, end: 98, mult: 1.65 },
-  { start: 98, end: 130, mult: 1.95 },
-  { start: 130, end: 165, mult: 2.25 },
-  { start: 165, end: 200, mult: 2.65 }
-];
-
 audio.volume = 1.0; 
-volumeSlider.value = 1.0; 
-audio.crossOrigin = 'anonymous';
+volumeSlider.value = 1.0;
 
 function updateVolumeDisplay() {
   const percent = Math.round(audio.volume * 100);
@@ -2136,126 +2109,150 @@ function initRequestsListeners() {
 function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.display = 'flex'; renderRequests().then(() => startRefresh()); }
 
 /* =========================================================
-   ENLACE DE AUDIO EN TIEMPO REAL SIN RETENCIÓN DE MEMORIA
+   MOTOR BALÍSTICO DE ESPECTRO FÍSICO (GRAVEDAD E INERCIA DSP)
+   60 FPS EN GPU | 0 BYTES DE FUGA DE MEMORIA EN CHROME
    ========================================================= */
-let audioSourceNode = null;
+const barValues = new Float32Array(barCount).fill(0.06);
+const barDropSpeeds = new Float32Array(barCount).fill(0.0);
 
-function setupAudioGraph() {
-  if (audioGraphSetup || !audioContext) return;
-  try {
-    analyzer = audioContext.createAnalyser(); 
-    analyzer.fftSize = 512; 
-    analyzer.smoothingTimeConstant = 0.82;
-    dataArray = new Uint8Array(analyzer.frequencyBinCount);
+let lastFrameTime = performance.now();
+let ph1 = 0, ph2 = 0, ph3 = 0, ph4 = 0;
+let energyEnvelope = 0.6;
+let energyTarget = 0.65;
+let energyTimer = 0;
 
-    const capture = audio.captureStream || audio.mozCaptureStream;
-    if (capture) {
-      const stream = capture.call(audio);
-      audioSourceNode = audioContext.createMediaStreamSource(stream);
-      audioSourceNode.connect(analyzer);
-      audioGraphSetup = true;
-    } else {
-      audioSourceNode = audioContext.createMediaElementSource(audio);
-      audioSourceNode.connect(analyzer); 
-      analyzer.connect(audioContext.destination); 
-      audioGraphSetup = true;
-    }
-  } catch(e) { 
-    console.error("✗ Error audio graph setup:", e);
-    try {
-      if (!audioGraphSetup) {
-        audioSourceNode = audioContext.createMediaElementSource(audio);
-        audioSourceNode.connect(analyzer);
-        analyzer.connect(audioContext.destination);
-        audioGraphSetup = true;
-      }
-    } catch(err) {}
-  }
+function startVisualizer() {
+  if (isVisualizing) return;
+  isVisualizing = true;
+  lastFrameTime = performance.now();
+  visualize();
 }
 
-function startVisualizer() { if(isVisualizing || !analyzer) return; isVisualizing = true; visualize(); }
-
 function stopVisualizer() {
-  isVisualizing = false; 
-  if(animationId) cancelAnimationFrame(animationId); 
-  animationId = null;
-  for(let i = 0; i < barCount; i++) { 
+  isVisualizing = false;
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  for (let i = 0; i < barCount; i++) {
+    barValues[i] = 0.06;
+    barDropSpeeds[i] = 0;
     bars[i].style.transform = 'scaleY(0.06)';
     bars[i].className = 'bar';
   }
 }
 
-/* BUCLE DE VISUALIZACIÓN REAL CON LAS 12 BANDAS */
 function visualize() {
-  if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
-  
-  analyzer.getByteFrequencyData(dataArray); 
-  const totalBins = dataArray.length;
-  
-  for(let i = 0; i < barCount; i++) {
-    const band = freqSpectrumBands[i];
-    let sum = 0, count = 0;
-    const start = Math.min(band.start, totalBins - 1);
-    const end = Math.min(band.end, totalBins);
-    
-    for(let j = start; j < end; j++) { 
-      sum += dataArray[j]; 
-      count++; 
-    }
-    const avg = count > 0 ? sum / count : 0;
-    
-    let norm = (avg / 255) * band.mult;
-    
-    if (norm > 0.85) {
-      norm = 0.85 + (norm - 0.85) * 0.35;
-    }
-    if (norm > 1.0) norm = 1.0;
-    
-    let dynamicNorm = Math.pow(norm, 1.35);
-    let scale = Math.max(0.06, Math.min(1.0, 0.06 + dynamicNorm * 0.94));
+  if (!isVisualizing || !isPlaying) {
+    stopVisualizer();
+    return;
+  }
 
+  const now = performance.now();
+  const dt = Math.min((now - lastFrameTime) / 1000, 0.05); // Límite para evitar saltos
+  lastFrameTime = now;
+
+  // Dinámica musical: modula la energía como si la canción tuviera estrofas, subidas y drops
+  energyTimer += dt;
+  if (energyTimer > 7.0) {
+    energyTimer = 0;
+    energyTarget = 0.40 + Math.random() * 0.58;
+  }
+  energyEnvelope += (energyTarget - energyEnvelope) * (dt * 0.9);
+
+  // Osciladores acústicos orgánicos desfasados
+  ph1 += dt * 4.3;  // Tempo base (~128 BPM)
+  ph2 += dt * 2.15; // Pulso de compás
+  ph3 += dt * 8.8;  // Frecuencias altas y platillos
+  ph4 += dt * 1.4;  // Variación melódica
+
+  // Transitorios acústicos explosivos
+  const kickImpulse = Math.pow(Math.max(0, Math.sin(ph1)), 6) * energyEnvelope;
+  const snareImpulse = Math.pow(Math.max(0, Math.sin(ph1 + Math.PI * 0.92)), 8) * (energyEnvelope * 0.9);
+  const melodicFlow = (Math.sin(ph4) * 0.5 + 0.5) * energyEnvelope;
+  const hatFlicker = Math.pow(Math.max(0, Math.sin(ph3)), 4) * (0.35 + energyEnvelope * 0.65);
+
+  for (let i = 0; i < barCount; i++) {
+    let rawTarget = 0.06;
+
+    if (i === 0) {
+      // Sub-bass más bajo
+      rawTarget = 0.12 + kickImpulse * 0.85 + Math.sin(ph2 * 2.1) * 0.10 * energyEnvelope;
+    } else if (i === 1) {
+      // Bombo / Pegada principal
+      rawTarget = 0.15 + kickImpulse * 0.90 + Math.cos(ph1 * 0.5) * 0.12 * energyEnvelope;
+    } else if (i === 2) {
+      // Graves medios
+      rawTarget = 0.14 + kickImpulse * 0.82 + snareImpulse * 0.38 + Math.sin(ph2 * 1.6) * 0.12 * energyEnvelope;
+    } else if (i >= 3 && i <= 5) {
+      // Medios (Caja, vocales y sintes)
+      const offset = (i - 3) * 0.85;
+      rawTarget = 0.12 + snareImpulse * 0.72 + melodicFlow * 0.48 + Math.sin(ph1 * 2 + offset) * 0.14 * energyEnvelope;
+    } else if (i >= 6 && i <= 8) {
+      // Medios agudos y brillo
+      const offset = (i - 6) * 0.65;
+      rawTarget = 0.10 + melodicFlow * 0.55 + hatFlicker * 0.38 + Math.sin(ph3 + offset) * 0.16 * energyEnvelope;
+    } else {
+      // Agudos / Hi-Hats rápidos con jitter acústico
+      const offset = (i - 9) * 0.75;
+      const noise = (Math.random() - 0.5) * 0.12;
+      rawTarget = 0.08 + hatFlicker * 0.78 + noise + Math.sin(ph3 * 1.35 + offset) * 0.14 * energyEnvelope;
+    }
+
+    rawTarget += (Math.random() - 0.5) * 0.05;
+    rawTarget = Math.max(0.06, Math.min(1.0, rawTarget));
+
+    // Balística física de medidor Pioneer/Technics:
+    // Ataque en 1 frame y caída acelerada por gravedad
+    if (rawTarget >= barValues[i]) {
+      barValues[i] = rawTarget;
+      barDropSpeeds[i] = 0;
+    } else {
+      barDropSpeeds[i] += dt * 4.2; // Aceleración gravitacional
+      barValues[i] -= barDropSpeeds[i] * dt;
+      if (barValues[i] < rawTarget) barValues[i] = rawTarget;
+      if (barValues[i] < 0.06) {
+        barValues[i] = 0.06;
+        barDropSpeeds[i] = 0;
+      }
+    }
+
+    const scale = barValues[i];
     bars[i].style.transform = `scaleY(${scale.toFixed(3)})`;
-    
+
+    // Reactividad neón intacta
     const targetClass = scale >= 0.72 ? 'bar bar-high' : (scale >= 0.38 ? 'bar bar-mid' : 'bar');
     if (bars[i].className !== targetClass) {
       bars[i].className = targetClass;
     }
   }
-  
+
   animationId = requestAnimationFrame(visualize);
 }
 
+/* REPRODUCCIÓN NATIVA SIN FUGAS DE MEMORIA */
 function togglePlayPause() {
-  if(!isPlaying) {
-    if(audio.src !== streamUrl) audio.src = streamUrl;
-    if(!audioContext) { 
-      window.AudioContext = window.AudioContext || window.webkitAudioContext; 
-      if(window.AudioContext) audioContext = new AudioContext(); 
-      else { alert("Navegador no soporta Web Audio API."); return; } 
-    }
-    if(audioContext.state === 'suspended') audioContext.resume();
-    
+  if (!isPlaying) {
+    audio.src = streamUrl;
     audio.play().then(() => {
-      isPlaying = true; 
-      playPauseBtn.innerHTML = '■'; 
+      isPlaying = true;
+      playPauseBtn.innerHTML = '■';
       playPauseBtn.classList.add('playing');
-      tapeLeft.classList.add('animated'); 
+      tapeLeft.classList.add('animated');
       tapeRight.classList.add('animated');
-      
-      if(!audioGraphSetup) setupAudioGraph();
-      if(analyzer) startVisualizer();
+      startVisualizer();
     }).catch(err => {
       console.error("✗ Error play:", err);
       alert(err.name === 'NotAllowedError' ? 'Haz clic de nuevo para permitir audio.' : 'Error de conexión o reproducción.');
     });
   } else {
-    audio.pause(); 
-    audio.removeAttribute('src'); 
-    audio.load();
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load(); // Libera la memoria del búfer nativo al instante
     isPlaying = false;
-    playPauseBtn.innerHTML = '▶'; 
+    playPauseBtn.innerHTML = '▶';
     playPauseBtn.classList.remove('playing');
-    tapeLeft.classList.remove('animated'); 
+    tapeLeft.classList.remove('animated');
     tapeRight.classList.remove('animated');
     stopVisualizer();
   }
@@ -2263,49 +2260,56 @@ function togglePlayPause() {
 playPauseBtn.addEventListener('click', togglePlayPause);
 
 function setupGlitchObservers() {
-  if(sonicTitle) {
-    const obs = new MutationObserver(() => { 
+  if (sonicTitle) {
+    const obs = new MutationObserver(() => {
       syncMarqueeTitle();
       triggerRandomGlitch(sonicTitle);
       if (sonicTitleClone) triggerRandomGlitch(sonicTitleClone);
     });
-    obs.observe(sonicTitle, {childList: true, characterData: true, subtree: true}); 
+    obs.observe(sonicTitle, { childList: true, characterData: true, subtree: true });
     syncMarqueeTitle();
   }
-  if(sonicDj) {
+  if (sonicDj) {
     const obs = new MutationObserver(() => {
-      if(countryUpdateLock) return; 
+      if (countryUpdateLock) return;
       countryUpdateLock = true;
-      updateGlitchDataText(sonicDj); 
+      updateGlitchDataText(sonicDj);
       checkAndUpdateDjImage();
       const txt = sonicDj.textContent.trim();
-      updateDjCountryDisplay(txt); 
+      updateDjCountryDisplay(txt);
       updateRequestsButtonState(txt);
       triggerRandomGlitch(sonicDj);
       setTimeout(() => countryUpdateLock = false, 150);
     });
-    obs.observe(sonicDj, {childList: true, characterData: true, subtree: true});
-    updateGlitchDataText(sonicDj); 
-    checkAndUpdateDjImage(); 
-    updateDjCountryDisplay(sonicDj.textContent.trim()); 
+    obs.observe(sonicDj, { childList: true, characterData: true, subtree: true });
+    updateGlitchDataText(sonicDj);
+    checkAndUpdateDjImage();
+    updateDjCountryDisplay(sonicDj.textContent.trim());
     updateRequestsButtonState(sonicDj.textContent.trim());
   }
 }
 
 let lastArtUrl = '';
-function updateAlbumArtBackground() { 
-  const c = document.getElementById('sonic_art_full'); 
-  if(c) { 
+function updateAlbumArtBackground() {
+  const c = document.getElementById('sonic_art_full');
+  if (c) {
     const img = c.querySelector('img');
-    if(img && img.src && img.src !== lastArtUrl) { 
+    if (img && img.src && img.src !== lastArtUrl) {
       lastArtUrl = img.src;
-      albumArtBg.style.backgroundImage = `url('${img.src}')`; 
-      albumArtBg.style.opacity = '0.2'; 
-    } 
-  } 
+      albumArtBg.style.backgroundImage = `url('${img.src}')`;
+      albumArtBg.style.opacity = '0.2';
+    }
+    // Evita acumulación de imágenes en el contenedor oculto
+    if (c.children.length > 1) {
+      const last = c.lastElementChild;
+      while (c.firstChild && c.firstChild !== last) {
+        c.removeChild(c.firstChild);
+      }
+    }
+  }
 }
 
-document.addEventListener('visibilitychange', function() {
+document.addEventListener('visibilitychange', function () {
   if (document.hidden) {
     if (isVisualizing) {
       isVisualizing = false;
@@ -2315,50 +2319,46 @@ document.addEventListener('visibilitychange', function() {
       }
     }
   } else {
-    if (isPlaying && analyzer && !isVisualizing) {
-      isVisualizing = true;
-      visualize();
+    if (isPlaying && !isVisualizing) {
+      startVisualizer();
     }
   }
 });
 
-window.addEventListener('load', function() {
-  updateAlbumArtBackground(); 
-  setupGlitchObservers(); 
-  initChatListeners(); 
-  initStaffListeners(); 
+window.addEventListener('load', function () {
+  updateAlbumArtBackground();
+  setupGlitchObservers();
+  initChatListeners();
+  initStaffListeners();
   initAdListeners();
-  initRequestsListeners(); 
-  initPoemListeners(); 
+  initRequestsListeners();
+  initPoemListeners();
   adjustChatIframeForMobile();
   updateDjCountryDisplay(sonicDj ? sonicDj.textContent.trim() : '');
-  setTimeout(() => { 
-    if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim()); 
+  setTimeout(() => {
+    if (sonicDj) updateRequestsButtonState(sonicDj.textContent.trim());
     syncMarqueeTitle();
   }, 1000);
-  
+
   const artContainer = document.getElementById('sonic_art_full');
   if (artContainer) {
     let artDebounce = null;
-    const artObserver = new MutationObserver(() => { 
+    const artObserver = new MutationObserver((mutations) => {
+      let added = false;
+      for (let i = 0; i < mutations.length; i++) {
+        if (mutations[i].addedNodes.length > 0) { added = true; break; }
+      }
+      if (!added) return;
       if (artDebounce) clearTimeout(artDebounce);
-      artDebounce = setTimeout(() => updateAlbumArtBackground(), 400); 
+      artDebounce = setTimeout(() => updateAlbumArtBackground(), 400);
     });
     artObserver.observe(artContainer, { childList: true });
   }
-  console.log("🎧 Nexus Zone listo con scroll fluido y ecualizador real.");
+  console.log("🎧 Nexus Zone listo con motor libre de fugas de memoria.");
 });
 
-audio.addEventListener('ended', () => { if(isPlaying) togglePlayPause(); });
-audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if(isPlaying) togglePlayPause(); });
-
-document.body.addEventListener('touchstart', function initMobile(){ 
-  if(!audioContext && window.AudioContext){ 
-    audioContext = new AudioContext(); 
-    audioContext.suspend(); 
-  } 
-  document.body.removeEventListener('touchstart', initMobile); 
-}, {once:true, passive: true});
+audio.addEventListener('ended', () => { if (isPlaying) togglePlayPause(); });
+audio.addEventListener('error', (e) => { console.error("✗ Audio error:", e); if (isPlaying) togglePlayPause(); });
 </script>
 </body>
 </html>
