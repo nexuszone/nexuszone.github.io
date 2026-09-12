@@ -1602,7 +1602,6 @@ footer {
 </div>
 <div class="requests-overlay" id="requests-overlay"></div>
 
-<!-- REPRODUCTOR DIRECTO -->
 <audio id="radio-player" crossorigin="anonymous" preload="none"></audio>
 
 <script>
@@ -1827,8 +1826,15 @@ function checkAndUpdateDjImage() {
   if (!sonicDj || !djProfileImg) return;
   const currentText = sonicDj.textContent.trim();
   if (currentText.toUpperCase().includes('NO DJ') || currentText === '') {
-    sonicDj.textContent = 'NeXus DJ'; updateGlitchDataText(sonicDj); updateDjImage('autodj'); return true;
-  } else if (currentText && currentText.toUpperCase() !== 'NEXUS DJ') { updateDjImage(currentText); }
+    if (sonicDj.textContent !== 'NeXus DJ') {
+      sonicDj.textContent = 'NeXus DJ';
+      updateGlitchDataText(sonicDj);
+      updateDjImage('autodj');
+    }
+    return true;
+  } else if (currentText && currentText.toUpperCase() !== 'NEXUS DJ') {
+    updateDjImage(currentText);
+  }
   return false;
 }
 
@@ -2127,26 +2133,28 @@ function initRequestsListeners() {
 function enterPanel() { requestsAuth.style.display = 'none'; requestsMain.style.display = 'flex'; renderRequests().then(() => startRefresh()); }
 
 /* =========================================================
-   WEB AUDIO API REAL (ANÁLISIS REAL SIN FUGAS DE MEMORIA)
+   ENLACE DE AUDIO EN TIEMPO REAL AL RITMO DE LA MÚSICA
+   (CON DRENAJE ACTIVO DE DESTINATION: 0 RETENCIÓN EN COLA)
    ========================================================= */
 function setupAudioGraph() {
   if (audioGraphSetup || !audioContext) return;
   try {
     analyzer = audioContext.createAnalyser(); 
     analyzer.fftSize = 512; 
-    analyzer.smoothingTimeConstant = 0.82; // Suavizado acústico natural idéntico al original
+    analyzer.smoothingTimeConstant = 0.82; // Suavizado acústico original exacto
     dataArray = new Uint8Array(analyzer.frequencyBinCount);
 
     audioSourceNode = audioContext.createMediaElementSource(audio);
     
-    // Conectamos el analizador en modo escucha para que lea las frecuencias reales de la canción
+    // Conectamos el analizador a la música
     audioSourceNode.connect(analyzer);
     
-    // ¡LA CORRECCIÓN CLAVE!: NO conectamos analyzer a audioContext.destination.
-    // El audio suena directamente por la etiqueta <audio> nativa hacia tus altavoces
-    // con un búfer circular de 3 segundos, impidiendo que Chrome acumule 4,7 GB de PCM.
+    // Conectamos a destination para que el reloj del hardware de sonido
+    // vacíe el búfer continuamente en cada milisegundo y NO se acumulen los 3,3 GB.
+    analyzer.connect(audioContext.destination);
+
     audioGraphSetup = true;
-    console.log("✅ Analizador Web Audio en tiempo real conectado al stream.");
+    console.log("✅ Analizador Web Audio conectado al ritmo de la música.");
   } catch(e) { 
     console.error("✗ Error audio graph setup:", e);
   }
@@ -2172,7 +2180,6 @@ function stopVisualizer() {
 function visualize() {
   if(!isVisualizing || !analyzer || !isPlaying) { stopVisualizer(); return; }
   
-  // Obtenemos los datos reales del stream
   analyzer.getByteFrequencyData(dataArray); 
   const totalBins = dataArray.length;
   
@@ -2190,7 +2197,6 @@ function visualize() {
     
     let norm = (avg / 255) * band.mult;
     
-    // Margen elástico original exacto
     if (norm > 0.85) {
       norm = 0.85 + (norm - 0.85) * 0.35;
     }
@@ -2199,10 +2205,8 @@ function visualize() {
     let dynamicNorm = Math.pow(norm, 1.35);
     let scale = Math.max(0.06, Math.min(1.0, 0.06 + dynamicNorm * 0.94));
 
-    // Aceleración GPU directa a 60 FPS
     bars[i].style.transform = `scaleY(${scale.toFixed(3)})`;
     
-    // ILUMINACIÓN REACTIVA NEÓN ORIGINAL
     const targetClass = scale >= 0.72 ? 'bar bar-high' : (scale >= 0.38 ? 'bar bar-mid' : 'bar');
     if (bars[i].className !== targetClass) {
       bars[i].className = targetClass;
@@ -2223,7 +2227,10 @@ function togglePlayPause() {
     
     if(!audioGraphSetup) setupAudioGraph();
 
-    audio.src = streamUrl;
+    if (audio.src !== streamUrl) {
+      audio.src = streamUrl;
+    }
+    
     audio.play().then(() => {
       isPlaying = true; 
       playPauseBtn.innerHTML = '■'; 
@@ -2238,8 +2245,8 @@ function togglePlayPause() {
     });
   } else {
     audio.pause(); 
-    audio.removeAttribute('src'); 
-    audio.load(); // Libera el búfer nativo de Chrome de forma inmediata
+    // Limpiamos la conexión de red sin corromper el pipeline de C++
+    audio.src = '';
     isPlaying = false;
     playPauseBtn.innerHTML = '▶'; 
     playPauseBtn.classList.remove('playing');
@@ -2252,27 +2259,35 @@ playPauseBtn.addEventListener('click', togglePlayPause);
 
 function setupGlitchObservers() {
   if(sonicTitle) {
+    let lastTitle = '';
     const obs = new MutationObserver(() => { 
+      const txt = sonicTitle.textContent.trim();
+      if (txt === lastTitle) return; // Corta bucles infinitos
+      lastTitle = txt;
       syncMarqueeTitle();
       triggerRandomGlitch(sonicTitle);
       if (sonicTitleClone) triggerRandomGlitch(sonicTitleClone);
     });
-    obs.observe(sonicTitle, {childList: true, characterData: true, subtree: true}); 
+    obs.observe(sonicTitle, {childList: true, characterData: true}); 
     syncMarqueeTitle();
   }
   if(sonicDj) {
+    let lastDj = '';
     const obs = new MutationObserver(() => {
+      const txt = sonicDj.textContent.trim();
+      if (txt === lastDj) return; // Corta bucles infinitos
+      lastDj = txt;
+
       if(countryUpdateLock) return; 
       countryUpdateLock = true;
       updateGlitchDataText(sonicDj); 
       checkAndUpdateDjImage();
-      const txt = sonicDj.textContent.trim();
       updateDjCountryDisplay(txt); 
       updateRequestsButtonState(txt);
       triggerRandomGlitch(sonicDj);
-      setTimeout(() => countryUpdateLock = false, 150);
+      setTimeout(() => countryUpdateLock = false, 200);
     });
-    obs.observe(sonicDj, {childList: true, characterData: true, subtree: true});
+    obs.observe(sonicDj, {childList: true, characterData: true});
     updateGlitchDataText(sonicDj); 
     checkAndUpdateDjImage(); 
     updateDjCountryDisplay(sonicDj.textContent.trim()); 
@@ -2290,12 +2305,9 @@ function updateAlbumArtBackground() {
       albumArtBg.style.backgroundImage = `url('${img.src}')`; 
       albumArtBg.style.opacity = '0.2'; 
     } 
-    // Mantiene limpio el contenedor oculto sin disparar bucles de mutación
-    if (c.children.length > 1) {
-      const last = c.lastElementChild;
-      while (c.firstChild && c.firstChild !== last) {
-        c.removeChild(c.firstChild);
-      }
+    // Deja solo la carátula activa sin provocar bucles de memoria
+    while (c.children.length > 1) {
+      c.removeChild(c.firstElementChild);
     }
   } 
 }
@@ -2335,14 +2347,15 @@ window.addEventListener('load', function() {
   const artContainer = document.getElementById('sonic_art_full');
   if (artContainer) {
     let artDebounce = null;
-    const artObserver = new MutationObserver((mutations) => { 
-      let added = false;
-      for (let i = 0; i < mutations.length; i++) {
-        if (mutations[i].addedNodes.length > 0) { added = true; break; }
-      }
-      if (!added) return;
+    let isCleaningArt = false;
+    const artObserver = new MutationObserver(() => { 
+      if (isCleaningArt) return; // Evita bucle si estamos limpiando nodos viejos
       if (artDebounce) clearTimeout(artDebounce);
-      artDebounce = setTimeout(() => updateAlbumArtBackground(), 400); 
+      artDebounce = setTimeout(() => {
+        isCleaningArt = true;
+        updateAlbumArtBackground();
+        setTimeout(() => { isCleaningArt = false; }, 100);
+      }, 300); 
     });
     artObserver.observe(artContainer, { childList: true });
   }
