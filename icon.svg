@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Cortes simétricos verticalmente -->
+    <clipPath id="icoLeftHalf">
+      <rect x="0" y="0" width="256" height="512"/>
+    </clipPath>
+    <clipPath id="icoRightHalf">
+      <rect x="256" y="0" width="256" height="512"/>
+    </clipPath>
+  </defs>
+
+  <!-- FONDO GENERAL OSCURO (Evita que Android o Chrome pongan fondo blanco) -->
+  <rect width="512" height="512" rx="96" fill="#08090d"/>
+
+  <!-- MITAD IZQUIERDA (MORADO #b026ff) -->
+  <g clip-path="url(#icoLeftHalf)">
+    <rect x="26" y="106" width="460" height="300" rx="64" fill="#0d0e15" stroke="#b026ff" stroke-width="26"/>
+    <rect x="86" y="156" width="340" height="150" rx="36" fill="#08090d" stroke="#b026ff" stroke-width="12"/>
+    <rect x="156" y="186" width="200" height="90" rx="22" fill="#0d0e15" stroke="#b026ff" stroke-width="10"/>
+    <circle cx="210" cy="231" r="30" fill="none" stroke="#b026ff" stroke-width="10"/>
+    <circle cx="210" cy="231" r="13" fill="#b026ff"/>
+    <polygon points="126,380 166,324 346,324 386,380" fill="#08090d" stroke="#b026ff" stroke-width="12"/>
+    <circle cx="196" cy="354" r="14" fill="#b026ff"/>
+  </g>
+
+  <!-- MITAD DERECHA (VERDE #00ff66) -->
+  <g clip-path="url(#icoRightHalf)">
+    <rect x="26" y="106" width="460" height="300" rx="64" fill="#0d0e15" stroke="#00ff66" stroke-width="26"/>
+    <rect x="86" y="156" width="340" height="150" rx="36" fill="#08090d" stroke="#00ff66" stroke-width="12"/>
+    <rect x="156" y="186" width="200" height="90" rx="22" fill="#0d0e15" stroke="#00ff66" stroke-width="10"/>
+    <circle cx="302" cy="231" r="30" fill="none" stroke="#00ff66" stroke-width="10"/>
+    <circle cx="302" cy="231" r="13" fill="#00ff66"/>
+    <polygon points="126,380 166,324 346,324 386,380" fill="#08090d" stroke="#00ff66" stroke-width="12"/>
+    <circle cx="316" cy="354" r="14" fill="#00ff66"/>
+  </g>
+
+  <!-- TORNILLOS Y AGUJERO CENTRAL EN GRIS -->
+  <circle cx="56" cy="136" r="12" fill="#6b7280"/>
+  <circle cx="456" cy="136" r="12" fill="#6b7280"/>
+  <circle cx="56" cy="376" r="12" fill="#6b7280"/>
+  <circle cx="456" cy="376" r="12" fill="#6b7280"/>
+  <circle cx="256" cy="354" r="11" fill="#6b7280"/>
+</svg>

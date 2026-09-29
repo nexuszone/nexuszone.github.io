@@ -1,0 +1,48 @@
+{
+  "social": {
+    "tiktok": "https://www.tiktok.com/@nexuszone2",
+    "telegram": "https://t.me/NeXusZoNe"
+  },
+  "no dj": {
+    "display": "NeXusDj",
+    "image": "djs/nexusdj.webp",
+    "country": "España",
+    "flag": "es"
+  },
+  "yahirmaniaca": {
+    "display": "YaHiRMaNiaCa",
+    "image": "djs/yahirmaniaca.webp",
+    "country": "México",
+    "flag": "mx"
+  },
+  "|lu5|0n": {
+    "display": "|lu5|0n",
+    "image": "djs/ilusion.webp",
+    "country": "Bolivia",
+    "flag": "bo"
+  },
+  "castle": {
+    "display": "Castle",
+    "image": "djs/castle.webp",
+    "country": "España",
+    "flag": "es"
+  }
+  "Cisne-Negro": {
+    "display": "Cisne-Negro",
+    "image": "djs/cisnenegro.webp",
+    "country": "Colombia",
+    "flag": "co"
+  },
+  "Caraxs": {
+    "display": "|lu5|0n",
+    "image": "djs/caraxs.webp",
+    "country": "El Salvador",
+    "flag": "sv"
+  },
+  "Amatista": {
+    "display": "Amatista",
+    "image": "djs/amatista.webp",
+    "country": "El Salvador",
+    "flag": "sv"
+  }
+}
