@@ -1617,10 +1617,11 @@
           li.className = "staff-card";
 
           const flagUrl = dj.flag ? `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png` : "";
-          const imgSrc = dj.image ? `${dj.image}` : "djs/nexusdj.webp";
+          const cacheBuster = `?v=1.1`;
+          const imgSrc = dj.image ? `${dj.image}${cacheBuster}` : `djs/nexusdj.webp${cacheBuster}`;
 
           li.innerHTML = `
-            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" loading="eager" fetchpriority="high" decoding="async" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
+            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" loading="eager" decoding="async" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
             <div class="staff-info">
               <div class="staff-name">${dj.name}</div>
             </div>
@@ -1639,7 +1640,7 @@
       }
 
       function openDjModal(dj, cardElement) {
-        const imgSrc = dj.image ? `${dj.image}` : "djs/nexusdj.webp";
+        const imgSrc = dj.image ? `${dj.image}?v=1.1` : "djs/nexusdj.webp?v=1.1";
         modalDjImg.src = imgSrc;
         modalDjImg.onerror = () => { 
           modalDjImg.onerror = null; 
