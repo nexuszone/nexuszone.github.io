@@ -953,12 +953,12 @@
 
     @media (min-width: 900px) {
       .staff-avatar-img {
-        flex: 1;
-        min-height: 0;
-        max-height: 68%;
-        width: auto;
-        max-width: 92%;
-        margin: 0;
+        flex: unset !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 130px !important;
+        max-width: 130px !important;
+        margin: 0 auto;
       }
     }
 
@@ -1617,11 +1617,14 @@
           li.className = "staff-card";
 
           const flagUrl = dj.flag ? `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png` : "";
-          const cacheBuster = `?v=1.1`;
-          const imgSrc = dj.image ? `${dj.image}${cacheBuster}` : `djs/nexusdj.webp${cacheBuster}`;
+          const imgSrc = dj.image ? `${dj.image}` : `djs/nexusdj.webp`;
+
+          // Precarga invisible para evitar fallos de renderizado en nombres compuestos o pesados en PC
+          const preloadImg = new Image();
+          preloadImg.src = imgSrc;
 
           li.innerHTML = `
-            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" loading="eager" decoding="async" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
+            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
             <div class="staff-info">
               <div class="staff-name">${dj.name}</div>
             </div>
@@ -1640,7 +1643,7 @@
       }
 
       function openDjModal(dj, cardElement) {
-        const imgSrc = dj.image ? `${dj.image}?v=1.1` : "djs/nexusdj.webp?v=1.1";
+        const imgSrc = dj.image ? `${dj.image}` : "djs/nexusdj.webp";
         modalDjImg.src = imgSrc;
         modalDjImg.onerror = () => { 
           modalDjImg.onerror = null; 
