@@ -953,12 +953,12 @@
 
     @media (min-width: 900px) {
       .staff-avatar-img {
-        flex: unset !important;
-        width: 100% !important;
-        height: 100% !important;
-        max-height: 130px !important;
-        max-width: 130px !important;
-        margin: 0 auto;
+        flex: 1;
+        min-height: 0;
+        max-height: 68%;
+        width: auto;
+        max-width: 92%;
+        margin: 0;
       }
     }
 
@@ -1619,7 +1619,7 @@
           const flagUrl = dj.flag ? `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png` : "";
           const imgSrc = dj.image ? `${dj.image}` : `djs/nexusdj.webp`;
 
-          // Precarga invisible para evitar fallos de renderizado en nombres compuestos o pesados en PC
+          // Precarga invisible para evitar fallos de renderizado en PC
           const preloadImg = new Image();
           preloadImg.src = imgSrc;
 
