@@ -6,5 +6,5 @@ window.POEMA_SEMANA = {
   author: "Poema de la semana",
 
   // Fecha, semana o dedicatoria
-  date: "NeXus ZonE"
+  date: "Amatista"
 };
