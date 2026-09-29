@@ -50,6 +50,16 @@ window.STAFF_MEMBERS = [
     "description": "Sesiones de música Rap y ritmos no tan sonados."
   },
   {
+    "name": "Smile-dj",
+    "image": "djs/smiledj.webp",
+    "role": "Dj",
+    "badge": "Dj",
+    "country": "España",
+    "flag": "es",
+    "schedule": "Siempre que puede por las tardes hora España",
+    "description": "Música variada"
+  },
+  {
     "name": "Caraxs",
     "image": "djs/caraxs.webp",
     "role": "Dj",
@@ -58,6 +68,16 @@ window.STAFF_MEMBERS = [
     "flag": "sv",
     "schedule": "Siempre que puede",
     "description": "Programa generos Urbanos y música de actualidad"
+  },
+  {
+    "name": "DjIvan",
+    "image": "djs/djivan.webp",
+    "role": "Dj",
+    "badge": "Dj",
+    "country": "España",
+    "flag": "es",
+    "schedule": "Siempre que puede",
+    "description": "Música variada & mezclas en vivo"
   },
   {
     "name": "NeXusDj",

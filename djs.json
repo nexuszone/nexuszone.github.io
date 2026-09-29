@@ -44,5 +44,17 @@
     "image": "djs/amatista.webp",
     "country": "El Salvador",
     "flag": "sv"
+  },
+  "Smiledj": {
+    "display": "Smile-dj",
+    "image": "djs/smiledj.webp",
+    "country": "España",
+    "flag": "es"
+  },
+  "DjIvan": {
+    "display": "DjIvan",
+    "image": "djs/djivan.webp",
+    "country": "España",
+    "flag": "es"
   }
 }
