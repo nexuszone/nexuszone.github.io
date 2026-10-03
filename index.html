@@ -33,9 +33,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   
-  <!-- Archivos externos de configuración -->
   <script src="./staff.js?v=1.1.65"></script>
   <script src="./poema.js?v=1.0.4"></script>
 
@@ -104,8 +103,8 @@
       align-items: center;
       border-bottom: 1px solid var(--border-subtle);
       background: rgba(8, 9, 13, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       flex-shrink: 0;
       z-index: 50;
     }
@@ -128,13 +127,8 @@
       width: clamp(28px, 3.8vh, 36px);
       height: clamp(28px, 3.8vh, 36px);
       flex-shrink: 0;
-      filter: drop-shadow(0 0 8px rgba(176, 38, 255, 0.5)) drop-shadow(0 0 10px rgba(0, 255, 102, 0.4));
-      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      filter: drop-shadow(0 0 6px rgba(176, 38, 255, 0.5));
       cursor: pointer;
-    }
-
-    .brand-cassette-svg:hover {
-      transform: scale(1.08) rotate(-2deg);
     }
 
     .brand-text-col {
@@ -142,7 +136,6 @@
       flex-direction: column;
       justify-content: center;
       line-height: 1.05;
-      gap: 0px;
       min-width: 0;
     }
 
@@ -157,26 +150,12 @@
       position: relative;
     }
 
-    .brand-name::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -120%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-      transform: skewX(-24deg);
-      animation: cyberSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-      pointer-events: none;
-    }
-
     .brand-slogan {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: clamp(10.5px, 1.35vh, 12.5px);
       font-weight: 700;
       color: var(--neon-green);
       letter-spacing: 0.4px;
-      text-transform: none;
       opacity: 0.95;
       text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
       white-space: nowrap;
@@ -186,31 +165,12 @@
 
     .title-nexus {
       color: var(--neon-purple);
-      text-shadow: 0 0 10px var(--purple-glow), 0 0 22px rgba(176, 38, 255, 0.4);
-      animation: pulseNeonPurple 3.2s ease-in-out infinite alternate;
+      text-shadow: 0 0 10px var(--purple-glow);
     }
 
     .title-zone {
       color: var(--neon-green);
-      text-shadow: 0 0 10px var(--green-glow), 0 0 22px rgba(0, 255, 102, 0.4);
-      animation: pulseNeonGreen 3.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseNeonPurple {
-      0% { text-shadow: 0 0 8px var(--purple-glow); }
-      100% { text-shadow: 0 0 14px var(--neon-purple), 0 0 24px rgba(176, 38, 255, 0.5); }
-    }
-
-    @keyframes pulseNeonGreen {
-      0% { text-shadow: 0 0 8px var(--green-glow); }
-      100% { text-shadow: 0 0 14px var(--neon-green), 0 0 24px rgba(0, 255, 102, 0.5); }
-    }
-
-    @keyframes cyberSweep {
-      0%, 65% { left: -120%; opacity: 0; }
-      70% { opacity: 0.8; }
-      80% { left: 160%; opacity: 0; }
-      100% { left: 160%; opacity: 0; }
+      text-shadow: 0 0 10px var(--green-glow);
     }
 
     .header-actions {
@@ -230,32 +190,13 @@
       border: 1px solid var(--border-subtle);
       color: #ffffff;
       text-decoration: none;
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      transition: background-color 0.2s, border-color 0.2s;
     }
 
     .social-btn svg {
       width: clamp(15px, 2vh, 18px);
       height: clamp(15px, 2vh, 18px);
       fill: currentColor;
-    }
-
-    @media (hover: hover) {
-      .social-tiktok:hover {
-        border-color: #ffffff;
-        background: rgba(255, 255, 255, 0.18);
-        color: #ffffff;
-        box-shadow: 0 0 16px var(--tiktok-glow), 0 0 6px #ffffff;
-        transform: translateY(-2px);
-      }
-      .social-telegram:hover {
-        border-color: var(--telegram-blue);
-        background: rgba(34, 158, 217, 0.2);
-        color: var(--telegram-blue);
-        box-shadow: 0 0 16px var(--telegram-glow), 0 0 6px var(--telegram-blue);
-        transform: translateY(-2px);
-      }
     }
 
     .workspace {
@@ -277,7 +218,6 @@
         padding: clamp(6px, 1vh, 12px) clamp(10px, 1.4vw, 20px);
         max-width: 1920px;
         margin: 0 auto;
-        box-sizing: border-box;
       }
     }
 
@@ -291,7 +231,6 @@
 
     .player-deck {
       background: var(--surface-1);
-      border-radius: 0;
       padding: clamp(6px, 1vh, 12px) clamp(10px, 2vw, 16px);
       padding-bottom: calc(clamp(6px, 1vh, 10px) + env(safe-area-inset-bottom, 0px));
       display: flex;
@@ -302,7 +241,6 @@
       width: 100%;
       min-height: 0;
       overflow: hidden;
-      box-sizing: border-box;
       position: relative;
     }
 
@@ -310,26 +248,21 @@
       .player-deck {
         border: 1px solid var(--border-subtle);
         border-radius: clamp(14px, 2vh, 22px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       }
     }
 
     .player-bg-art {
       position: absolute;
-      inset: -15px;
+      inset: -10px;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      filter: blur(16px) brightness(0.7);
-      opacity: 0.5;
+      filter: blur(10px) brightness(0.68);
+      opacity: 0.35;
       z-index: 0;
       pointer-events: none;
-      transform: scale(1.05) translateZ(0);
-      will-change: opacity;
-      transition: opacity 0.5s ease;
     }
 
-    /* 1. CARÁTULA */
     .cover-wrapper {
       width: min(90vw, calc(100dvh - 310px));
       max-width: 90vw;
@@ -340,17 +273,14 @@
       margin-bottom: clamp(8px, 1.8vh, 18px);
       position: relative;
       background: #0d0e15;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       padding: 3px;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      will-change: transform;
       z-index: 2;
-      min-height: 0;
     }
 
     @media (min-width: 900px) {
@@ -385,7 +315,7 @@
       pointer-events: none;
       opacity: 0;
       z-index: 4;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.3s ease;
     }
 
     .cover-img {
@@ -403,11 +333,7 @@
 
     .is-playing .cover-wrapper {
       border-color: transparent;
-      box-shadow: 
-        0 14px 34px rgba(0, 0, 0, 0.9),
-        0 0 20px rgba(176, 38, 255, 0.4), 
-        0 0 14px rgba(0, 255, 102, 0.25);
-      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 16px rgba(176, 38, 255, 0.35);
     }
 
     .is-playing .cover-wrapper::before {
@@ -416,12 +342,9 @@
     }
 
     @keyframes neonBorderRotate {
-      to {
-        --border-angle: 360deg;
-      }
+      to { --border-angle: 360deg; }
     }
 
-    /* 2. ZONA INTERMEDIA */
     .deck-mid-section {
       width: 100%;
       flex: 1;
@@ -449,23 +372,328 @@
       position: relative;
       text-align: center;
       margin-bottom: 2px;
-      mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
     }
 
-    /* TÍTULO DE CANCIÓN */
+    /* EFECTOS GLITCH */
     #display_title {
       font-size: clamp(17px, 2.3vh, 23px);
       font-weight: 900;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
       line-height: 1.2;
       white-space: nowrap;
       display: inline-block;
       padding: 0 10px;
       color: var(--text-primary);
       text-align: center;
-      will-change: transform;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+      position: relative;
+      animation: 
+        hackerTitleGlitch 6.8s infinite steps(1),
+        hackerVerticalJitter 8.4s infinite ease-in-out,
+        hackerSignalDrop 11.2s infinite steps(1),
+        hackerPixelShear 9.3s infinite steps(1);
+    }
+
+    #display_title::before,
+    #display_title::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #display_title::before {
+      color: #00ff66;
+      z-index: -1;
+      animation: 
+        hackerGlitchSlice1 5.9s infinite linear alternate-reverse,
+        hackerScanlineSweep 8.2s infinite ease-in-out,
+        hackerGhostTrace 7.5s infinite ease-out;
+      opacity: 0.88;
+    }
+
+    #display_title::after {
+      color: #b026ff;
+      z-index: -2;
+      animation: hackerGlitchSlice2 6.6s infinite linear alternate-reverse;
+      opacity: 0.88;
+    }
+
+    #display_dj {
+      display: inline-block;
+      color: var(--neon-green);
+      font-size: clamp(13px, 1.7vh, 18px);
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-shadow: 0 0 10px var(--green-glow);
+      position: relative;
+      animation: 
+        hackerDjGlitch 6.2s infinite steps(1),
+        hackerVerticalJitter 7.8s infinite ease-in-out reverse,
+        hackerSignalDrop 10.4s infinite steps(1),
+        hackerPixelShear 8.7s infinite steps(1);
+    }
+
+    #display_dj::before,
+    #display_dj::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #display_dj::before {
+      color: #b026ff;
+      z-index: -1;
+      animation: 
+        hackerDjSlice1 5.4s infinite linear alternate-reverse,
+        hackerScanlineSweep 7.6s infinite ease-in-out,
+        hackerGhostTrace 8.1s infinite ease-out;
+      opacity: 0.9;
+    }
+
+    #display_dj::after {
+      color: #00ff66;
+      z-index: -2;
+      animation: hackerDjSlice2 7.1s infinite linear alternate-reverse;
+      opacity: 0.9;
+    }
+
+    #djCountryName {
+      display: inline-block;
+      position: relative;
+      animation: 
+        hackerCountryGlitch 7.2s infinite steps(1),
+        hackerVerticalJitter 9.1s infinite ease-in-out,
+        hackerSignalDrop 11.8s infinite steps(1);
+    }
+
+    #djCountryName::before,
+    #djCountryName::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #djCountryName::before {
+      color: #00ff66;
+      z-index: -1;
+      animation: 
+        hackerCountrySlice1 5.7s infinite linear alternate-reverse,
+        hackerGhostTrace 6.9s infinite ease-out;
+      opacity: 0.85;
+    }
+
+    #djCountryName::after {
+      color: #b026ff;
+      z-index: -2;
+      animation: hackerCountrySlice2 7.5s infinite linear alternate-reverse;
+      opacity: 0.85;
+    }
+
+    @keyframes hackerPixelShear {
+      0%, 93%, 100% {
+        transform: skewY(0deg) skewX(0deg);
+        filter: none;
+      }
+      94% {
+        transform: skewY(-1.2deg) skewX(3deg);
+        filter: drop-shadow(2px 0 0 #b026ff);
+      }
+      95% {
+        transform: skewY(1.4deg) skewX(-2deg);
+        filter: drop-shadow(-2px 0 0 #00ff66);
+      }
+      96% {
+        transform: skewY(0deg) skewX(0deg);
+        filter: none;
+      }
+    }
+
+    @keyframes hackerGhostTrace {
+      0%, 91%, 100% {
+        opacity: 0;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+      92% {
+        opacity: 0.8;
+        transform: scale(1.03) translate(-2px, -1px);
+        filter: blur(1px);
+      }
+      94% {
+        opacity: 0.3;
+        transform: scale(1.05) translate(2px, 1px);
+        filter: blur(2px);
+      }
+      96% {
+        opacity: 0;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes hackerVerticalJitter {
+      0%, 92%, 100% { transform: translateY(0); }
+      93% { transform: translateY(-2px); }
+      94% { transform: translateY(2px); }
+      95% { transform: translateY(-1px); }
+      96% { transform: translateY(0); }
+    }
+
+    @keyframes hackerScanlineSweep {
+      0%, 88%, 100% { clip-path: inset(50% 50% 50% 50%); }
+      89% { clip-path: inset(0 0 80% 0); transform: translate(-3px, 0); }
+      90% { clip-path: inset(35% 0 50% 0); transform: translate(3px, 0); }
+      91% { clip-path: inset(75% 0 0 0); transform: translate(-1.5px, 0); }
+      92% { clip-path: inset(50% 50% 50% 50%); }
+    }
+
+    @keyframes hackerSignalDrop {
+      0%, 95%, 98%, 100% { opacity: 1; filter: none; }
+      96% { opacity: 0.35; filter: drop-shadow(2px 0 0 #00ff66) drop-shadow(-2px 0 0 #b026ff); }
+      97% { opacity: 0.8; }
+    }
+
+    @keyframes hackerTitleGlitch {
+      0%, 86%, 100% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+      87% {
+        transform: translate(-3px, 1px) skewX(-2.5deg);
+        text-shadow: 3px 0 #00ff66, -3px 0 #b026ff;
+      }
+      88% {
+        transform: translate(2px, -2px) skewX(2.5deg);
+        text-shadow: -3px 0 #00ff66, 3px 0 #b026ff;
+      }
+      89% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+      95% {
+        transform: translate(2px, 0) scaleY(1.02);
+        text-shadow: -2px 0 #00ff66, 2px 0 #b026ff;
+      }
+      96% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+    }
+
+    @keyframes hackerGlitchSlice1 {
+      0%, 85%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      86% {
+        clip-path: inset(10% 0 65% 0);
+        transform: translate(-4px, -1px);
+      }
+      88% {
+        clip-path: inset(45% 0 25% 0);
+        transform: translate(4px, 1px);
+      }
+      90% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerGlitchSlice2 {
+      0%, 88%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      89% {
+        clip-path: inset(25% 0 45% 0);
+        transform: translate(3px, 1px);
+      }
+      91% {
+        clip-path: inset(65% 0 10% 0);
+        transform: translate(-3px, -1px);
+      }
+      93% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerDjGlitch {
+      0%, 87%, 100% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 10px var(--green-glow);
+      }
+      88% {
+        transform: translate(2.5px, -1px) skewX(3deg);
+        text-shadow: -3px 0 #b026ff, 3px 0 #00ff66;
+      }
+      89% {
+        transform: translate(-2px, 1px) skewX(-2deg);
+        text-shadow: 3px 0 #b026ff, -3px 0 #00ff66;
+      }
+      90% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 10px var(--green-glow);
+      }
+    }
+
+    @keyframes hackerDjSlice1 {
+      0%, 87%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      88% {
+        clip-path: inset(15% 0 55% 0);
+        transform: translate(3px, -1px);
+      }
+      90% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerDjSlice2 {
+      0%, 90%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      91% {
+        clip-path: inset(40% 0 30% 0);
+        transform: translate(-3px, 1px);
+      }
+      93% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerCountryGlitch {
+      0%, 89%, 100% { transform: translate(0, 0); }
+      90% { transform: translate(-2px, 1px) skewX(-2deg); text-shadow: 2px 0 #00ff66, -2px 0 #b026ff; }
+      91% { transform: translate(2px, -1px) skewX(2deg); text-shadow: -2px 0 #00ff66, 2px 0 #b026ff; }
+      92% { transform: translate(0, 0); text-shadow: none; }
+    }
+
+    @keyframes hackerCountrySlice1 {
+      0%, 86%, 100% { clip-path: inset(50% 50% 50% 50%); transform: translate(0); }
+      87% { clip-path: inset(20% 0 50% 0); transform: translate(2.5px, -1px); }
+      89% { clip-path: inset(50% 50% 50% 50%); }
+    }
+
+    @keyframes hackerCountrySlice2 {
+      0%, 91%, 100% { clip-path: inset(50% 50% 50% 50%); transform: translate(0); }
+      92% { clip-path: inset(55% 0 15% 0); transform: translate(-2.5px, 1px); }
+      94% { clip-path: inset(50% 50% 50% 50%); }
     }
 
     .marquee-active {
@@ -478,7 +706,7 @@
     }
 
     .meta-artist {
-      font-size: clamp(11.5px, 1.4vh, 14px);
+      font-size: clamp(12px, 1.45vh, 14.5px);
       color: var(--text-secondary);
       font-weight: 600;
       white-space: nowrap;
@@ -487,7 +715,7 @@
       max-width: 100%;
       text-align: center;
       margin-bottom: clamp(1px, 0.4vh, 3px);
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
 
     .meta-dj-row {
@@ -510,16 +738,6 @@
       text-shadow: 0 0 10px var(--purple-glow);
     }
 
-    #display_dj {
-      display: inline-block;
-      color: var(--neon-green);
-      font-size: clamp(13px, 1.7vh, 18px);
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 10px var(--green-glow);
-    }
-
-    /* PAÍS Y BANDERA */
     .dj-country-row {
       display: flex;
       align-items: center;
@@ -529,7 +747,6 @@
       font-weight: 800;
       letter-spacing: 0.5px;
       color: #e2e6f0;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
       min-height: 20px;
       margin-top: 1px;
     }
@@ -539,12 +756,10 @@
       height: clamp(14px, 1.8vh, 19px);
       border-radius: 3px;
       object-fit: cover;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
       display: inline-block;
       flex-shrink: 0;
     }
 
-    /* CONTENEDOR BOTONES */
     .deck-buttons-container {
       width: 100%;
       margin: auto 0;
@@ -564,29 +779,58 @@
       flex-wrap: nowrap;
     }
 
+    /* BOTÓN PLAY EN RELIEVE 3D HARDWARE (ESCALA ORIGINAL) */
     .btn-play-hero {
-      background: #b026ff !important;
-      border: none;
-      color: white;
       width: clamp(58px, 7.4vh, 76px);
       height: clamp(58px, 7.4vh, 76px);
       border-radius: 50%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 10px 28px rgba(176, 38, 255, 0.75) !important;
-      transition: transform 0.2s, box-shadow 0.2s;
       flex-shrink: 0;
+      background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(176, 38, 255, 0.8) 25%, #6a0dad 60%, #170729 100%);
+      box-shadow: 
+        0 0 0 3px #181b24,
+        0 0 0 4.5px rgba(255, 255, 255, 0.18),
+        0 8px 18px rgba(0, 0, 0, 0.85),
+        0 0 25px rgba(176, 38, 255, 0.45),
+        inset 0 3px 3px rgba(255, 255, 255, 0.65),
+        inset 0 -4px 6px rgba(0, 0, 0, 0.75) !important;
+      transition: transform 0.12s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .btn-play-hero::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.25) 0%, rgba(176, 38, 255, 0.15) 45%, rgba(0, 0, 0, 0.4) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      pointer-events: none;
     }
 
     .btn-play-hero svg {
-      width: clamp(26px, 3.4vh, 36px);
-      height: clamp(26px, 3.4vh, 36px);
+      width: clamp(26px, 3.4vh, 34px);
+      height: clamp(26px, 3.4vh, 34px);
+      fill: #ffffff;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
     }
 
     .btn-play-hero:active {
-      transform: scale(0.94);
+      transform: translateY(3px) scale(0.96);
+      box-shadow: 
+        0 0 0 3px #12141c,
+        0 0 0 4.5px rgba(255, 255, 255, 0.1),
+        0 3px 8px rgba(0, 0, 0, 0.9),
+        0 0 15px rgba(176, 38, 255, 0.3),
+        inset 0 3px 5px rgba(0, 0, 0, 0.75),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.3) !important;
     }
 
     .btn-deck-action {
@@ -604,31 +848,24 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      transition: background-color 0.2s, box-shadow 0.2s;
       flex-shrink: 0;
       outline: none;
     }
 
-    /* ESTILO ILUMINADO ACTIVO PARA EL BOTÓN DE CHAT (FORZADO) */
     .btn-deck-action.chat-active-glow,
     #btnDeckChat.chat-active-glow {
       background: rgba(0, 255, 102, 0.45) !important;
       border-color: #00ff66 !important;
       color: #ffffff !important;
-      box-shadow: 0 0 22px rgba(0, 255, 102, 0.95), 0 0 10px #00ff66 !important;
+      box-shadow: 0 0 16px rgba(0, 255, 102, 0.8) !important;
     }
 
-    .btn-deck-staff {
-      display: flex;
-    }
-
+    .btn-deck-staff { display: flex; }
     @media (min-width: 900px) {
-      .btn-deck-staff {
-        display: none !important;
-      }
+      .btn-deck-staff { display: none !important; }
     }
 
-    /* 3. PARTE INFERIOR */
     .deck-bottom {
       width: 100%;
       display: flex;
@@ -646,15 +883,12 @@
       align-items: flex-end;
       justify-content: center;
       overflow: hidden;
-      contain: strict;
     }
 
     #equalizerCanvas {
       width: 100%;
       height: 100%;
       display: block;
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
 
     .volume-row {
@@ -676,11 +910,6 @@
       fill: var(--text-muted);
       cursor: pointer;
       flex-shrink: 0;
-      transition: fill 0.2s;
-    }
-
-    .vol-icon:hover {
-      fill: var(--text-primary);
     }
 
     .volume-slider {
@@ -694,14 +923,48 @@
       cursor: pointer;
     }
 
+    /* CAPUCHÓN DE FADER PIONEER DJ EN GRIS METÁLICO */
     .volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
+      appearance: none;
       width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fff;
+      height: 22px;
+      border-radius: 3px;
       cursor: pointer;
-      box-shadow: 0 0 8px #b026ff;
+      background: 
+        linear-gradient(to right, transparent 5px, #00ff66 5px, #00ff66 9px, transparent 9px),
+        repeating-linear-gradient(to bottom, #d6dbe6 0px, #d6dbe6 1px, #7c8599 1.5px, #7c8599 2.5px),
+        linear-gradient(180deg, #f0f3f8 0%, #b8c0d2 50%, #838c9e 100%);
+      background-size: 100% 100%;
+      border: 1px solid #ffffff;
+      box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.95),
+        0 0 1px rgba(0, 0, 0, 0.9),
+        0 0 6px rgba(0, 255, 102, 0.75),
+        inset 0 1px 1px #ffffff,
+        inset 0 -1px 2px #383e4d;
+      transition: filter 0.15s ease;
+    }
+
+    .volume-slider:hover::-webkit-slider-thumb {
+      filter: brightness(1.1);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 22px;
+      border-radius: 3px;
+      cursor: pointer;
+      background: 
+        linear-gradient(to right, transparent 5px, #00ff66 5px, #00ff66 9px, transparent 9px),
+        repeating-linear-gradient(to bottom, #d6dbe6 0px, #d6dbe6 1px, #7c8599 1.5px, #7c8599 2.5px),
+        linear-gradient(180deg, #f0f3f8 0%, #b8c0d2 50%, #838c9e 100%);
+      border: 1px solid #ffffff;
+      box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.95),
+        0 0 6px rgba(0, 255, 102, 0.75),
+        inset 0 1px 1px #ffffff,
+        inset 0 -1px 2px #383e4d;
     }
 
     .library-panel {
@@ -717,7 +980,7 @@
       display: flex;
       flex-direction: column;
       transform: translateY(105%);
-      transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
+      transition: transform 0.28s ease;
       visibility: hidden;
     }
 
@@ -735,7 +998,6 @@
         border: 1px solid var(--border-subtle);
         border-radius: clamp(14px, 2vh, 22px);
         padding: clamp(6px, 1vh, 12px) clamp(8px, 1vw, 14px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         transform: none !important;
         visibility: visible !important;
         z-index: 1;
@@ -754,9 +1016,7 @@
     }
 
     @media (min-width: 900px) {
-      .drawer-mobile-header {
-        display: none;
-      }
+      .drawer-mobile-header { display: none; }
     }
 
     .drawer-title {
@@ -789,11 +1049,8 @@
       flex-shrink: 0;
     }
 
-    /* OCULTAR LA BARRA DE PESTAÑAS EN MÓVIL SI ESTÁ ACTIVO EL CHAT */
     @media (max-width: 899px) {
-      .library-panel.chat-mode-active .panel-header {
-        display: none !important;
-      }
+      .library-panel.chat-mode-active .panel-header { display: none !important; }
     }
 
     .tabs-group {
@@ -823,16 +1080,11 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      transition: all 0.2s;
       white-space: nowrap;
     }
 
     #tabChat { display: none; }
-
-    .tab-item.active {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-    }
+    .tab-item.active { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); }
 
     .tab-view-container {
       flex: 1;
@@ -846,15 +1098,8 @@
       background: #08090d;
     }
 
-    .view-content {
-      width: 100%;
-      height: 100%;
-      display: none;
-    }
-
-    .view-content.active {
-      display: block;
-    }
+    .view-content { width: 100%; height: 100%; display: none; }
+    .view-content.active { display: block; }
 
     .chat-iframe {
       width: 100%;
@@ -862,7 +1107,7 @@
       border: none;
       display: block;
       background: #08090d;
-      filter: invert(0.92) hue-rotate(180deg) contrast(1.12) brightness(0.92);
+      filter: invert(0.92) hue-rotate(180deg) contrast(1.12);
     }
 
     .staff-container {
@@ -886,6 +1131,7 @@
       max-width: 440px;
       margin: 0 auto;
       padding: 4px 0 18px 0;
+      contain: layout paint;
     }
 
     @media (min-width: 900px) {
@@ -915,11 +1161,11 @@
       border-radius: clamp(10px, 1.4vh, 16px);
       padding: 12px 10px 14px 10px;
       cursor: pointer;
-      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
       position: relative;
       overflow: hidden;
       width: 100%;
       min-height: 230px;
+      content-visibility: visible;
     }
 
     @media (min-width: 900px) {
@@ -932,12 +1178,11 @@
     }
 
     .staff-card:hover {
-      transform: translateY(-2px);
       border-color: var(--neon-purple);
       background: rgba(176, 38, 255, 0.08);
-      box-shadow: 0 6px 18px rgba(176, 38, 255, 0.35);
     }
 
+    /* FOTO ORIGINAL DEL STAFF */
     .staff-avatar-img {
       width: min(150px, 48vw);
       height: min(150px, 48vw);
@@ -946,9 +1191,8 @@
       object-fit: cover;
       border: 2px solid var(--neon-purple);
       background: #08090d;
-      box-shadow: 0 0 12px rgba(176, 38, 255, 0.35);
       margin: 0 auto;
-      transition: transform 0.2s ease;
+      display: block;
     }
 
     @media (min-width: 900px) {
@@ -958,12 +1202,8 @@
         max-height: 68%;
         width: auto;
         max-width: 92%;
-        margin: 0;
+        margin: 0 auto;
       }
-    }
-
-    .staff-card:hover .staff-avatar-img {
-      transform: scale(1.04);
     }
 
     .staff-info {
@@ -975,9 +1215,7 @@
     }
 
     @media (min-width: 900px) {
-      .staff-info {
-        margin: 1px 0;
-      }
+      .staff-info { margin: 1px 0; }
     }
 
     .staff-name {
@@ -1003,13 +1241,9 @@
     }
 
     @media (min-width: 900px) {
-      .staff-bottom-row {
-        padding: 0 4px;
-        margin-top: 0;
-      }
+      .staff-bottom-row { padding: 0 4px; margin-top: 0; }
     }
 
-    /* BADGE DE PAÍS EN STAFF */
     .staff-country-badge {
       display: inline-flex;
       align-items: center;
@@ -1021,7 +1255,6 @@
       padding: 2px 6px;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      text-transform: none;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1046,14 +1279,11 @@
       border-radius: 6px;
       letter-spacing: 0.3px;
       white-space: nowrap;
-      box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
-      text-transform: none;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 48%;
     }
 
-    /* VISTA MAXIMIZADA PARA EL POEMA */
     .poema-container {
       width: 100%;
       height: 100%;
@@ -1075,13 +1305,11 @@
       border: 1px solid var(--border-subtle);
       border-radius: clamp(12px, 1.8vh, 18px);
       padding: clamp(6px, 1vh, 10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       gap: 6px;
-      box-sizing: border-box;
     }
 
     .poema-img-frame {
@@ -1091,12 +1319,10 @@
       border-radius: 10px;
       overflow: hidden;
       border: 1.5px solid var(--neon-purple);
-      box-shadow: 0 0 18px rgba(176, 38, 255, 0.35);
       background: #08090d;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
     .poema-img {
@@ -1121,31 +1347,26 @@
       flex-shrink: 0;
     }
 
-    /* TÍTULO A LA IZQUIERDA: VERDE NEÓN */
-    .poema-title-tag {
-      color: var(--neon-green);
-      text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
-    }
+    .poema-title-tag { color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
+    .poema-date-tag { color: var(--neon-purple); letter-spacing: 0.3px; }
 
-    /* DEDICATORIA/AUTOR A LA DERECHA (NEXUS ZONE): MORADO NEÓN */
-    .poema-date-tag {
-      color: var(--neon-purple);
-      text-shadow: 0 0 10px var(--purple-glow), 0 0 18px rgba(176, 38, 255, 0.4);
-      letter-spacing: 0.3px;
-    }
-
+    /* =========================================================
+       MODAL DEL DJ: IMAGEN 2 VECES MÁS GRANDE (~280px) ADAPTABLE
+       ========================================================= */
     .dj-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 999;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: clamp(10px, 2.5vw, 20px);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      transition: opacity 0.22s ease-in-out;
     }
 
     .dj-modal-overlay.modal-active {
@@ -1155,59 +1376,52 @@
 
     .dj-modal-card {
       width: 100%;
-      max-width: 400px;
+      max-width: min(92vw, 540px);
+      max-height: 90dvh;
+      overflow-y: auto;
       background: #0f1118;
       border: 1px solid var(--neon-purple);
-      border-radius: 20px;
-      box-shadow: 0 16px 45px rgba(176, 38, 255, 0.45), 0 0 25px rgba(0, 255, 102, 0.25);
-      padding: 16px 18px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.95), 0 0 28px rgba(176, 38, 255, 0.4);
+      border-radius: 22px;
+      padding: clamp(16px, 2.5dvh, 26px) clamp(16px, 2.5vw, 28px);
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      transform: scale(0.92) translateY(15px);
-      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .dj-modal-overlay.modal-active .dj-modal-card {
-      transform: scale(1) translateY(0);
     }
 
     .btn-close-modal {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 14px;
+      right: 14px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-subtle);
       color: #ffffff;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
+      font-size: 15px;
+      z-index: 10;
     }
 
-    .btn-close-modal:hover {
-      background: var(--neon-purple);
-      border-color: var(--neon-purple);
-    }
-
+    /* FOTO 2 VECES MÁS GRANDE (280px) CON TOPE SEGURO PARA NO CORTAR TEXTOS */
     .modal-dj-avatar {
-      height: clamp(80px, 15vh, 130px);
-      width: clamp(80px, 15vh, 130px);
+      width: min(280px, 68vw, 36dvh);
+      height: min(280px, 68vw, 36dvh);
       aspect-ratio: 1 / 1;
-      border-radius: clamp(6px, 1vh, 12px);
+      border-radius: clamp(12px, 1.8vh, 18px);
       object-fit: cover;
-      border: 2px solid var(--neon-purple);
-      box-shadow: 0 8px 24px var(--purple-glow);
-      margin: 0 auto;
+      border: 2.5px solid var(--neon-purple);
       background: #08090d;
+      margin: 4px auto 10px auto;
       flex-shrink: 0;
+      display: block;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 16px rgba(176, 38, 255, 0.35);
     }
 
     .modal-dj-name {
@@ -1218,9 +1432,8 @@
       align-items: center;
       gap: 8px;
       justify-content: center;
-      font-size: clamp(15px, 2vh, 19px);
-      margin: clamp(4px, 0.8vh, 8px) 0 clamp(2px, 0.4vh, 4px) 0;
-      text-transform: none;
+      font-size: clamp(18px, 2.4vh, 24px);
+      margin: clamp(4px, 0.8vh, 8px) 0 2px 0;
       line-height: 1.2;
     }
 
@@ -1229,31 +1442,27 @@
       background: rgba(0, 255, 102, 0.18);
       border: 1px solid rgba(0, 255, 102, 0.65);
       color: var(--neon-green);
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(11.5px, 1.4vh, 13px);
       font-weight: 800;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 6px;
       letter-spacing: 0.3px;
-      text-transform: none;
       margin-top: 2px;
-      box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
     }
 
-    /* PAÍS EN MODAL */
     .modal-dj-country {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(12px, 1.5vh, 13.5px);
       font-weight: 700;
       color: #e2e6f0;
-      margin-top: 3px;
-      text-transform: none;
+      margin-top: 4px;
     }
 
     .modal-dj-country img {
-      width: clamp(12px, 1.5vh, 15px);
-      height: clamp(8px, 1vh, 10px);
+      width: clamp(14px, 1.8vh, 17px);
+      height: clamp(9px, 1.2vh, 11px);
       border-radius: 2px;
       object-fit: cover;
     }
@@ -1262,33 +1471,31 @@
       width: 100%;
       height: 1px;
       background: var(--border-subtle);
-      margin: 8px 0;
+      margin: 12px 0 10px 0;
     }
 
     .modal-info-block {
       width: 100%;
       text-align: left;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 8px;
     }
 
     .modal-info-title {
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(12px, 1.5vh, 13.5px);
       font-weight: 800;
       color: var(--neon-green);
       letter-spacing: 0.3px;
-      text-transform: none;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .modal-info-text {
-      font-size: 11.5px;
+      font-size: 13px;
       color: #e2e6f0;
-      line-height: 1.35;
-      text-transform: none;
+      line-height: 1.45;
     }
   </style>
 </head>
@@ -1298,14 +1505,9 @@
     <div class="brand">
       <svg class="brand-cassette-svg" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <clipPath id="navLeftHalf">
-            <rect x="0" y="0" width="256" height="512"/>
-          </clipPath>
-          <clipPath id="navRightHalf">
-            <rect x="256" y="0" width="256" height="512"/>
-          </clipPath>
+          <clipPath id="navLeftHalf"><rect x="0" y="0" width="256" height="512"/></clipPath>
+          <clipPath id="navRightHalf"><rect x="256" y="0" width="256" height="512"/></clipPath>
         </defs>
-
         <g clip-path="url(#navLeftHalf)">
           <rect x="26" y="106" width="460" height="300" rx="64" fill="#0d0e15" stroke="#b026ff" stroke-width="26"/>
           <rect x="86" y="156" width="340" height="150" rx="36" fill="#08090d" stroke="#b026ff" stroke-width="12"/>
@@ -1315,7 +1517,6 @@
           <polygon points="126,380 166,324 346,324 386,380" fill="#08090d" stroke="#b026ff" stroke-width="12"/>
           <circle cx="196" cy="354" r="14" fill="#b026ff"/>
         </g>
-
         <g clip-path="url(#navRightHalf)">
           <rect x="26" y="106" width="460" height="300" rx="64" fill="#0d0e15" stroke="#00ff66" stroke-width="26"/>
           <rect x="86" y="156" width="340" height="150" rx="36" fill="#08090d" stroke="#00ff66" stroke-width="12"/>
@@ -1325,14 +1526,12 @@
           <polygon points="126,380 166,324 346,324 386,380" fill="#08090d" stroke="#00ff66" stroke-width="12"/>
           <circle cx="316" cy="354" r="14" fill="#00ff66"/>
         </g>
-
         <circle cx="56" cy="136" r="12" fill="#6b7280"/>
         <circle cx="456" cy="136" r="12" fill="#6b7280"/>
         <circle cx="56" cy="376" r="12" fill="#6b7280"/>
         <circle cx="456" cy="376" r="12" fill="#6b7280"/>
         <circle cx="256" cy="354" r="11" fill="#6b7280"/>
       </svg>
-
       <div class="brand-text-col">
         <div class="brand-name">
           <span class="title-nexus">NeXus</span>
@@ -1343,16 +1542,11 @@
     </div>
     
     <div class="header-actions">
-      <a href="#" target="_blank" rel="noopener noreferrer" class="social-btn social-tiktok" id="linkTiktok" title="TikTok" aria-label="TikTok">
-        <svg viewBox="0 0 24 24">
-          <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/>
-        </svg>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="social-btn" id="linkTiktok" title="TikTok" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-2.9 6.24-1.72 1.36-3.92 1.9-6.09 1.49-2.17-.41-4.13-1.73-5.36-3.59-1.23-1.86-1.6-4.22-1.02-6.42.58-2.2 2.05-4.08 4.03-5.19 1.98-1.11 4.37-1.36 6.54-.69v4.08c-1.14-.36-2.38-.26-3.46.29-1.08.55-1.91 1.53-2.26 2.71-.35 1.18-.18 2.48.47 3.54.65 1.06 1.73 1.82 2.96 2.09 1.23.27 2.52.02 3.58-.69 1.06-.71 1.79-1.85 1.99-3.11.08-.51.12-1.02.12-1.54V.02h-2.68z"/></svg>
       </a>
-
-      <a href="#" target="_blank" rel="noopener noreferrer" class="social-btn social-telegram" id="linkTelegram" title="Telegram" aria-label="Telegram">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-        </svg>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="social-btn" id="linkTelegram" title="Telegram" aria-label="Telegram">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
       </a>
     </div>
   </header>
@@ -1361,49 +1555,42 @@
     <section class="player-deck" id="playerDeck">
       <div class="player-bg-art" id="playerBgArt"></div>
 
-      <!-- 1. CARÁTULA -->
       <div class="cover-wrapper">
         <img src="djs/nexusdj.webp" id="coverImg" class="cover-img" alt="Foto del DJ">
       </div>
       
-      <!-- 2. ZONA INTERMEDIA -->
       <div class="deck-mid-section">
         <div class="deck-info-container">
           <div class="title-marquee-container" id="marqueeContainer">
             <div id='sonic_title' style="display: none;"></div>
-            <div id='display_title'>Cargando emisión...</div>
+            <div id='display_title' data-text="Cargando emisión...">Cargando emisión...</div>
           </div>
-
-          <div class="meta-artist" id="trackArtist">Nexus Zone Radio</div>
-
+          <div class="meta-artist" id="trackArtist">NeXus ZonE</div>
           <div class="meta-dj-row">
             <span class="emit-label">Emitiendo:</span>
             <div id='sonic_dj' style="display: none;"></div>
-            <span id='display_dj'>NeXusDj</span>
+            <span id='display_dj' data-text="NeXusDj">NeXusDj</span>
           </div>
-
           <div class="dj-country-row" id="djCountryRow">
-            <span id="djCountryName">España</span>
+            <span id="djCountryName" data-text="España">España</span>
             <img src="https://flagcdn.com/24x18/es.png" class="dj-flag-img" id="djFlagImg" alt="Bandera">
           </div>
         </div>
 
         <div class="deck-buttons-container">
           <div class="playback-controls">
+            <!-- BOTÓN PLAY CON RELIEVE 3D HARDWARE (ESCALA ORIGINAL) -->
             <button class="btn-play-hero" id="btnPlay" title="Reproducir / Detener" aria-label="Reproducir o detener">
-              <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor">
+              <svg id="playIcon" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
               </svg>
             </button>
-
-            <!-- BOTÓN DE CHAT -->
             <button class="btn-deck-action" id="btnDeckChat" title="Abrir Chat" aria-label="Abrir Chat">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
               </svg>
               <span>Chat</span>
             </button>
-
             <button class="btn-deck-action btn-deck-staff" id="btnDeckStaff" title="Ver Staff y Poema" aria-label="Ver Staff y Poema">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
@@ -1414,31 +1601,22 @@
         </div>
       </div>
 
-      <!-- 3. PARTE INFERIOR -->
       <div class="deck-bottom">
         <div class="equalizer-canvas-container">
           <canvas id="equalizerCanvas"></canvas>
         </div>
-
         <div class="volume-row">
-          <svg class="vol-icon" id="volMuteBtn" viewBox="0 0 24 24">
-            <path d="M7 9v6h4l5 5V4l-5 5H7z"/>
-          </svg>
+          <svg class="vol-icon" id="volMuteBtn" viewBox="0 0 24 24"><path d="M7 9v6h4l5 5V4l-5 5H7z"/></svg>
           <input type="range" class="volume-slider" id="volumeControl" min="0" max="1" step="0.01" value="1" aria-label="Control de volumen">
-          <svg class="vol-icon" id="volMaxBtn" viewBox="0 0 24 24">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-          </svg>
+          <svg class="vol-icon" id="volMaxBtn" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         </div>
       </div>
     </section>
 
-    <!-- Panel de Comunidad -->
     <section class="library-panel" id="libraryPanel">
       <div class="drawer-mobile-header">
         <div class="drawer-title" id="drawerTitleText">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-          </svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
           <span>NeXus ZonE</span>
         </div>
         <button class="btn-close-drawer" id="btnCloseDrawer" title="Cerrar">✕</button>
@@ -1453,27 +1631,14 @@
       </div>
 
       <div class="tab-view-container">
-        <!-- Vista Chat -->
         <div class="view-content" id="viewChat">
-          <iframe 
-            id="chatIframe"
-            src="" 
-            class="chat-iframe"
-            title="ChatZona IRC"
-            loading="lazy">
-          </iframe>
+          <iframe id="chatIframe" src="" class="chat-iframe" title="ChatZona IRC" loading="lazy"></iframe>
         </div>
-
-        <!-- Vista Staff -->
         <div class="view-content active" id="viewStaff">
           <div class="staff-container">
-            <ul class="staff-grid" id="staffListGrid">
-              <!-- Renderizado dinámico desde staff.js -->
-            </ul>
+            <ul class="staff-grid" id="staffListGrid"></ul>
           </div>
         </div>
-
-        <!-- Vista Poema de la semana -->
         <div class="view-content" id="viewPoema">
           <div class="poema-container">
             <div class="poema-card-wrapper">
@@ -1491,32 +1656,24 @@
     </section>
   </main>
 
-  <!-- MODAL AMPLIADO DJ -->
+  <!-- MODAL DE DJ -->
   <div class="dj-modal-overlay" id="djModalOverlay">
     <div class="dj-modal-card">
       <button class="btn-close-modal" id="btn-close-modal" title="Cerrar">✕</button>
       <img src="djs/nexusdj.webp" class="modal-dj-avatar" id="modalDjImg" alt="DJ">
       <div class="modal-dj-name" id="modalDjName">Nombre del DJ</div>
       <div class="modal-dj-role-pill" id="modalDjRole">Rol / Rango</div>
-      
       <div class="modal-dj-country" id="modalDjCountry">
         <span id="modalDjCountryName">País</span>
         <img src="" id="modalDjFlag" alt="Bandera">
       </div>
-
       <div class="modal-divider"></div>
-
       <div class="modal-info-block">
-        <div class="modal-info-title">
-          <span>Estilo & Música</span>
-        </div>
+        <div class="modal-info-title"><span>Estilo & Música</span></div>
         <div class="modal-info-text" id="modalDjDesc">Descripción del estilo musical del DJ.</div>
       </div>
-
       <div class="modal-info-block">
-        <div class="modal-info-title">
-          <span>Horario de Transmisión</span>
-        </div>
+        <div class="modal-info-title"><span>Horario de Transmisión</span></div>
         <div class="modal-info-text" id="modalDjSchedule">Horarios habituales del DJ.</div>
       </div>
     </div>
@@ -1586,6 +1743,7 @@
     let isPlaying = false;
     let audioCtx = null;
     let analyser = null;
+    let sourceNode = null;
     let dataArray = null;
     let eqAnimId = null;
 
@@ -1594,14 +1752,13 @@
     let currentCoverUrl = "";
     let djMap = {};
     const coverMemoryCache = new Map();
+    let fetchCoverTimeout = null;
 
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. NICK AUTOMÁTICO NeXus_User (1 al 100) Y CONFIGURAR EL CHAT
       const randomNum = Math.floor(Math.random() * 100) + 1;
       const generatedNick = `NeXus_User${randomNum}`;
       chatIframe.src = `https://chat.chatzona.org/index.html?nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone#nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone`;
 
-      // 2. CARGA DEL STAFF
       function loadStaffMembers() {
         try {
           if (window.STAFF_MEMBERS && Array.isArray(window.STAFF_MEMBERS)) {
@@ -1616,70 +1773,55 @@
           const li = document.createElement("li");
           li.className = "staff-card";
 
-          const flagUrl = dj.flag ? `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png` : "";
+          const flagCode = dj.flag || dj.flagCode || "es";
+          const flagUrl = `https://flagcdn.com/24x18/${flagCode.toLowerCase()}.png`;
           const imgSrc = dj.image ? `${dj.image}` : `djs/nexusdj.webp`;
 
-          // Precarga invisible para evitar fallos de renderizado en PC ("Cisne-Negro", "Ilusión")
-          const preloadImg = new Image();
-          preloadImg.src = imgSrc;
-
           li.innerHTML = `
-            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" loading="eager" decoding="sync" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
+            <img src="${imgSrc}" class="staff-avatar-img" alt="${dj.name}" decoding="sync" onerror="this.onerror=null; this.src='djs/nexusdj.webp';">
             <div class="staff-info">
               <div class="staff-name">${dj.name}</div>
             </div>
             <div class="staff-bottom-row">
               <div class="staff-country-badge">
-                <span>${dj.country || "Int."}</span>
-                ${flagUrl ? `<img src="${flagUrl}" alt="${dj.country}" loading="eager" decoding="async">` : ""}
+                <span>${dj.country || "España"}</span>
+                <img src="${flagUrl}" alt="${dj.country || 'Bandera'}">
               </div>
-              <span class="staff-badge">${dj.badge || "Staff"}</span>
+              <span class="staff-badge">${dj.badge || dj.role || "Staff"}</span>
             </div>
           `;
 
-          li.addEventListener("click", () => openDjModal(dj, li));
+          li.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openDjModal(dj);
+          });
           staffListGrid.appendChild(li);
         });
       }
 
-      function openDjModal(dj, cardElement) {
+      function openDjModal(dj) {
+        if (!dj) return;
         const imgSrc = dj.image ? `${dj.image}` : "djs/nexusdj.webp";
         modalDjImg.src = imgSrc;
         modalDjImg.onerror = () => { 
           modalDjImg.onerror = null; 
           modalDjImg.src = "djs/nexusdj.webp"; 
         };
-
-        if (cardElement) {
-          const cardImg = cardElement.querySelector(".staff-avatar-img");
-          if (cardImg) {
-            const rect = cardImg.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) {
-              modalDjImg.style.width = `${Math.round(rect.width)}px`;
-              modalDjImg.style.height = `${Math.round(rect.height)}px`;
-            }
-          }
-        }
         
-        modalDjName.textContent = dj.name;
+        modalDjName.textContent = dj.name || "DJ";
         modalDjRole.textContent = dj.role || dj.badge || "Miembro del Staff";
         
-        if (dj.country) {
-          modalDjCountryName.textContent = dj.country;
-          if (dj.flag) {
-            modalDjFlag.src = `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png`;
-            modalDjFlag.style.display = "inline-block";
-          } else {
-            modalDjFlag.style.display = "none";
-          }
-          document.getElementById("modalDjCountry").style.display = "flex";
-        } else {
-          document.getElementById("modalDjCountry").style.display = "none";
-        }
+        const countryVal = dj.country || dj.pais || "España";
+        const flagVal = dj.flag || dj.flagCode || "es";
+        
+        modalDjCountryName.textContent = countryVal;
+        modalDjFlag.src = `https://flagcdn.com/24x18/${flagVal.toLowerCase()}.png`;
+        modalDjFlag.style.display = "inline-block";
+        document.getElementById("modalDjCountry").style.display = "flex";
 
-        modalDjDesc.textContent = dj.description || "No hay información adicional disponible.";
-        modalDjSchedule.textContent = dj.schedule || "Sin horarios fijos especificados.";
-
+        modalDjDesc.textContent = dj.description || dj.desc || dj.style || "Estilo musical variado. Éxitos y sesiones en vivo.";
+        modalDjSchedule.textContent = dj.schedule || dj.horario || "Transmisiones regulares en vivo por Nexus Zone.";
+        
         djModalOverlay.classList.add("modal-active");
       }
 
@@ -1687,30 +1829,32 @@
         djModalOverlay.classList.remove("modal-active");
       }
 
-      btnCloseModal.addEventListener("click", closeDjModal);
+      btnCloseModal.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeDjModal();
+      });
+
       djModalOverlay.addEventListener("click", (e) => {
         if (e.target === djModalOverlay) closeDjModal();
       });
 
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && djModalOverlay.classList.contains("modal-active")) {
+          closeDjModal();
+        }
+      });
+
       loadStaffMembers();
 
-      // 3. CARGA DEL POEMA DE LA SEMANA
       function loadPoemaSemana() {
         if (window.POEMA_SEMANA) {
-          if (window.POEMA_SEMANA.image) {
-            poemaImgEl.src = window.POEMA_SEMANA.image;
-          }
-          if (window.POEMA_SEMANA.author) {
-            poemaTitleEl.textContent = window.POEMA_SEMANA.author;
-          }
-          if (window.POEMA_SEMANA.date) {
-            poemaDateEl.textContent = window.POEMA_SEMANA.date;
-          }
+          if (window.POEMA_SEMANA.image) poemaImgEl.src = window.POEMA_SEMANA.image;
+          if (window.POEMA_SEMANA.author) poemaTitleEl.textContent = window.POEMA_SEMANA.author;
+          if (window.POEMA_SEMANA.date) poemaDateEl.textContent = window.POEMA_SEMANA.date;
         }
       }
       loadPoemaSemana();
 
-      // 4. PESTAÑAS Y NAVEGACIÓN (CONTROL DE ILUMINACIÓN DE CHAT)
       function activateTab(tabName) {
         tabChat.classList.remove("active");
         tabStaff.classList.remove("active");
@@ -1732,14 +1876,12 @@
           tabPoema.classList.add("active");
           viewPoema.classList.add("active");
           btnDeckChat.classList.remove("chat-active-glow");
-          btnDeckChat.blur();
         } else {
           libraryPanel.classList.remove("chat-mode-active");
           tabChat.style.display = "none";
           tabStaff.classList.add("active");
           viewStaff.classList.add("active");
           btnDeckChat.classList.remove("chat-active-glow");
-          btnDeckChat.blur();
         }
       }
 
@@ -1753,7 +1895,6 @@
             libraryPanel.classList.remove("drawer-open");
             libraryPanel.classList.remove("chat-mode-active");
             btnDeckChat.classList.remove("chat-active-glow");
-            btnDeckChat.blur();
           } else {
             activateTab("chat");
             libraryPanel.classList.add("drawer-open");
@@ -1773,7 +1914,6 @@
 
       btnDeckStaff.addEventListener("click", () => {
         btnDeckChat.classList.remove("chat-active-glow");
-        btnDeckChat.blur();
         libraryPanel.classList.remove("chat-mode-active");
         if (libraryPanel.classList.contains("drawer-open") && (viewStaff.classList.contains("active") || viewPoema.classList.contains("active"))) {
           libraryPanel.classList.remove("drawer-open");
@@ -1787,7 +1927,6 @@
         libraryPanel.classList.remove("drawer-open");
         libraryPanel.classList.remove("chat-mode-active");
         btnDeckChat.classList.remove("chat-active-glow");
-        btnDeckChat.blur();
         activateTab("staff");
       });
 
@@ -1801,7 +1940,6 @@
         btnDeckChat.classList.remove("chat-active-glow");
       });
 
-      // 5. SOPORTE DE DESLIZAMIENTO TÁCTIL (SWIPE GESTURES)
       let touchStartX = 0;
       let touchStartY = 0;
 
@@ -1811,27 +1949,14 @@
       }, { passive: true });
 
       libraryPanel.addEventListener("touchend", (e) => {
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-        const diffX = touchEndX - touchStartX;
-        const diffY = touchEndY - touchStartY;
-
-        if (!viewChat.classList.contains("active")) {
-          if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-            if (diffX > 0) {
-              if (viewStaff.classList.contains("active")) {
-                activateTab("poema");
-              }
-            } else {
-              if (viewPoema.classList.contains("active")) {
-                activateTab("staff");
-              }
-            }
-          }
+        const diffX = e.changedTouches[0].screenX - touchStartX;
+        const diffY = e.changedTouches[0].screenY - touchStartY;
+        if (!viewChat.classList.contains("active") && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+          if (diffX > 0 && viewStaff.classList.contains("active")) activateTab("poema");
+          else if (diffX < 0 && viewPoema.classList.contains("active")) activateTab("staff");
         }
       }, { passive: true });
 
-      // 6. MAPA DE DJS Y METADATOS (SINCRONIZACIÓN AUTOMÁTICA EN VIVO)
       async function loadDjMap() {
         try {
           const res = await fetch("djs.json?nocache=" + Date.now());
@@ -1857,7 +1982,6 @@
             }
           });
         }
-
         processDjUpdate(sonicDj.textContent.trim());
       }
       loadDjMap();
@@ -1866,11 +1990,9 @@
         if (!rawDj) rawDj = "no dj";
         let cleanDj = rawDj.replace(/\s+/g, ' ').trim();
         let lookupKey = cleanDj.toLowerCase();
+        if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) lookupKey = "no dj";
 
-        if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) {
-          lookupKey = "no dj";
-        }
-
+        if (lookupKey === lastObservedDjRaw) return;
         lastObservedDjRaw = lookupKey;
 
         let styledName = cleanDj;
@@ -1891,9 +2013,11 @@
         }
 
         displayDj.textContent = styledName;
+        displayDj.setAttribute("data-text", styledName);
 
         if (country) {
           djCountryName.textContent = country;
+          djCountryName.setAttribute("data-text", country);
           if (flagCode) {
             djFlagImg.src = `https://flagcdn.com/24x18/${flagCode.toLowerCase()}.png`;
             djFlagImg.style.display = "inline-block";
@@ -1923,52 +2047,68 @@
         if (!cleanUrl || cleanUrl === currentCoverUrl) return;
 
         currentCoverUrl = cleanUrl;
-        const tempImg = new Image();
-        tempImg.onload = () => {
-          playerBgArt.style.backgroundImage = `url('${cleanUrl}')`;
-          tempImg.onload = null;
-          tempImg.onerror = null;
-        };
-        tempImg.onerror = () => {
-          tempImg.onload = null;
-          tempImg.onerror = null;
-        };
-        tempImg.src = cleanUrl;
+        playerBgArt.style.backgroundImage = `url('${cleanUrl}')`;
       }
 
-      function sanitizeTerm(str) {
+      function cleanSearchText(str) {
+        if (!str) return "";
         return str
-          .replace(/\b(feat|ft|remix|mix|edit|version|radio edit|original mix|extended|official video|audio|lyrics)\b.*$/gi, '')
           .replace(/[\(\[\{].*?[\)\]\}]/g, '')
-          .replace(/["'_]/g, ' ')
+          .replace(/\b(feat|ft|remix|mix|edit|version|official video|audio|lyrics|extended|original mix|pres|vs|prod|club mix)\b.*$/gi, '')
+          .replace(/["'_#!?]/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
       }
 
-      let fetchCoverTimeout = null;
       function fetchAccurateCover(title, artist) {
         if (fetchCoverTimeout) clearTimeout(fetchCoverTimeout);
         fetchCoverTimeout = setTimeout(async () => {
           const cacheKey = `${artist} - ${title}`.toLowerCase();
           if (coverMemoryCache.has(cacheKey)) {
-            applyBackgroundCover(coverMemoryCache.get(cacheKey));
+            const cached = coverMemoryCache.get(cacheKey);
+            if (cached && cached.cover) {
+              applyBackgroundCover(cached.cover);
+            }
+            if (cached && cached.artist && trackArtist.textContent === "NeXus ZonE") {
+              trackArtist.textContent = cached.artist;
+            }
             return;
           }
 
-          const cleanArtist = sanitizeTerm(artist);
-          const cleanTitle = sanitizeTerm(title);
+          const cleanArtist = cleanSearchText(artist);
+          const cleanTitle = cleanSearchText(title);
+          if (!cleanTitle || cleanTitle.length < 2) return;
+
+          let query = cleanTitle;
+          if (cleanArtist && cleanArtist !== "NeXus ZonE" && cleanArtist !== "Nexus Zone") {
+            query = `${cleanArtist} ${cleanTitle}`;
+          }
 
           try {
-            const query1 = encodeURIComponent(`${cleanArtist} ${cleanTitle}`);
-            let res = await fetch(`https://itunes.apple.com/search?term=${query1}&media=music&entity=song&limit=2`);
-            let data = await res.json();
+            const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=1`);
+            const data = await res.json();
+            if (data.results && data.results.length > 0) {
+              const item = data.results[0];
+              const itunesTrack = (item.trackName || "").toLowerCase();
+              const myTrack = cleanTitle.toLowerCase();
 
-            let bestMatch = (data.results && data.results[0]) ? data.results[0] : null;
+              const words = myTrack.split(" ").filter(w => w.length > 2);
+              const matches = words.length === 0 || words.some(w => itunesTrack.includes(w));
 
-            if (bestMatch && bestMatch.artworkUrl100) {
-              const hires = bestMatch.artworkUrl100.replace('100x100bb', '600x600bb');
-              coverMemoryCache.set(cacheKey, hires);
-              applyBackgroundCover(hires);
+              if (matches) {
+                const detectedArtist = item.artistName || "";
+                let hires = "";
+                if (item.artworkUrl100) {
+                  hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
+                  applyBackgroundCover(hires);
+                }
+
+                coverMemoryCache.set(cacheKey, { cover: hires, artist: detectedArtist });
+
+                if (detectedArtist && (trackArtist.textContent === "NeXus ZonE" || trackArtist.textContent === "Nexus Zone")) {
+                  trackArtist.textContent = detectedArtist;
+                }
+              }
             }
           } catch (_) {}
         }, 1200);
@@ -1979,42 +2119,35 @@
           const res = await fetch(STATS_URL + "&t=" + Date.now());
           if (res.ok) {
             const data = await res.json();
-            if (data.songtitle) {
-              updateSongDisplay(data.songtitle);
-            }
-            if (data.djusername) {
-              processDjUpdate(data.djusername);
-            }
+            if (data.songtitle) updateSongDisplay(data.songtitle);
+            if (data.djusername) processDjUpdate(data.djusername);
           }
         } catch (_) {}
       }
 
       const titleObserver = new MutationObserver(() => {
         const raw = sonicTitle.textContent.trim();
-        if (raw) {
-          updateSongDisplay(raw);
-        }
+        if (raw) updateSongDisplay(raw);
       });
       titleObserver.observe(sonicTitle, { childList: true, subtree: true, characterData: true });
 
-      setInterval(syncMetadataAPI, 8000);
+      setInterval(syncMetadataAPI, 10000);
       syncMetadataAPI();
 
-      // 7. ECUALIZADOR VISUAL ORIGINAL
       const canvas = document.getElementById("equalizerCanvas");
       const ctx = canvas ? canvas.getContext("2d", { alpha: true }) : null;
 
-      const NUM_BARS = 28;
+      const NUM_BARS = 24;
       const peaks = new Float32Array(NUM_BARS);
       const precomputedBins = new Uint16Array(NUM_BARS);
       const precomputedBoosts = new Float32Array(NUM_BARS);
-      let cachedBarGradient = null;
       let eqLogicalWidth = 0;
       let eqLogicalHeight = 0;
+      let cachedGradient = null;
 
       function buildPrecomputedLookup() {
         const minIndex = 1;
-        const binCount = analyser ? analyser.frequencyBinCount : 128;
+        const binCount = analyser ? analyser.frequencyBinCount : 64;
         const maxIndex = Math.max(2, Math.floor(binCount * 0.65));
         for (let i = 0; i < NUM_BARS; i++) {
           const fraction = i / (NUM_BARS - 1);
@@ -2028,55 +2161,46 @@
         const rect = canvas.parentElement.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
 
-        eqLogicalWidth = rect.width;
-        eqLogicalHeight = rect.height;
+        eqLogicalWidth = Math.floor(rect.width);
+        eqLogicalHeight = Math.floor(rect.height);
 
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.round(eqLogicalWidth * dpr);
-        canvas.height = Math.round(eqLogicalHeight * dpr);
-
+        canvas.width = eqLogicalWidth;
+        canvas.height = eqLogicalHeight;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.scale(dpr, dpr);
 
-        cachedBarGradient = ctx.createLinearGradient(0, eqLogicalHeight, 0, 0);
-        cachedBarGradient.addColorStop(0, "#b026ff");
-        cachedBarGradient.addColorStop(1, "#00ff66");
+        cachedGradient = ctx.createLinearGradient(0, eqLogicalHeight, 0, 0);
+        cachedGradient.addColorStop(0, "#b026ff");
+        cachedGradient.addColorStop(1, "#00ff66");
 
         buildPrecomputedLookup();
-
-        if (!isPlaying) {
-          renderIdleBars();
-        }
+        if (!isPlaying) renderIdleBars();
       }
 
-      async function setupAudioContext() {
+      function initWebAudioOnce() {
         if (!audioCtx) {
           try {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 256;
+            analyser.fftSize = 64;
             analyser.minDecibels = -80;
             analyser.maxDecibels = -10;
-            analyser.smoothingTimeConstant = 0.58;
+            analyser.smoothingTimeConstant = 0.7;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-            const source = audioCtx.createMediaElementSource(audio);
-            source.connect(analyser);
+            sourceNode = audioCtx.createMediaElementSource(audio);
+            sourceNode.connect(analyser);
             analyser.connect(audioCtx.destination);
             buildPrecomputedLookup();
           } catch (e) {
-            console.warn("Web Audio API:", e);
+            console.warn("AudioContext init error:", e);
           }
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          await audioCtx.resume();
         }
       }
 
       function renderIdleBars() {
         if (!ctx || eqLogicalWidth <= 0 || eqLogicalHeight <= 0) return;
         ctx.clearRect(0, 0, eqLogicalWidth, eqLogicalHeight);
-        const barSpacing = Math.max(2, Math.floor(eqLogicalWidth / 130));
+        const barSpacing = 3;
         const barWidth = Math.max(2, Math.floor((eqLogicalWidth - (NUM_BARS - 1) * barSpacing) / NUM_BARS));
         ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
         for (let i = 0; i < NUM_BARS; i++) {
@@ -2086,47 +2210,29 @@
       }
 
       function drawEqualizer() {
-        if (!isPlaying || !analyser || !ctx || eqLogicalWidth <= 0) {
-          renderIdleBars();
-          return;
-        }
+        if (!isPlaying || !analyser || !ctx || eqLogicalWidth <= 0) return;
 
         eqAnimId = requestAnimationFrame(drawEqualizer);
         ctx.clearRect(0, 0, eqLogicalWidth, eqLogicalHeight);
         analyser.getByteFrequencyData(dataArray);
 
-        const barSpacing = Math.max(2, Math.floor(eqLogicalWidth / 130));
+        const barSpacing = 3;
         const barWidth = Math.max(2, Math.floor((eqLogicalWidth - (NUM_BARS - 1) * barSpacing) / NUM_BARS));
         const H = eqLogicalHeight;
 
-        ctx.fillStyle = cachedBarGradient || "#00ff66";
+        ctx.fillStyle = cachedGradient || "#00ff66";
         for (let i = 0; i < NUM_BARS; i++) {
           const val = dataArray[precomputedBins[i]] || 0;
-          const norm = Math.min(1, (val / 255) * precomputedBoosts[i]);
-          let barHeight = Math.pow(norm, 1.22) * H * 1.3;
+          let barHeight = Math.pow(val / 255, 1.2) * H * 1.1;
           if (barHeight < 3) barHeight = 3;
           else if (barHeight > H) barHeight = H;
 
           const x = i * (barWidth + barSpacing);
           ctx.fillRect(x, H - barHeight, barWidth, barHeight);
-
-          if (barHeight >= peaks[i]) {
-            peaks[i] = barHeight;
-          } else {
-            peaks[i] = Math.max(0, peaks[i] - 1.9);
-          }
-        }
-
-        ctx.fillStyle = "#d0d5e2";
-        for (let i = 0; i < NUM_BARS; i++) {
-          if (peaks[i] > 5) {
-            ctx.fillRect(i * (barWidth + barSpacing), H - peaks[i] - 3, barWidth, 2);
-          }
         }
       }
 
       window.addEventListener("resize", resizeCanvas, { passive: true });
-      window.addEventListener("orientationchange", () => setTimeout(resizeCanvas, 150), { passive: true });
       resizeCanvas();
 
       async function togglePlay() {
@@ -2137,28 +2243,27 @@
             eqAnimId = null;
           }
           audio.pause();
-          audio.src = '';
-          audio.load();
-
           playerDeck.classList.remove("is-playing");
           playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
           renderIdleBars();
         } else {
-          await setupAudioContext();
+          initWebAudioOnce();
+          if (audioCtx && audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+          }
           try {
-            audio.src = STREAM_URL;
-            audio.load();
+            if (!audio.src || audio.src === "" || audio.src === window.location.href) {
+              audio.src = STREAM_URL;
+            }
             await audio.play();
 
             isPlaying = true;
             playerDeck.classList.add("is-playing");
             playIcon.innerHTML = `<rect x="6" y="6" width="12" height="12" rx="1.5" />`;
 
-            if (!eqAnimId) {
-              eqAnimId = requestAnimationFrame(drawEqualizer);
-            }
+            if (!eqAnimId) eqAnimId = requestAnimationFrame(drawEqualizer);
           } catch (e) {
-            console.error("Error al iniciar audio:", e);
+            console.error("Error reproduciendo stream:", e);
           }
         }
       }
@@ -2176,13 +2281,13 @@
         }
       });
 
-      // 8. CONTROL DE VOLUMEN ORIGINAL
       function updateVolumeVisual(val) {
         audio.volume = val;
         const pct = Math.round(val * 100);
         volumeControl.style.background = `linear-gradient(to right, #b026ff ${pct}%, rgba(255, 255, 255, 0.1) ${pct}%)`;
       }
 
+      volumeControl.volume = 1;
       volumeControl.addEventListener("input", (e) => {
         updateVolumeVisual(parseFloat(e.target.value));
       });
@@ -2199,7 +2304,6 @@
 
       updateVolumeVisual(parseFloat(volumeControl.value));
 
-      // 9. MARQUESINA DE TÍTULO
       function recalculateMarquee() {
         displayTitle.classList.remove("marquee-active");
         displayTitle.style.transform = "translateX(0)";
@@ -2226,17 +2330,29 @@
         if (!raw || raw === lastObservedTitle || raw === "Cargando emisión...") return;
 
         lastObservedTitle = raw;
-        let artist = "Nexus Zone Radio";
+        let artist = "";
         let songOnly = raw;
 
-        if (raw.includes(" - ")) {
+        const separatorRegex = /\s+[\-\u2013\u2014\|]\s+/;
+
+        if (separatorRegex.test(raw)) {
+          const parts = raw.split(separatorRegex);
+          artist = parts[0].trim();
+          songOnly = parts.slice(1).join(" - ").trim();
+        } else if (raw.includes(" - ")) {
           const parts = raw.split(" - ");
           artist = parts[0].trim();
           songOnly = parts.slice(1).join(" - ").trim();
         }
 
-        trackArtist.textContent = artist;
+        if (artist && artist.length > 0) {
+          trackArtist.textContent = artist;
+        } else {
+          trackArtist.textContent = "NeXus ZonE";
+        }
+
         displayTitle.textContent = songOnly;
+        displayTitle.setAttribute("data-text", songOnly);
         recalculateMarquee();
         
         fetchAccurateCover(songOnly, artist);
