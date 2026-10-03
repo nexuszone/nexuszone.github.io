@@ -1579,7 +1579,7 @@
 
         <div class="deck-buttons-container">
           <div class="playback-controls">
-            <!-- BOTÓN PLAY CON RELIEVE 3D HARDWARE (ESCALA ORIGINAL) -->
+            <!-- BOTÓN PLAY EN RELIEVE 3D HARDWARE (ESCALA ORIGINAL) -->
             <button class="btn-play-hero" id="btnPlay" title="Reproducir / Detener" aria-label="Reproducir o detener">
               <svg id="playIcon" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
@@ -1753,6 +1753,7 @@
     let djMap = {};
     const coverMemoryCache = new Map();
     let fetchCoverTimeout = null;
+    let syncIntervalId = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       const randomNum = Math.floor(Math.random() * 100) + 1;
@@ -2131,14 +2132,14 @@
       });
       titleObserver.observe(sonicTitle, { childList: true, subtree: true, characterData: true });
 
-      setInterval(syncMetadataAPI, 10000);
+      if (syncIntervalId) clearInterval(syncIntervalId);
+      syncIntervalId = setInterval(syncMetadataAPI, 15000);
       syncMetadataAPI();
 
       const canvas = document.getElementById("equalizerCanvas");
       const ctx = canvas ? canvas.getContext("2d", { alpha: true }) : null;
 
       const NUM_BARS = 24;
-      const peaks = new Float32Array(NUM_BARS);
       const precomputedBins = new Uint16Array(NUM_BARS);
       const precomputedBoosts = new Float32Array(NUM_BARS);
       let eqLogicalWidth = 0;
@@ -2147,7 +2148,7 @@
 
       function buildPrecomputedLookup() {
         const minIndex = 1;
-        const binCount = analyser ? analyser.frequencyBinCount : 64;
+        const binCount = analyser ? analyser.frequencyBinCount : 32;
         const maxIndex = Math.max(2, Math.floor(binCount * 0.65));
         for (let i = 0; i < NUM_BARS; i++) {
           const fraction = i / (NUM_BARS - 1);
@@ -2205,7 +2206,6 @@
         ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
         for (let i = 0; i < NUM_BARS; i++) {
           ctx.fillRect(i * (barWidth + barSpacing), eqLogicalHeight - 3, barWidth, 3);
-          peaks[i] = 0;
         }
       }
 
@@ -2223,7 +2223,8 @@
         ctx.fillStyle = cachedGradient || "#00ff66";
         for (let i = 0; i < NUM_BARS; i++) {
           const val = dataArray[precomputedBins[i]] || 0;
-          let barHeight = Math.pow(val / 255, 1.2) * H * 1.1;
+          const norm = Math.min(1, (val / 255) * precomputedBoosts[i]);
+          let barHeight = Math.pow(norm, 1.2) * H * 1.1;
           if (barHeight < 3) barHeight = 3;
           else if (barHeight > H) barHeight = H;
 
@@ -2243,6 +2244,15 @@
             eqAnimId = null;
           }
           audio.pause();
+          
+          // Liberación segura del contexto de audio para evitar retención de memoria en RAM
+          if (audioCtx && audioCtx.state !== 'closed') {
+            try { await audioCtx.close(); } catch (_) {}
+            audioCtx = null;
+            analyser = null;
+            sourceNode = null;
+          }
+
           playerDeck.classList.remove("is-playing");
           playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
           renderIdleBars();
@@ -2270,6 +2280,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
+      // BLINDAJE DE MEMORIA PARA PESTAÑAS EN SEGUNDO PLANO
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
