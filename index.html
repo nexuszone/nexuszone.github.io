@@ -253,14 +253,23 @@
 
     .player-bg-art {
       position: absolute;
-      inset: 0;
+      inset: -20px;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.28;
+      filter: blur(22px) brightness(0.65);
+      opacity: 0.45;
       z-index: 0;
       pointer-events: none;
-      transition: background-image 0.5s ease-in-out;
+      transition: background-image 0.6s ease-in-out;
+    }
+
+    .player-bg-art::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 35%, rgba(8, 9, 13, 0.85) 90%);
+      pointer-events: none;
     }
 
     .cover-wrapper {
@@ -395,7 +404,6 @@
       85%, 100% { transform: translateX(var(--scroll-distance, -50px)); }
     }
 
-    /* NOMBRE DEL ARTISTA: Restaurado a tono secundario metálico */
     .meta-artist {
       font-size: clamp(12px, 1.45vh, 14.5px);
       color: var(--text-secondary);
@@ -429,7 +437,6 @@
       text-shadow: 0 0 10px var(--purple-glow);
     }
 
-    /* NOMBRE DEL DJ: Restaurado a verde neón brillante */
     #display_dj {
       display: inline-block;
       color: var(--neon-green);
@@ -1702,7 +1709,11 @@
         fetchCoverTimeout = setTimeout(async () => {
           const cacheKey = `${artist} - ${title}`.toLowerCase();
           if (coverMemoryCache.has(cacheKey)) {
-            applyBackgroundCover(coverMemoryCache.get(cacheKey));
+            const cached = coverMemoryCache.get(cacheKey);
+            applyBackgroundCover(cached.cover);
+            if (cached.artist && (trackArtist.textContent === "Nexus Zone" || !artist || artist === "Nexus Zone")) {
+              trackArtist.textContent = cached.artist;
+            }
             return;
           }
 
@@ -1721,9 +1732,17 @@
               const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=song&limit=1`);
               const data = await res.json();
               if (data.results && data.results.length > 0 && data.results[0].artworkUrl100) {
-                const hires = data.results[0].artworkUrl100.replace('100x100bb', '600x600bb');
-                coverMemoryCache.set(cacheKey, hires);
+                const item = data.results[0];
+                const hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
+                const detectedArtist = item.artistName || "";
+
+                coverMemoryCache.set(cacheKey, { cover: hires, artist: detectedArtist });
                 applyBackgroundCover(hires);
+
+                // Si encontramos la canción y el artista en pantalla es genérico o no vino separado, lo actualizamos con el oficial
+                if (detectedArtist && (trackArtist.textContent === "Nexus Zone" || !artist || artist === "Nexus Zone")) {
+                  trackArtist.textContent = detectedArtist;
+                }
                 return;
               }
             } catch (_) {}
