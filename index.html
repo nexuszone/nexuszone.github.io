@@ -422,7 +422,7 @@
       opacity: 0.88;
     }
 
-    /* 2. NOMBRE DEL DJ */
+    /* 2. NOMBRE DEL DJ: VERDE NEÓN ORIGINAL */
     #display_dj {
       display: inline-block;
       color: var(--neon-green);
@@ -840,9 +840,7 @@
       flex-wrap: nowrap;
     }
 
-    /* ========================================================
-       REDISEÑO: BOTÓN DE PLAY HARDWARE 3D CYBERPUNK
-       ======================================================== */
+    /* BOTÓN PLAY EN RELIEVE 3D / HARDWARE */
     .btn-play-hero {
       width: clamp(62px, 7.8vh, 78px);
       height: clamp(62px, 7.8vh, 78px);
@@ -855,24 +853,17 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      /* Anillo concéntrico de titanio cepillado con núcleo purpura */
-      background: 
-        radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(176, 38, 255, 0.8) 25%, #6a0dad 60%, #170729 100%);
+      background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(176, 38, 255, 0.8) 25%, #6a0dad 60%, #170729 100%);
       box-shadow: 
-        /* Anillo biselado exterior */
         0 0 0 3px #181b24,
         0 0 0 4.5px rgba(255, 255, 255, 0.18),
-        /* Sombra de relieve de profundidad */
         0 8px 18px rgba(0, 0, 0, 0.85),
-        /* Resplandor neón inferior */
         0 0 25px rgba(176, 38, 255, 0.45),
-        /* Bisel cóncavo interno */
         inset 0 3px 3px rgba(255, 255, 255, 0.65),
         inset 0 -4px 6px rgba(0, 0, 0, 0.75) !important;
       transition: transform 0.12s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
     }
 
-    /* Textura de micro-surcos circulares estilo botón de consola */
     .btn-play-hero::before {
       content: '';
       position: absolute;
@@ -893,7 +884,6 @@
       transition: transform 0.1s ease;
     }
 
-    /* Pulsación mecánica realista */
     .btn-play-hero:active {
       transform: translateY(3px) scale(0.96);
       box-shadow: 
@@ -1004,9 +994,7 @@
       cursor: pointer;
     }
 
-    /* ========================================================
-       REDISEÑO: CAPUCHÓN DE FADER METÁLICO (PIONEER DJ STYLE)
-       ======================================================== */
+    /* CAPUCHÓN DE FADER PIONEER DJ */
     .volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -1014,23 +1002,16 @@
       height: 22px;
       border-radius: 3px;
       cursor: pointer;
-      /* Cuerpo en aluminio mecanizado con grip y hendidura retroiluminada */
       background: 
-        /* Línea guía central del fader iluminada en verde neón */
         linear-gradient(to right, transparent 5px, #00ff66 5px, #00ff66 9px, transparent 9px),
-        /* Micro-ranuras táctiles horizontales superiores e inferiores */
         repeating-linear-gradient(to bottom, #d6dbe6 0px, #d6dbe6 1px, #7c8599 1.5px, #7c8599 2.5px),
-        /* Metal plateado base */
         linear-gradient(180deg, #f0f3f8 0%, #b8c0d2 50%, #838c9e 100%);
       background-size: 100% 100%;
       border: 1px solid #ffffff;
       box-shadow: 
-        /* Relieve exterior de sombra */
         0 3px 8px rgba(0, 0, 0, 0.95),
         0 0 1px rgba(0, 0, 0, 0.9),
-        /* Luz del indicador verde */
         0 0 6px rgba(0, 255, 102, 0.75),
-        /* Bisel metálico superior e inferior */
         inset 0 1px 1px #ffffff,
         inset 0 -1px 2px #383e4d;
       transition: filter 0.15s ease;
@@ -1463,18 +1444,21 @@
       letter-spacing: 0.3px;
     }
 
+    /* MODAL DEL DJ EN CAPA RAÍZ Z-INDEX 999 AMPLIADO Y PROPORCIONADO */
     .dj-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
-      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 999;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.22s ease-in-out;
     }
 
     .dj-modal-overlay.modal-active {
@@ -1484,11 +1468,14 @@
 
     .dj-modal-card {
       width: 100%;
-      max-width: 400px;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
       background: #0f1118;
       border: 1px solid var(--neon-purple);
-      border-radius: 20px;
-      padding: 16px 18px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.95), 0 0 24px rgba(176, 38, 255, 0.38);
+      border-radius: 22px;
+      padding: 20px 24px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1498,29 +1485,31 @@
 
     .btn-close-modal {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 14px;
+      right: 14px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-subtle);
       color: #ffffff;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
+      z-index: 10;
     }
 
+    /* AVATAR CON EL TAMAÑO EXACTO DEL STAFF */
     .modal-dj-avatar {
-      height: clamp(80px, 15vh, 130px);
-      width: clamp(80px, 15vh, 130px);
+      width: min(150px, 48vw);
+      height: min(150px, 48vw);
       aspect-ratio: 1 / 1;
-      border-radius: clamp(6px, 1vh, 12px);
+      border-radius: clamp(8px, 1.2vh, 14px);
       object-fit: cover;
       border: 2px solid var(--neon-purple);
-      margin: 0 auto;
+      margin: 4px auto 8px auto;
       background: #08090d;
       flex-shrink: 0;
     }
@@ -1533,8 +1522,8 @@
       align-items: center;
       gap: 8px;
       justify-content: center;
-      font-size: clamp(15px, 2vh, 19px);
-      margin: clamp(4px, 0.8vh, 8px) 0 clamp(2px, 0.4vh, 4px) 0;
+      font-size: clamp(18px, 2.5vh, 22px);
+      margin: clamp(6px, 1vh, 10px) 0 clamp(3px, 0.5vh, 5px) 0;
       line-height: 1.2;
     }
 
@@ -1543,9 +1532,9 @@
       background: rgba(0, 255, 102, 0.18);
       border: 1px solid rgba(0, 255, 102, 0.65);
       color: var(--neon-green);
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(12px, 1.5vh, 13px);
       font-weight: 800;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 6px;
       letter-spacing: 0.3px;
       margin-top: 2px;
@@ -1555,15 +1544,15 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(12px, 1.5vh, 13.5px);
       font-weight: 700;
       color: #e2e6f0;
-      margin-top: 3px;
+      margin-top: 4px;
     }
 
     .modal-dj-country img {
-      width: clamp(12px, 1.5vh, 15px);
-      height: clamp(8px, 1vh, 10px);
+      width: clamp(14px, 1.8vh, 17px);
+      height: clamp(9px, 1.2vh, 11px);
       border-radius: 2px;
       object-fit: cover;
     }
@@ -1572,31 +1561,31 @@
       width: 100%;
       height: 1px;
       background: var(--border-subtle);
-      margin: 8px 0;
+      margin: 12px 0 10px 0;
     }
 
     .modal-info-block {
       width: 100%;
       text-align: left;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 8px;
     }
 
     .modal-info-title {
-      font-size: clamp(9px, 1.2vh, 11px);
+      font-size: clamp(12.5px, 1.6vh, 14px);
       font-weight: 800;
       color: var(--neon-green);
       letter-spacing: 0.3px;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .modal-info-text {
-      font-size: 11.5px;
+      font-size: 13.5px;
       color: #e2e6f0;
-      line-height: 1.35;
+      line-height: 1.45;
     }
   </style>
 </head>
@@ -1757,6 +1746,7 @@
     </section>
   </main>
 
+  <!-- MODAL DJ ELEVADO A Z-INDEX 999 CON IMAGEN TAMAÑO STAFF -->
   <div class="dj-modal-overlay" id="djModalOverlay">
     <div class="dj-modal-card">
       <button class="btn-close-modal" id="btn-close-modal" title="Cerrar">✕</button>
@@ -1872,7 +1862,8 @@
           const li = document.createElement("li");
           li.className = "staff-card";
 
-          const flagUrl = dj.flag ? `https://flagcdn.com/24x18/${dj.flag.toLowerCase()}.png` : "";
+          const flagCode = dj.flag || dj.flagCode || "es";
+          const flagUrl = `https://flagcdn.com/24x18/${flagCode.toLowerCase()}.png`;
           const imgSrc = dj.image ? `${dj.image}` : `djs/nexusdj.webp`;
 
           li.innerHTML = `
@@ -1882,19 +1873,23 @@
             </div>
             <div class="staff-bottom-row">
               <div class="staff-country-badge">
-                <span>${dj.country || "Int."}</span>
-                ${flagUrl ? `<img src="${flagUrl}" alt="${dj.country}">` : ""}
+                <span>${dj.country || "España"}</span>
+                <img src="${flagUrl}" alt="${dj.country || 'Bandera'}">
               </div>
-              <span class="staff-badge">${dj.badge || "Staff"}</span>
+              <span class="staff-badge">${dj.badge || dj.role || "Staff"}</span>
             </div>
           `;
 
-          li.addEventListener("click", () => openDjModal(dj));
+          li.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openDjModal(dj);
+          });
           staffListGrid.appendChild(li);
         });
       }
 
       function openDjModal(dj) {
+        if (!dj) return;
         const imgSrc = dj.image ? `${dj.image}` : "djs/nexusdj.webp";
         modalDjImg.src = imgSrc;
         modalDjImg.onerror = () => { 
@@ -1902,24 +1897,20 @@
           modalDjImg.src = "djs/nexusdj.webp"; 
         };
         
-        modalDjName.textContent = dj.name;
+        modalDjName.textContent = dj.name || "DJ";
         modalDjRole.textContent = dj.role || dj.badge || "Miembro del Staff";
         
-        if (dj.country) {
-          modalDjCountryName.textContent = dj.country;
-          if (dj.flag) {
-            modalDjFlag.src = `https://flagcdn.com/24x18/${flagCode.toLowerCase()}.png`;
-            modalDjFlag.style.display = "inline-block";
-          } else {
-            modalDjFlag.style.display = "none";
-          }
-          document.getElementById("modalDjCountry").style.display = "flex";
-        } else {
-          document.getElementById("modalDjCountry").style.display = "none";
-        }
+        const countryVal = dj.country || dj.pais || "España";
+        const flagVal = dj.flag || dj.flagCode || "es";
+        
+        modalDjCountryName.textContent = countryVal;
+        modalDjFlag.src = `https://flagcdn.com/24x18/${flagVal.toLowerCase()}.png`;
+        modalDjFlag.style.display = "inline-block";
+        document.getElementById("modalDjCountry").style.display = "flex";
 
-        modalDjDesc.textContent = dj.description || "No hay información adicional disponible.";
-        modalDjSchedule.textContent = dj.schedule || "Sin horarios fijos especificados.";
+        modalDjDesc.textContent = dj.description || dj.desc || dj.style || "Estilo musical variado. Éxitos y sesiones en vivo.";
+        modalDjSchedule.textContent = dj.schedule || dj.horario || "Transmisiones regulares en vivo por Nexus Zone.";
+        
         djModalOverlay.classList.add("modal-active");
       }
 
@@ -1927,9 +1918,19 @@
         djModalOverlay.classList.remove("modal-active");
       }
 
-      btnCloseModal.addEventListener("click", closeDjModal);
+      btnCloseModal.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeDjModal();
+      });
+
       djModalOverlay.addEventListener("click", (e) => {
         if (e.target === djModalOverlay) closeDjModal();
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && djModalOverlay.classList.contains("modal-active")) {
+          closeDjModal();
+        }
       });
 
       loadStaffMembers();
