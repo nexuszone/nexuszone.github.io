@@ -251,6 +251,7 @@
       }
     }
 
+    /* Desenfoque limpio, ligero y seguro para GPU */
     .player-bg-art {
       position: absolute;
       inset: -10px;
@@ -1216,7 +1217,7 @@
             <div id='sonic_title' style="display: none;"></div>
             <div id='display_title'>Cargando emisión...</div>
           </div>
-          <div class="meta-artist" id="trackArtist">Nexus Zone</div>
+          <div class="meta-artist" id="trackArtist">NeXus ZonE</div>
           <div class="meta-dj-row">
             <span class="emit-label">Emitiendo:</span>
             <div id='sonic_dj' style="display: none;"></div>
@@ -1694,7 +1695,6 @@
           .trim();
       }
 
-      // MOTOR DE BÚSQUEDA PRECISO SIN FALSOS POSITIVOS
       let fetchCoverTimeout = null;
       function fetchAccurateCover(title, artist) {
         if (fetchCoverTimeout) clearTimeout(fetchCoverTimeout);
@@ -1704,31 +1704,20 @@
             const cached = coverMemoryCache.get(cacheKey);
             if (cached && cached.cover) {
               applyBackgroundCover(cached.cover);
-              if (cached.artist && (trackArtist.textContent === "Nexus Zone" || !artist || artist === "Nexus Zone")) {
-                trackArtist.textContent = cached.artist;
-              }
             }
-            return;
-          }
-
-          // Si no hay artista real o el título es genérico, no buscamos para evitar falsos positivos
-          const rawLow = (title + " " + artist).toLowerCase();
-          const genericWords = ["nexus zone", "radio", "publicidad", "sintonia", "sintonía", "promo", "offline", "cargando"];
-          if (genericWords.some(w => rawLow.includes(w)) && (!artist || artist === "Nexus Zone")) {
+            if (cached && cached.artist && trackArtist.textContent === "NeXus ZonE") {
+              trackArtist.textContent = cached.artist;
+            }
             return;
           }
 
           const cleanArtist = cleanSearchText(artist);
           const cleanTitle = cleanSearchText(title);
+          if (!cleanTitle || cleanTitle.length < 2) return;
 
-          // Exigimos que haya un término real de al menos 3 caracteres
-          if (!cleanTitle || cleanTitle.length < 3) return;
-
-          let query = "";
-          if (cleanArtist && cleanArtist !== "Nexus Zone") {
+          let query = cleanTitle;
+          if (cleanArtist && cleanArtist !== "NeXus ZonE" && cleanArtist !== "Nexus Zone") {
             query = `${cleanArtist} ${cleanTitle}`;
-          } else {
-            query = cleanTitle;
           }
 
           try {
@@ -1736,22 +1725,24 @@
             const data = await res.json();
             if (data.results && data.results.length > 0) {
               const item = data.results[0];
-
-              // Validación de coincidencia estricta: debe contener al menos parte del título buscado
               const itunesTrack = (item.trackName || "").toLowerCase();
               const myTrack = cleanTitle.toLowerCase();
 
               const words = myTrack.split(" ").filter(w => w.length > 2);
-              const matches = words.some(w => itunesTrack.includes(w));
+              const matches = words.length === 0 || words.some(w => itunesTrack.includes(w));
 
-              if (matches && item.artworkUrl100) {
-                const hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
+              if (matches) {
                 const detectedArtist = item.artistName || "";
+                let hires = "";
+                if (item.artworkUrl100) {
+                  hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
+                  applyBackgroundCover(hires);
+                }
 
                 coverMemoryCache.set(cacheKey, { cover: hires, artist: detectedArtist });
-                applyBackgroundCover(hires);
 
-                if (detectedArtist && (trackArtist.textContent === "Nexus Zone" || !artist || artist === "Nexus Zone")) {
+                // Si en pantalla no teníamos artista (decía NeXus ZonE), lo completamos con el oficial verificado
+                if (detectedArtist && (trackArtist.textContent === "NeXus ZonE" || trackArtist.textContent === "Nexus Zone")) {
                   trackArtist.textContent = detectedArtist;
                 }
               }
@@ -1981,16 +1972,18 @@
 
       window.addEventListener("resize", recalculateMarquee, { passive: true });
 
+      // PARSER EXACTO Y PRECISO DIRECTAMENTE DESDE LA FUENTE
       function updateSongDisplay(rawString) {
         if (!rawString) return;
         const raw = rawString.trim();
         if (!raw || raw === lastObservedTitle || raw === "Cargando emisión...") return;
 
         lastObservedTitle = raw;
-        let artist = "Nexus Zone";
+        let artist = "";
         let songOnly = raw;
 
-        const separatorRegex = /\s+[\-\u2013\u2014\|~]\s+/;
+        // Detectar separadores comunes en transmisiones de radio: " - ", " – ", " — ", " | "
+        const separatorRegex = /\s+[\-\u2013\u2014\|]\s+/;
 
         if (separatorRegex.test(raw)) {
           const parts = raw.split(separatorRegex);
@@ -2002,10 +1995,17 @@
           songOnly = parts.slice(1).join(" - ").trim();
         }
 
-        trackArtist.textContent = artist || "Nexus Zone";
+        // Si la cadena de radio tenía el artista, se muestra DE INMEDIATO sin depender de APIs externas
+        if (artist && artist.length > 0) {
+          trackArtist.textContent = artist;
+        } else {
+          trackArtist.textContent = "NeXus ZonE";
+        }
+
         displayTitle.textContent = songOnly;
         recalculateMarquee();
         
+        // Búsqueda complementaria de carátula en segundo plano
         fetchAccurateCover(songOnly, artist);
       }
     });
