@@ -33,7 +33,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   
   <script src="./staff.js?v=1.1.65"></script>
   <script src="./poema.js?v=1.0.4"></script>
@@ -251,7 +251,6 @@
       }
     }
 
-    /* Desenfoque limpio, ligero y seguro para GPU */
     .player-bg-art {
       position: absolute;
       inset: -10px;
@@ -375,16 +374,402 @@
       margin-bottom: 2px;
     }
 
+    /* ========================================================
+       SISTEMA GLITCH HACKER PAUSADO, MULTICAPA Y ALEATORIO
+       ======================================================== */
+    
+    /* 1. TÍTULO DE LA CANCIÓN */
     #display_title {
       font-size: clamp(17px, 2.3vh, 23px);
       font-weight: 900;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
       line-height: 1.2;
       white-space: nowrap;
       display: inline-block;
       padding: 0 10px;
       color: var(--text-primary);
       text-align: center;
+      position: relative;
+      animation: 
+        hackerTitleGlitch 6.8s infinite steps(1),
+        hackerVerticalJitter 8.4s infinite ease-in-out,
+        hackerSignalDrop 11.2s infinite steps(1),
+        hackerPixelShear 9.3s infinite steps(1);
+    }
+
+    #display_title::before,
+    #display_title::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #display_title::before {
+      color: #00ff66;
+      z-index: -1;
+      animation: 
+        hackerGlitchSlice1 5.9s infinite linear alternate-reverse,
+        hackerScanlineSweep 8.2s infinite ease-in-out,
+        hackerGhostTrace 7.5s infinite ease-out;
+      opacity: 0.88;
+    }
+
+    #display_title::after {
+      color: #b026ff;
+      z-index: -2;
+      animation: hackerGlitchSlice2 6.6s infinite linear alternate-reverse;
+      opacity: 0.88;
+    }
+
+    /* 2. NOMBRE DEL DJ */
+    #display_dj {
+      display: inline-block;
+      color: var(--neon-green);
+      font-size: clamp(13px, 1.7vh, 18px);
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-shadow: 0 0 10px var(--green-glow);
+      position: relative;
+      animation: 
+        hackerDjGlitch 6.2s infinite steps(1),
+        hackerVerticalJitter 7.8s infinite ease-in-out reverse,
+        hackerSignalDrop 10.4s infinite steps(1),
+        hackerPixelShear 8.7s infinite steps(1);
+    }
+
+    #display_dj::before,
+    #display_dj::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #display_dj::before {
+      color: #b026ff;
+      z-index: -1;
+      animation: 
+        hackerDjSlice1 5.4s infinite linear alternate-reverse,
+        hackerScanlineSweep 7.6s infinite ease-in-out,
+        hackerGhostTrace 8.1s infinite ease-out;
+      opacity: 0.9;
+    }
+
+    #display_dj::after {
+      color: #00ff66;
+      z-index: -2;
+      animation: hackerDjSlice2 7.1s infinite linear alternate-reverse;
+      opacity: 0.9;
+    }
+
+    /* 3. PAÍS DEL DJ */
+    #djCountryName {
+      display: inline-block;
+      position: relative;
+      animation: 
+        hackerCountryGlitch 7.2s infinite steps(1),
+        hackerVerticalJitter 9.1s infinite ease-in-out,
+        hackerSignalDrop 11.8s infinite steps(1);
+    }
+
+    #djCountryName::before,
+    #djCountryName::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    #djCountryName::before {
+      color: #00ff66;
+      z-index: -1;
+      animation: 
+        hackerCountrySlice1 5.7s infinite linear alternate-reverse,
+        hackerGhostTrace 6.9s infinite ease-out;
+      opacity: 0.85;
+    }
+
+    #djCountryName::after {
+      color: #b026ff;
+      z-index: -2;
+      animation: hackerCountrySlice2 7.5s infinite linear alternate-reverse;
+      opacity: 0.85;
+    }
+
+    /* ========================================================
+       KEYFRAMES DE GLITCH CALIBRADOS (MÁS LENTOS Y ALEATORIOS)
+       ======================================================== */
+
+    /* NUEVO EFECTO 1: Cizallamiento diagonal / Pixel Shear */
+    @keyframes hackerPixelShear {
+      0%, 93%, 100% {
+        transform: skewY(0deg) skewX(0deg);
+        filter: none;
+      }
+      94% {
+        transform: skewY(-1.2deg) skewX(3deg);
+        filter: drop-shadow(2px 0 0 #b026ff);
+      }
+      95% {
+        transform: skewY(1.4deg) skewX(-2deg);
+        filter: drop-shadow(-2px 0 0 #00ff66);
+      }
+      96% {
+        transform: skewY(0deg) skewX(0deg);
+        filter: none;
+      }
+    }
+
+    /* NUEVO EFECTO 2: Eco espectral de fósforo / Ghost Trace */
+    @keyframes hackerGhostTrace {
+      0%, 91%, 100% {
+        opacity: 0;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+      92% {
+        opacity: 0.8;
+        transform: scale(1.03) translate(-2px, -1px);
+        filter: blur(1px);
+      }
+      94% {
+        opacity: 0.3;
+        transform: scale(1.05) translate(2px, 1px);
+        filter: blur(2px);
+      }
+      96% {
+        opacity: 0;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    /* Desincronización y micro-salto vertical (V-Sync Drop) */
+    @keyframes hackerVerticalJitter {
+      0%, 92%, 100% {
+        transform: translateY(0);
+      }
+      93% {
+        transform: translateY(-2px);
+      }
+      94% {
+        transform: translateY(2px);
+      }
+      95% {
+        transform: translateY(-1px);
+      }
+      96% {
+        transform: translateY(0);
+      }
+    }
+
+    /* Línea de barrido / Scanline Sweep */
+    @keyframes hackerScanlineSweep {
+      0%, 88%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+      89% {
+        clip-path: inset(0 0 80% 0);
+        transform: translate(-3px, 0);
+      }
+      90% {
+        clip-path: inset(35% 0 50% 0);
+        transform: translate(3px, 0);
+      }
+      91% {
+        clip-path: inset(75% 0 0 0);
+        transform: translate(-1.5px, 0);
+      }
+      92% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    /* Caída de señal estroboscópica y parpadeo de datos */
+    @keyframes hackerSignalDrop {
+      0%, 95%, 98%, 100% {
+        opacity: 1;
+        filter: none;
+      }
+      96% {
+        opacity: 0.35;
+        filter: drop-shadow(2px 0 0 #00ff66) drop-shadow(-2px 0 0 #b026ff);
+      }
+      97% {
+        opacity: 0.8;
+      }
+    }
+
+    /* Cortes y deformaciones cromáticas del Título */
+    @keyframes hackerTitleGlitch {
+      0%, 86%, 100% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+      87% {
+        transform: translate(-3px, 1px) skewX(-2deg);
+        text-shadow: 3px 0 #00ff66, -3px 0 #b026ff;
+      }
+      88% {
+        transform: translate(2px, -2px) skewX(2deg);
+        text-shadow: -3px 0 #00ff66, 3px 0 #b026ff;
+      }
+      89% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+      95% {
+        transform: translate(2px, 0) scaleY(1.02);
+        text-shadow: -2px 0 #00ff66, 2px 0 #b026ff;
+      }
+      96% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+    }
+
+    @keyframes hackerGlitchSlice1 {
+      0%, 85%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      86% {
+        clip-path: inset(10% 0 65% 0);
+        transform: translate(-4px, -1px);
+      }
+      88% {
+        clip-path: inset(45% 0 25% 0);
+        transform: translate(4px, 1px);
+      }
+      90% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerGlitchSlice2 {
+      0%, 88%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      89% {
+        clip-path: inset(25% 0 45% 0);
+        transform: translate(3px, 1px);
+      }
+      91% {
+        clip-path: inset(65% 0 10% 0);
+        transform: translate(-3px, -1px);
+      }
+      93% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    /* Cortes y deformaciones cromáticas del DJ */
+    @keyframes hackerDjGlitch {
+      0%, 87%, 100% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 10px var(--green-glow);
+      }
+      88% {
+        transform: translate(2.5px, -1px) skewX(3deg);
+        text-shadow: -3px 0 #b026ff, 3px 0 #00ff66;
+      }
+      89% {
+        transform: translate(-2px, 1px) skewX(-2deg);
+        text-shadow: 3px 0 #b026ff, -3px 0 #00ff66;
+      }
+      90% {
+        transform: translate(0, 0);
+        text-shadow: 0 0 10px var(--green-glow);
+      }
+    }
+
+    @keyframes hackerDjSlice1 {
+      0%, 87%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      88% {
+        clip-path: inset(15% 0 55% 0);
+        transform: translate(3px, -1px);
+      }
+      90% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerDjSlice2 {
+      0%, 90%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      91% {
+        clip-path: inset(40% 0 30% 0);
+        transform: translate(-3px, 1px);
+      }
+      93% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    /* Cortes y deformaciones cromáticas del País */
+    @keyframes hackerCountryGlitch {
+      0%, 89%, 100% {
+        transform: translate(0, 0);
+      }
+      90% {
+        transform: translate(-2px, 1px) skewX(-2deg);
+        text-shadow: 2px 0 #00ff66, -2px 0 #b026ff;
+      }
+      91% {
+        transform: translate(2px, -1px) skewX(2deg);
+        text-shadow: -2px 0 #00ff66, 2px 0 #b026ff;
+      }
+      92% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+    }
+
+    @keyframes hackerCountrySlice1 {
+      0%, 86%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      87% {
+        clip-path: inset(20% 0 50% 0);
+        transform: translate(2.5px, -1px);
+      }
+      89% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
+    }
+
+    @keyframes hackerCountrySlice2 {
+      0%, 91%, 100% {
+        clip-path: inset(50% 50% 50% 50%);
+        transform: translate(0);
+      }
+      92% {
+        clip-path: inset(55% 0 15% 0);
+        transform: translate(-2.5px, 1px);
+      }
+      94% {
+        clip-path: inset(50% 50% 50% 50%);
+      }
     }
 
     .marquee-active {
@@ -427,15 +812,6 @@
       font-weight: 800;
       letter-spacing: 0.5px;
       text-shadow: 0 0 10px var(--purple-glow);
-    }
-
-    #display_dj {
-      display: inline-block;
-      color: var(--neon-green);
-      font-size: clamp(13px, 1.7vh, 18px);
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 10px var(--green-glow);
     }
 
     .dj-country-row {
@@ -1215,16 +1591,16 @@
         <div class="deck-info-container">
           <div class="title-marquee-container" id="marqueeContainer">
             <div id='sonic_title' style="display: none;"></div>
-            <div id='display_title'>Cargando emisión...</div>
+            <div id='display_title' data-text="Cargando emisión...">Cargando emisión...</div>
           </div>
           <div class="meta-artist" id="trackArtist">NeXus ZonE</div>
           <div class="meta-dj-row">
             <span class="emit-label">Emitiendo:</span>
             <div id='sonic_dj' style="display: none;"></div>
-            <span id='display_dj'>NeXusDj</span>
+            <span id='display_dj' data-text="NeXusDj">NeXusDj</span>
           </div>
           <div class="dj-country-row" id="djCountryRow">
-            <span id="djCountryName">España</span>
+            <span id="djCountryName" data-text="España">España</span>
             <img src="https://flagcdn.com/24x18/es.png" class="dj-flag-img" id="djFlagImg" alt="Bandera">
           </div>
         </div>
@@ -1630,6 +2006,7 @@
         let lookupKey = cleanDj.toLowerCase();
         if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) lookupKey = "no dj";
 
+        if (lookupKey === lastObservedDjRaw) return;
         lastObservedDjRaw = lookupKey;
 
         let styledName = cleanDj;
@@ -1650,9 +2027,11 @@
         }
 
         displayDj.textContent = styledName;
+        displayDj.setAttribute("data-text", styledName);
 
         if (country) {
           djCountryName.textContent = country;
+          djCountryName.setAttribute("data-text", country);
           if (flagCode) {
             djFlagImg.src = `https://flagcdn.com/24x18/${flagCode.toLowerCase()}.png`;
             djFlagImg.style.display = "inline-block";
@@ -1741,7 +2120,6 @@
 
                 coverMemoryCache.set(cacheKey, { cover: hires, artist: detectedArtist });
 
-                // Si en pantalla no teníamos artista (decía NeXus ZonE), lo completamos con el oficial verificado
                 if (detectedArtist && (trackArtist.textContent === "NeXus ZonE" || trackArtist.textContent === "Nexus Zone")) {
                   trackArtist.textContent = detectedArtist;
                 }
@@ -1972,7 +2350,6 @@
 
       window.addEventListener("resize", recalculateMarquee, { passive: true });
 
-      // PARSER EXACTO Y PRECISO DIRECTAMENTE DESDE LA FUENTE
       function updateSongDisplay(rawString) {
         if (!rawString) return;
         const raw = rawString.trim();
@@ -1982,7 +2359,6 @@
         let artist = "";
         let songOnly = raw;
 
-        // Detectar separadores comunes en transmisiones de radio: " - ", " – ", " — ", " | "
         const separatorRegex = /\s+[\-\u2013\u2014\|]\s+/;
 
         if (separatorRegex.test(raw)) {
@@ -1995,7 +2371,6 @@
           songOnly = parts.slice(1).join(" - ").trim();
         }
 
-        // Si la cadena de radio tenía el artista, se muestra DE INMEDIATO sin depender de APIs externas
         if (artist && artist.length > 0) {
           trackArtist.textContent = artist;
         } else {
@@ -2003,9 +2378,9 @@
         }
 
         displayTitle.textContent = songOnly;
+        displayTitle.setAttribute("data-text", songOnly);
         recalculateMarquee();
         
-        // Búsqueda complementaria de carátula en segundo plano
         fetchAccurateCover(songOnly, artist);
       }
     });
