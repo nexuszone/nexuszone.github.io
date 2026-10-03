@@ -1831,7 +1831,7 @@
         }
       }, { passive: true });
 
-      // 6. MAPA DE DJS Y METADATOS
+      // 6. MAPA DE DJS Y METADATOS (SINCRONIZACIÓN AUTOMÁTICA DE PAÍS, BANDERA Y AVATAR)
       async function loadDjMap() {
         try {
           const res = await fetch("djs.json?nocache=" + Date.now());
@@ -1842,14 +1842,23 @@
               if (djMap.social.telegram) linkTelegram.href = djMap.social.telegram;
             }
           }
-        } catch (_) {
-          djMap = {
-            "no dj": { display: "NeXusDj", image: "djs/nexusdj.webp", country: "España", flag: "es" },
-            "yahirmaniaca": { display: "YaHiRMaNiaCa", image: "djs/yahirmaniaca.webp", country: "México", flag: "mx" },
-            "|lu5|0n": { display: "|lu5|0n", image: "djs/lu50n.webp", country: "Argentina", flag: "ar" },
-            "castle": { display: "Castle", image: "djs/castle.webp", country: "España", flag: "es" }
-          };
+        } catch (_) {}
+
+        // Si tenemos la lista global staff.js, la integramos también en el mapa dinámicamente
+        if (window.STAFF_MEMBERS && Array.isArray(window.STAFF_MEMBERS)) {
+          window.STAFF_MEMBERS.forEach(member => {
+            const k = member.name.toLowerCase().trim();
+            if (!djMap[k]) {
+              djMap[k] = {
+                display: member.name,
+                image: member.image || `djs/${k}.webp`,
+                country: member.country || "España",
+                flag: member.flag || "es"
+              };
+            }
+          });
         }
+
         processDjUpdate(sonicDj.textContent.trim());
       }
       loadDjMap();
@@ -1873,8 +1882,8 @@
         if (djMap[lookupKey]) {
           styledName = djMap[lookupKey].display || styledName;
           imgPath = djMap[lookupKey].image || imgPath;
-          country = djMap[lookupKey].country || "";
-          flagCode = djMap[lookupKey].flag || "";
+          country = djMap[lookupKey].country || country;
+          flagCode = djMap[lookupKey].flag || flagCode;
         } else if (lookupKey === "no dj") {
           styledName = "NeXusDj";
           imgPath = "djs/nexusdj.webp";
@@ -1884,6 +1893,7 @@
 
         displayDj.textContent = styledName;
 
+        // Actualizar país y bandera dinámicamente en el reproductor
         if (country) {
           djCountryName.textContent = country;
           if (flagCode) {
@@ -2175,6 +2185,7 @@
         volumeControl.style.background = `linear-gradient(to right, #b026ff ${pct}%, rgba(255, 255, 255, 0.1) ${pct}%)`;
       }
 
+      volumeControl.volume = 1;
       volumeControl.addEventListener("input", (e) => {
         updateVolumeVisual(parseFloat(e.target.value));
       });
