@@ -1751,7 +1751,17 @@
     let lastObservedDjRaw = "";
     let currentCoverUrl = "";
     let djMap = {};
+    
+    // Caché acotada a máximo 50 elementos para evitar fugas de memoria RAM en uso 24/7
     const coverMemoryCache = new Map();
+    function setBoundedCache(key, value) {
+      if (coverMemoryCache.size >= 50) {
+        const firstKey = coverMemoryCache.keys().next().value;
+        coverMemoryCache.delete(firstKey);
+      }
+      coverMemoryCache.set(key, value);
+    }
+
     let fetchCoverTimeout = null;
     let syncIntervalId = null;
 
@@ -2104,7 +2114,7 @@
                   applyBackgroundCover(hires);
                 }
 
-                coverMemoryCache.set(cacheKey, { cover: hires, artist: detectedArtist });
+                setBoundedCache(cacheKey, { cover: hires, artist: detectedArtist });
 
                 if (detectedArtist && (trackArtist.textContent === "NeXus ZonE" || trackArtist.textContent === "Nexus Zone")) {
                   trackArtist.textContent = detectedArtist;
@@ -2245,7 +2255,7 @@
           }
           audio.pause();
           
-          // Liberación segura del contexto de audio para evitar retención de memoria en RAM
+          // Libera completamente el contexto de audio para evitar fugas acumulativas de RAM
           if (audioCtx && audioCtx.state !== 'closed') {
             try { await audioCtx.close(); } catch (_) {}
             audioCtx = null;
@@ -2280,7 +2290,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
-      // BLINDAJE DE MEMORIA PARA PESTAÑAS EN SEGUNDO PLANO
+      // Cero consumo en segundo plano: detiene la animación si el usuario minimiza o cambia de pestaña
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
