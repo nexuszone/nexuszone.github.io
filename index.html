@@ -779,7 +779,7 @@
       flex-wrap: nowrap;
     }
 
-    /* BOTÓN PLAY EN RELIEVE 3D HARDWARE (ESCALA ORIGINAL) */
+    /* BOTÓN PLAY EN RELIEVE 3D HARDWARE */
     .btn-play-hero {
       width: clamp(58px, 7.4vh, 76px);
       height: clamp(58px, 7.4vh, 76px);
@@ -1351,7 +1351,7 @@
     .poema-date-tag { color: var(--neon-purple); letter-spacing: 0.3px; }
 
     /* =========================================================
-       MODAL DEL DJ: IMAGEN 2 VECES MÁS GRANDE (~280px) ADAPTABLE
+       MODAL DEL DJ: IMAGEN ADAPTABLE
        ========================================================= */
     .dj-modal-overlay {
       position: fixed;
@@ -1409,7 +1409,6 @@
       z-index: 10;
     }
 
-    /* FOTO 2 VECES MÁS GRANDE (280px) CON TOPE SEGURO PARA NO CORTAR TEXTOS */
     .modal-dj-avatar {
       width: min(280px, 68vw, 36dvh);
       height: min(280px, 68vw, 36dvh);
@@ -1579,7 +1578,7 @@
 
         <div class="deck-buttons-container">
           <div class="playback-controls">
-            <!-- BOTÓN PLAY EN RELIEVE 3D HARDWARE (ESCALA ORIGINAL) -->
+            <!-- BOTÓN PLAY EN RELIEVE 3D HARDWARE -->
             <button class="btn-play-hero" id="btnPlay" title="Reproducir / Detener" aria-label="Reproducir o detener">
               <svg id="playIcon" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
@@ -1752,7 +1751,7 @@
     let currentCoverUrl = "";
     let djMap = {};
     
-    // Caché acotada a máximo 50 elementos para evitar fugas de memoria RAM en uso 24/7
+    // Caché acotada a máximo 50 elementos para evitar fugas de memoria
     const coverMemoryCache = new Map();
     function setBoundedCache(key, value) {
       if (coverMemoryCache.size >= 50) {
@@ -2253,14 +2252,15 @@
             cancelAnimationFrame(eqAnimId);
             eqAnimId = null;
           }
+
+          // 1. Pausa y libera el buffer de red del stream para evitar acumulación de memoria
           audio.pause();
-          
-          // Libera completamente el contexto de audio para evitar fugas acumulativas de RAM
-          if (audioCtx && audioCtx.state !== 'closed') {
-            try { await audioCtx.close(); } catch (_) {}
-            audioCtx = null;
-            analyser = null;
-            sourceNode = null;
+          audio.removeAttribute("src");
+          audio.load();
+
+          // 2. Suspende el procesamiento de audio sin destruir el nodo conectado
+          if (audioCtx && audioCtx.state === 'running') {
+            try { await audioCtx.suspend(); } catch (_) {}
           }
 
           playerDeck.classList.remove("is-playing");
@@ -2272,9 +2272,8 @@
             await audioCtx.resume();
           }
           try {
-            if (!audio.src || audio.src === "" || audio.src === window.location.href) {
-              audio.src = STREAM_URL;
-            }
+            // Reconexión en directo
+            audio.src = STREAM_URL + "?nocache=" + Date.now();
             await audio.play();
 
             isPlaying = true;
@@ -2290,7 +2289,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
-      // Cero consumo en segundo plano: detiene la animación si el usuario minimiza o cambia de pestaña
+      // Ahorro total de GPU cuando la pestaña se minimiza o pasa a segundo plano
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
