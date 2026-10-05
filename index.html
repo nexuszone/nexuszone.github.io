@@ -2148,7 +2148,8 @@
       const canvas = document.getElementById("equalizerCanvas");
       const ctx = canvas ? canvas.getContext("2d", { alpha: true }) : null;
 
-      const NUM_BARS = 24;
+      const NUM_BARS = 28;
+      const peaks = new Float32Array(NUM_BARS);
       const precomputedBins = new Uint16Array(NUM_BARS);
       const precomputedBoosts = new Float32Array(NUM_BARS);
       let eqLogicalWidth = 0;
@@ -2157,7 +2158,7 @@
 
       function buildPrecomputedLookup() {
         const minIndex = 1;
-        const binCount = analyser ? analyser.frequencyBinCount : 32;
+        const binCount = analyser ? analyser.frequencyBinCount : 64;
         const maxIndex = Math.max(2, Math.floor(binCount * 0.65));
         for (let i = 0; i < NUM_BARS; i++) {
           const fraction = i / (NUM_BARS - 1);
@@ -2191,10 +2192,10 @@
           try {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 64;
+            analyser.fftSize = 128;
             analyser.minDecibels = -80;
             analyser.maxDecibels = -10;
-            analyser.smoothingTimeConstant = 0.7;
+            analyser.smoothingTimeConstant = 0.58;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
 
             sourceNode = audioCtx.createMediaElementSource(audio);
@@ -2210,11 +2211,12 @@
       function renderIdleBars() {
         if (!ctx || eqLogicalWidth <= 0 || eqLogicalHeight <= 0) return;
         ctx.clearRect(0, 0, eqLogicalWidth, eqLogicalHeight);
-        const barSpacing = 3;
+        const barSpacing = Math.max(2, Math.floor(eqLogicalWidth / 130));
         const barWidth = Math.max(2, Math.floor((eqLogicalWidth - (NUM_BARS - 1) * barSpacing) / NUM_BARS));
         ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
         for (let i = 0; i < NUM_BARS; i++) {
           ctx.fillRect(i * (barWidth + barSpacing), eqLogicalHeight - 3, barWidth, 3);
+          peaks[i] = 0;
         }
       }
 
@@ -2225,7 +2227,7 @@
         ctx.clearRect(0, 0, eqLogicalWidth, eqLogicalHeight);
         analyser.getByteFrequencyData(dataArray);
 
-        const barSpacing = 3;
+        const barSpacing = Math.max(2, Math.floor(eqLogicalWidth / 130));
         const barWidth = Math.max(2, Math.floor((eqLogicalWidth - (NUM_BARS - 1) * barSpacing) / NUM_BARS));
         const H = eqLogicalHeight;
 
@@ -2233,12 +2235,24 @@
         for (let i = 0; i < NUM_BARS; i++) {
           const val = dataArray[precomputedBins[i]] || 0;
           const norm = Math.min(1, (val / 255) * precomputedBoosts[i]);
-          let barHeight = Math.pow(norm, 1.2) * H * 1.1;
+          let barHeight = Math.pow(norm, 1.22) * H * 1.3;
           if (barHeight < 3) barHeight = 3;
           else if (barHeight > H) barHeight = H;
 
           const x = i * (barWidth + barSpacing);
           ctx.fillRect(x, H - barHeight, barWidth, barHeight);
+
+          // Caída física de las crestas/picos
+          if (barHeight >= peaks[i]) peaks[i] = barHeight;
+          else peaks[i] = Math.max(0, peaks[i] - 1.9);
+        }
+
+        // DIBUJO DE PICOS FLOTANTES BLANCOS/METÁLICOS (PEAKS)
+        ctx.fillStyle = "#d0d5e2";
+        for (let i = 0; i < NUM_BARS; i++) {
+          if (peaks[i] > 5) {
+            ctx.fillRect(i * (barWidth + barSpacing), H - peaks[i] - 3, barWidth, 2);
+          }
         }
       }
 
@@ -2253,12 +2267,12 @@
             eqAnimId = null;
           }
 
-          // 1. Pausa y libera el buffer de red del stream para evitar acumulación de memoria
+          // 1. Pausa y vacía completamente el stream para que no guarde audio en caché ni genere fugas
           audio.pause();
           audio.removeAttribute("src");
           audio.load();
 
-          // 2. Suspende el procesamiento de audio sin destruir el nodo conectado
+          // 2. Suspende el procesamiento sin romper el enlace del ecualizador
           if (audioCtx && audioCtx.state === 'running') {
             try { await audioCtx.suspend(); } catch (_) {}
           }
@@ -2272,7 +2286,7 @@
             await audioCtx.resume();
           }
           try {
-            // Reconexión en directo
+            // Reconexión en directo al stream
             audio.src = STREAM_URL + "?nocache=" + Date.now();
             await audio.play();
 
@@ -2289,7 +2303,6 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
-      // Ahorro total de GPU cuando la pestaña se minimiza o pasa a segundo plano
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
