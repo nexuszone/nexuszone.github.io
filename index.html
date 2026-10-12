@@ -1835,11 +1835,11 @@
     const STATS_URL = "https://mars.streamerr.co/8434/stats?json=1";
     const DEFAULT_COVER = "djs/nexusdj.webp";
     
-    // Configuración del sistema de peticiones
-    const NPOINT_URL = "https://api.npoint.io/e5a4c12d40ba24202d39";
+    // Configuración del sistema de peticiones con tu nueva URL limpia
+    const NPOINT_URL = "https://api.npoint.io/8a4ec2abfeb4a2b240c3";
     const USER_PASS = "nexus2026";
     const DJ_PASS = "djs2026";
-    const PETICION_TTL = 15 * 60 * 1000; // 15 minutos en milisegundos
+    const PETICION_TTL = 15 * 60 * 1000; // 15 minutos
 
     const audio = document.getElementById("audioSource");
     const playerDeck = document.getElementById("playerDeck");
@@ -1919,7 +1919,7 @@
     let isNpointRootArray = false;
     let autoPurgeTimerId = null;
     
-    // Caché acotada a máximo 50 elementos
+    // Caché acotada a 50 elementos
     const coverMemoryCache = new Map();
     function setBoundedCache(key, value) {
       if (coverMemoryCache.size >= 50) {
@@ -2135,7 +2135,6 @@
         btnDeckChat.classList.remove("chat-active-glow");
       });
 
-      // FILTRAR PETICIONES CON MÁS DE 15 MINUTOS
       function filterActivePeticiones(list) {
         if (!Array.isArray(list)) return [];
         const now = Date.now();
@@ -2174,7 +2173,6 @@
         } catch (_) {}
       }
 
-      // LÓGICA DE GESTIÓN DE PETICIONES CON NPOINT.IO
       async function fetchPeticiones() {
         try {
           const res = await fetch(NPOINT_URL + "?nocache=" + Date.now());
@@ -2250,7 +2248,7 @@
         }
 
         const elapsed = Date.now() - parseInt(lastTime, 10);
-        const cooldown = 5 * 60 * 1000; // 5 minutos entre envíos
+        const cooldown = 5 * 60 * 1000;
 
         if (elapsed < cooldown) {
           const remainingSec = Math.ceil((cooldown - elapsed) / 1000);
