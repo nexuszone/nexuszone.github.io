@@ -1916,6 +1916,7 @@
     let djMap = {};
     let isDjAuthenticated = false;
     let currentPeticionesList = [];
+    let isNpointRootArray = false;
     let autoPurgeTimerId = null;
     
     // Caché acotada a máximo 50 elementos
@@ -2147,7 +2148,7 @@
       function startAutoPurgeTimer() {
         if (autoPurgeTimerId) clearInterval(autoPurgeTimerId);
         autoPurgeTimerId = setInterval(() => {
-          if (viewPeticiones.classList.contains("active")) {
+          if (viewPeticiones && viewPeticiones.classList.contains("active")) {
             const activeList = filterActivePeticiones(currentPeticionesList);
             if (activeList.length !== currentPeticionesList.length) {
               currentPeticionesList = activeList;
@@ -2155,7 +2156,11 @@
               syncPeticionesSilent(activeList);
             }
           }
-        }, 30000); // Comprueba cada 30 segundos
+        }, 30000);
+      }
+
+      function preparePayload(list) {
+        return isNpointRootArray ? list : { peticiones: list };
       }
 
       async function syncPeticionesSilent(cleanList) {
@@ -2164,7 +2169,7 @@
           await fetch(NPOINT_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(cleanList)
+            body: JSON.stringify(preparePayload(cleanList))
           });
         } catch (_) {}
       }
@@ -2177,16 +2182,20 @@
             const data = await res.json();
             let rawList = [];
             if (Array.isArray(data)) {
+              isNpointRootArray = true;
               rawList = data;
             } else if (data && Array.isArray(data.peticiones)) {
+              isNpointRootArray = false;
               rawList = data.peticiones;
+            } else {
+              isNpointRootArray = false;
+              rawList = [];
             }
             
             const activeList = filterActivePeticiones(rawList);
             currentPeticionesList = activeList;
             renderPeticionesList();
 
-            // Si había peticiones con más de 15 min, las borramos del servidor
             if (activeList.length !== rawList.length) {
               syncPeticionesSilent(activeList);
             }
@@ -2308,14 +2317,14 @@
             hora: hora
           };
 
-          // Limpiar caducadas antes de añadir la nueva
           const activeList = filterActivePeticiones(currentPeticionesList);
           const updatedList = [newRequest, ...activeList].slice(0, 30);
+          const payload = preparePayload(updatedList);
 
           const res = await fetch(NPOINT_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedList)
+            body: JSON.stringify(payload)
           });
 
           if (res.ok) {
@@ -2329,12 +2338,13 @@
             peticionesFeedback.textContent = "¡Petición enviada al DJ con éxito!";
             checkPeticionCooldown();
           } else {
-            throw new Error();
+            const errText = await res.text().catch(() => "");
+            throw new Error(`Servidor npoint respondió ${res.status}: ${errText || res.statusText}`);
           }
-        } catch (_) {
+        } catch (err) {
           btnSendRequest.disabled = false;
           peticionesFeedback.className = "peticiones-feedback error";
-          peticionesFeedback.textContent = "Error al enviar la petición. Comprueba tu conexión o servidor.";
+          peticionesFeedback.textContent = err.message || "Error al enviar la petición.";
         }
       });
 
@@ -2368,7 +2378,7 @@
           await fetch(NPOINT_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(currentPeticionesList)
+            body: JSON.stringify(preparePayload(currentPeticionesList))
           });
           renderPeticionesList();
         } catch (_) {
