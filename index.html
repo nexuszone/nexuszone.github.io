@@ -251,6 +251,7 @@
       }
     }
 
+    /* AISLAMIENTO DE GPU PARA EVITAR RE-RENDERIZADO DE BLUR */
     .player-bg-art {
       position: absolute;
       inset: -10px;
@@ -1864,7 +1865,7 @@
 
             <div class="peticiones-box">
               <div class="peticiones-list-header">
-                <span class="peticiones-title" style="margin-bottom:0;">Peticiones en Cola (15 min)</span>
+                <span class="peticiones-title" style="margin-bottom:0;">Peticiones en cola</span>
                 <div style="display:flex; gap:8px;">
                   <button class="btn-dj-auth" id="btnRefreshReqs" title="Actualizar">↻ Recargar</button>
                   <button class="btn-dj-auth" id="btnDjAuthToggle">Modo DJ</button>
@@ -1916,7 +1917,7 @@
     const STATS_URL = "https://mars.streamerr.co/8434/stats?json=1";
     const DEFAULT_COVER = "djs/nexusdj.webp";
     
-    // Configuración del sistema de peticiones con tu nueva URL limpia sin bloqueo
+    // Configuración del sistema de peticiones con tu URL limpia y anónima
     const NPOINT_URL = "https://api.npoint.io/6fe86c7ad2a5d165a71c";
     const USER_PASS = "nexus2026";
     const DJ_PASS = "djs2026";
@@ -2001,7 +2002,7 @@
     let isDjAuthenticated = false;
     let currentPeticionesList = [];
     let isNpointRootArray = false;
-    let autoPurgeTimerId = null;
+    let autoRefreshTimerId = null;
     let isLiveDjBroadcasting = false;
     
     // Caché acotada a 50 elementos
@@ -2145,12 +2146,14 @@
         viewPeticiones.classList.remove("active");
 
         if (tabName === "chat") {
+          stopAutoRefreshTimer();
           libraryPanel.classList.add("chat-mode-active");
           tabChat.style.display = "flex";
           tabChat.classList.add("active");
           viewChat.classList.add("active");
           btnDeckChat.classList.add("chat-active-glow");
         } else if (tabName === "poema") {
+          stopAutoRefreshTimer();
           libraryPanel.classList.remove("chat-mode-active");
           tabChat.style.display = "none";
           tabPoema.classList.add("active");
@@ -2164,8 +2167,9 @@
           btnDeckChat.classList.remove("chat-active-glow");
           fetchPeticiones();
           updatePeticionesDjState();
-          startAutoPurgeTimer();
+          startAutoRefreshTimer(); // Activa refresco en segundo plano sin fugas
         } else {
+          stopAutoRefreshTimer();
           libraryPanel.classList.remove("chat-mode-active");
           tabChat.style.display = "none";
           tabStaff.classList.add("active");
@@ -2259,18 +2263,21 @@
         });
       }
 
-      function startAutoPurgeTimer() {
-        if (autoPurgeTimerId) clearInterval(autoPurgeTimerId);
-        autoPurgeTimerId = setInterval(() => {
-          if (viewPeticiones && viewPeticiones.classList.contains("active")) {
-            const activeList = filterActivePeticiones(currentPeticionesList);
-            if (activeList.length !== currentPeticionesList.length) {
-              currentPeticionesList = activeList;
-              renderPeticionesList();
-              syncPeticionesSilent(activeList);
-            }
+      // TEMPORIZADOR INTELIGENTE (SIN FUGAS DE MEMORIA)
+      function startAutoRefreshTimer() {
+        stopAutoRefreshTimer();
+        autoRefreshTimerId = setInterval(() => {
+          if (viewPeticiones && viewPeticiones.classList.contains("active") && !document.hidden) {
+            fetchPeticiones();
           }
-        }, 30000);
+        }, 15000); // 15 segundos
+      }
+
+      function stopAutoRefreshTimer() {
+        if (autoRefreshTimerId) {
+          clearInterval(autoRefreshTimerId);
+          autoRefreshTimerId = null;
+        }
       }
 
       function preparePayload(list) {
@@ -2306,8 +2313,14 @@
             }
             
             const activeList = filterActivePeticiones(rawList);
+            
+            // OPTIMIZACIÓN: Solo redibuja el DOM si la lista cambió realmente
+            const listChanged = JSON.stringify(activeList) !== JSON.stringify(currentPeticionesList);
             currentPeticionesList = activeList;
-            renderPeticionesList();
+
+            if (listChanged) {
+              renderPeticionesList();
+            }
 
             if (activeList.length !== rawList.length) {
               syncPeticionesSilent(activeList);
@@ -2323,7 +2336,7 @@
       function renderPeticionesList() {
         peticionesQueueList.innerHTML = "";
         if (!currentPeticionesList || currentPeticionesList.length === 0) {
-          peticionesQueueList.innerHTML = `<li style="text-align:center; font-size:12px; color:var(--text-muted); padding:10px;">No hay peticiones activas (caducan a los 15 min).</li>`;
+          peticionesQueueList.innerHTML = `<li style="text-align:center; font-size:12px; color:var(--text-muted); padding:10px;">No hay peticiones activas.</li>`;
           return;
         }
 
@@ -2543,7 +2556,6 @@
         let lookupKey = cleanDj.toLowerCase();
         if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) lookupKey = "no dj";
 
-        // Determinar si hay un DJ real en vivo (distinto de NeXusDj / nodj)
         const isNexusDj = (lookupKey === "no dj" || lookupKey === "nexusdj" || lookupKey === "nexus dj");
         isLiveDjBroadcasting = !isNexusDj;
         updatePeticionesDjState();
@@ -2872,14 +2884,22 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
+      // PAUSA Y REANUDACIÓN CONTROLADA DE RECURSOS AL CAMBIAR DE PESTAÑA
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
             cancelAnimationFrame(eqAnimId);
             eqAnimId = null;
           }
-        } else if (isPlaying && !eqAnimId) {
-          eqAnimId = requestAnimationFrame(drawEqualizer);
+          stopAutoRefreshTimer();
+        } else {
+          if (isPlaying && !eqAnimId) {
+            eqAnimId = requestAnimationFrame(drawEqualizer);
+          }
+          if (viewPeticiones && viewPeticiones.classList.contains("active")) {
+            fetchPeticiones();
+            startAutoRefreshTimer();
+          }
         }
       });
 
