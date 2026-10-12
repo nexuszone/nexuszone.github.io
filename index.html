@@ -1265,7 +1265,9 @@
     .poema-title-tag { color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
     .poema-date-tag { color: var(--neon-purple); letter-spacing: 0.3px; }
 
-    /* PESTAÑA DE PETICIONES */
+    /* =========================================================
+       PESTAÑA DE PETICIONES
+       ========================================================= */
     .peticiones-container {
       width: 100%;
       height: 100%;
@@ -1324,11 +1326,50 @@
       border-radius: 8px;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
+      user-select: text;
     }
 
     .peticiones-input:focus {
       border-color: var(--neon-purple);
       box-shadow: 0 0 8px rgba(176, 38, 255, 0.4);
+    }
+
+    /* CONTENEDOR CONTRASEÑA CON OJITO */
+    .password-input-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-input-wrapper input {
+      padding-right: 38px;
+    }
+
+    .btn-toggle-eye {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .btn-toggle-eye:hover {
+      color: var(--neon-purple);
+    }
+
+    .btn-toggle-eye svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     .peticiones-btn-submit {
@@ -1337,11 +1378,11 @@
       background: rgba(0, 255, 102, 0.16);
       border: 1px solid rgba(0, 255, 102, 0.6);
       color: var(--neon-green);
-      padding: 9px;
+      padding: 10px;
       border-radius: 10px;
       font-family: inherit;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 13.5px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -1356,17 +1397,31 @@
     }
 
     .peticiones-btn-submit:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
       border-color: var(--border-subtle);
       color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* TIEMPO DE ESPERA DEBAJO DEL BOTÓN Y MÁS GRANDE */
+    #peticionesCountdown {
+      text-align: center;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--neon-purple);
+      text-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+      margin-top: 2px;
+      min-height: 18px;
     }
 
     .peticiones-feedback {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 700;
       text-align: center;
       min-height: 16px;
+      margin-top: 2px;
     }
 
     .peticiones-feedback.success { color: var(--neon-green); }
@@ -1379,15 +1434,25 @@
       margin-top: 2px;
     }
 
+    /* BOTONES MODO DJ Y RECARGA MÁS GRANDES */
     .btn-dj-auth {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-subtle);
       color: var(--neon-purple);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 8px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .btn-dj-auth:hover {
+      background: rgba(176, 38, 255, 0.15);
+      border-color: var(--neon-purple);
     }
 
     .peticiones-cards-list {
@@ -1398,15 +1463,17 @@
       padding-bottom: 8px;
     }
 
+    /* PERMITIR COPIAR EL TEXTO DE FORMA TRADICIONAL */
     .peticion-card {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      padding: 9px 12px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+      user-select: text !important;
     }
 
     .peticion-info {
@@ -1414,40 +1481,48 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
+      user-select: text !important;
     }
 
     .peticion-song {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      user-select: text !important;
+      word-break: break-word;
     }
 
     .peticion-details {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
       display: flex;
+      align-items: baseline;
       gap: 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      flex-wrap: wrap;
+      user-select: text !important;
     }
 
-    .peticion-user { color: var(--neon-purple); font-weight: 700; }
+    /* NICK DE LA PERSONA MÁS GRANDE */
+    .peticion-user { 
+      color: var(--neon-purple); 
+      font-weight: 900;
+      font-size: 14.5px;
+      letter-spacing: 0.3px;
+      user-select: text !important;
+    }
 
     .btn-delete-peticion {
       background: rgba(255, 77, 109, 0.15);
       border: 1px solid rgba(255, 77, 109, 0.4);
       color: #ff4d6d;
       border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: 700;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 800;
       cursor: pointer;
       flex-shrink: 0;
+      user-select: none;
     }
 
     /* MODAL DE DJ */
@@ -1755,8 +1830,7 @@
           <div class="peticiones-container">
             <div class="peticiones-box">
               <div class="peticiones-title">
-                <span>Pide tu Canción</span>
-                <span id="peticionesCountdown" style="font-size: 11px; color: var(--neon-purple);"></span>
+                <span id="peticionesMainHeader">Pide tu canción</span>
               </div>
               <div class="peticiones-input-group">
                 <label class="peticiones-label" for="reqNick">Tu Nombre o Nick:</label>
@@ -1772,20 +1846,27 @@
               </div>
               <div class="peticiones-input-group">
                 <label class="peticiones-label" for="reqUserPass">Clave de Usuario:</label>
-                <input type="password" id="reqUserPass" class="peticiones-input" placeholder="Introduce la clave">
+                <div class="password-input-wrapper">
+                  <input type="password" id="reqUserPass" class="peticiones-input" placeholder="Introduce la clave">
+                  <button type="button" class="btn-toggle-eye" id="btnTogglePassword" title="Mostrar/Ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                    <svg id="eyeIcon" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
               </div>
               <button class="peticiones-btn-submit" id="btnSendRequest">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 <span>Enviar Petición</span>
               </button>
+              <!-- TIEMPO DE ESPERA DEBAJO DEL BOTÓN Y MÁS GRANDE -->
+              <div id="peticionesCountdown"></div>
               <div id="peticionesFeedback" class="peticiones-feedback"></div>
             </div>
 
             <div class="peticiones-box">
               <div class="peticiones-list-header">
                 <span class="peticiones-title" style="margin-bottom:0;">Peticiones en Cola (15 min)</span>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-dj-auth" id="btnRefreshReqs" title="Actualizar">↻</button>
+                <div style="display:flex; gap:8px;">
+                  <button class="btn-dj-auth" id="btnRefreshReqs" title="Actualizar">↻ Recargar</button>
                   <button class="btn-dj-auth" id="btnDjAuthToggle">Modo DJ</button>
                 </div>
               </div>
@@ -1877,10 +1958,13 @@
     const viewPeticiones = document.getElementById("viewPeticiones");
 
     // Elementos de Peticiones
+    const peticionesMainHeader = document.getElementById("peticionesMainHeader");
     const reqNick = document.getElementById("reqNick");
     const reqSong = document.getElementById("reqSong");
     const reqMsg = document.getElementById("reqMsg");
     const reqUserPass = document.getElementById("reqUserPass");
+    const btnTogglePassword = document.getElementById("btnTogglePassword");
+    const eyeIcon = document.getElementById("eyeIcon");
     const btnSendRequest = document.getElementById("btnSendRequest");
     const peticionesFeedback = document.getElementById("peticionesFeedback");
     const peticionesCountdown = document.getElementById("peticionesCountdown");
@@ -1918,6 +2002,7 @@
     let currentPeticionesList = [];
     let isNpointRootArray = false;
     let autoPurgeTimerId = null;
+    let isLiveDjBroadcasting = false;
     
     // Caché acotada a 50 elementos
     const coverMemoryCache = new Map();
@@ -1938,6 +2023,19 @@
       chatIframe.src = `https://chat.chatzona.org/index.html?nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone#nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone`;
 
       if (reqNick) reqNick.placeholder = generatedNick;
+
+      // BOTÓN OJITO PARA VER/OCULTAR CONTRASEÑA
+      if (btnTogglePassword && reqUserPass) {
+        btnTogglePassword.addEventListener("click", () => {
+          if (reqUserPass.type === "password") {
+            reqUserPass.type = "text";
+            eyeIcon.innerHTML = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
+          } else {
+            reqUserPass.type = "password";
+            eyeIcon.innerHTML = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
+          }
+        });
+      }
 
       function loadStaffMembers() {
         try {
@@ -2065,7 +2163,7 @@
           viewPeticiones.classList.add("active");
           btnDeckChat.classList.remove("chat-active-glow");
           fetchPeticiones();
-          checkPeticionCooldown();
+          updatePeticionesDjState();
           startAutoPurgeTimer();
         } else {
           libraryPanel.classList.remove("chat-mode-active");
@@ -2134,6 +2232,23 @@
         activateTab("peticiones");
         btnDeckChat.classList.remove("chat-active-glow");
       });
+
+      // CONTROL DE ESTADO SEGÚN EL DJ EN DIRECTO
+      function updatePeticionesDjState() {
+        if (!peticionesMainHeader || !btnSendRequest) return;
+        
+        if (isLiveDjBroadcasting) {
+          peticionesMainHeader.textContent = "Pide tu canción";
+          peticionesMainHeader.style.color = "var(--neon-green)";
+          checkPeticionCooldown();
+        } else {
+          peticionesMainHeader.textContent = "Peticiones cerradas (AutoDJ)";
+          peticionesMainHeader.style.color = "var(--text-muted)";
+          btnSendRequest.disabled = true;
+          peticionesCountdown.textContent = "Solo disponibles cuando un DJ está en vivo";
+          peticionesCountdown.style.color = "var(--text-muted)";
+        }
+      }
 
       function filterActivePeticiones(list) {
         if (!Array.isArray(list)) return [];
@@ -2240,6 +2355,8 @@
       }
 
       function checkPeticionCooldown() {
+        if (!isLiveDjBroadcasting) return false;
+
         const lastTime = localStorage.getItem("nexus_last_req_time");
         if (!lastTime) {
           btnSendRequest.disabled = false;
@@ -2255,7 +2372,8 @@
           const mins = Math.floor(remainingSec / 60);
           const secs = remainingSec % 60;
           btnSendRequest.disabled = true;
-          peticionesCountdown.textContent = `Espera ${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+          peticionesCountdown.textContent = `Espera ${mins}m ${secs < 10 ? '0' : ''}${secs}s para volver a pedir`;
+          peticionesCountdown.style.color = "var(--neon-purple)";
           setTimeout(checkPeticionCooldown, 1000);
           return false;
         } else {
@@ -2266,6 +2384,12 @@
       }
 
       btnSendRequest.addEventListener("click", async () => {
+        if (!isLiveDjBroadcasting) {
+          peticionesFeedback.className = "peticiones-feedback error";
+          peticionesFeedback.textContent = "Las peticiones están deshabilitadas cuando emite NeXusDj (AutoDJ).";
+          return;
+        }
+
         const pass = reqUserPass.value.trim();
         const nick = reqNick.value.trim() || reqNick.placeholder || "Oyente";
         const song = reqSong.value.trim();
@@ -2418,6 +2542,11 @@
         let cleanDj = rawDj.replace(/\s+/g, ' ').trim();
         let lookupKey = cleanDj.toLowerCase();
         if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) lookupKey = "no dj";
+
+        // Determinar si hay un DJ real en vivo (distinto de NeXusDj / nodj)
+        const isNexusDj = (lookupKey === "no dj" || lookupKey === "nexusdj" || lookupKey === "nexus dj");
+        isLiveDjBroadcasting = !isNexusDj;
+        updatePeticionesDjState();
 
         if (lookupKey === lastObservedDjRaw) return;
         lastObservedDjRaw = lookupKey;
