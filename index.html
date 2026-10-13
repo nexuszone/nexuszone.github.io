@@ -252,6 +252,7 @@
       }
     }
 
+    /* AISLAMIENTO ESTRICTO DE GPU: Evita el recalculo del filtro de desenfoque a 60 FPS */
     .player-bg-art {
       position: absolute;
       inset: -10px;
@@ -262,6 +263,9 @@
       opacity: 0.35;
       z-index: 0;
       pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+      contain: strict;
     }
 
     .cover-wrapper {
@@ -282,6 +286,8 @@
       padding: 3px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       z-index: 2;
+      transform: translateZ(0);
+      contain: paint;
     }
 
     @media (min-width: 900px) {
@@ -317,6 +323,7 @@
       opacity: 0;
       z-index: 4;
       transition: opacity 0.3s ease;
+      will-change: transform;
     }
 
     .cover-img {
@@ -375,6 +382,7 @@
       margin-bottom: 2px;
     }
 
+    /* AISLAMIENTO DE CAPA PARA LOS TEXTOS GLITCH */
     #display_title {
       font-size: clamp(17px, 2.3vh, 23px);
       font-weight: 900;
@@ -386,6 +394,9 @@
       color: var(--text-primary);
       text-align: center;
       position: relative;
+      transform: translateZ(0);
+      will-change: transform;
+      contain: layout paint;
       animation: 
         hackerTitleGlitch 6.8s infinite steps(1),
         hackerVerticalJitter 8.4s infinite ease-in-out,
@@ -430,6 +441,9 @@
       letter-spacing: 0.6px;
       text-shadow: 0 0 10px var(--green-glow);
       position: relative;
+      transform: translateZ(0);
+      will-change: transform;
+      contain: layout paint;
       animation: 
         hackerDjGlitch 6.2s infinite steps(1),
         hackerVerticalJitter 7.8s infinite ease-in-out reverse,
@@ -469,6 +483,9 @@
     #djCountryName {
       display: inline-block;
       position: relative;
+      transform: translateZ(0);
+      will-change: transform;
+      contain: layout paint;
       animation: 
         hackerCountryGlitch 7.2s infinite steps(1),
         hackerVerticalJitter 9.1s infinite ease-in-out,
@@ -779,6 +796,7 @@
       z-index: 2;
     }
 
+    /* AISLAMIENTO DEL CANVAS DEL ECUALIZADOR */
     .equalizer-canvas-container {
       width: 100%;
       height: clamp(24px, 3.4vh, 38px);
@@ -786,12 +804,15 @@
       align-items: flex-end;
       justify-content: center;
       overflow: hidden;
+      transform: translate3d(0, 0, 0);
+      contain: strict;
     }
 
     #equalizerCanvas {
       width: 100%;
       height: 100%;
       display: block;
+      will-change: contents;
     }
 
     .volume-row {
@@ -1249,7 +1270,9 @@
     .poema-title-tag { color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 102, 0.4); }
     .poema-date-tag { color: var(--neon-purple); letter-spacing: 0.3px; }
 
-    /* PESTAÑA DE PETICIONES */
+    /* =========================================================
+       PESTAÑA DE PETICIONES
+       ========================================================= */
     .peticiones-container {
       width: 100%;
       height: 100%;
@@ -1316,6 +1339,7 @@
       box-shadow: 0 0 8px rgba(176, 38, 255, 0.4);
     }
 
+    /* CONTENEDOR CONTRASEÑA CON OJITO */
     .password-input-wrapper {
       position: relative;
       width: 100%;
@@ -1385,6 +1409,7 @@
       background: rgba(255, 255, 255, 0.04);
     }
 
+    /* TIEMPO DE ESPERA DEBAJO DEL BOTÓN CON MAYOR TAMAÑO */
     #peticionesCountdown {
       text-align: center;
       font-size: 14.5px;
@@ -1414,6 +1439,7 @@
       margin-top: 2px;
     }
 
+    /* BOTONES MODO DJ Y RECARGA MÁS AMPLIOS */
     .btn-dj-auth {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-subtle);
@@ -1442,6 +1468,7 @@
       padding-bottom: 8px;
     }
 
+    /* COPIA TRADICIONAL DE TEXTO PERMITIDA EN LAS PETICIONES */
     .peticion-card {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border-subtle);
@@ -1481,6 +1508,7 @@
       user-select: text !important;
     }
 
+    /* NICK DE LA PERSONA MÁS GRANDE */
     .peticion-user { 
       color: var(--neon-purple); 
       font-weight: 900;
@@ -1502,6 +1530,7 @@
       user-select: none;
     }
 
+    /* MODAL DE DJ */
     .dj-modal-overlay {
       position: fixed;
       inset: 0;
@@ -1780,6 +1809,7 @@
 
       <div class="tab-view-container">
         <div class="view-content" id="viewChat">
+          <!-- El chat se carga exclusivamente al abrir la pestaña para evitar fugas de memoria -->
           <iframe id="chatIframe" src="about:blank" class="chat-iframe" title="ChatZona IRC" loading="lazy"></iframe>
         </div>
         <div class="view-content active" id="viewStaff">
@@ -1977,6 +2007,7 @@
     let autoRefreshTimerId = null;
     let cooldownTimerId = null;
     let isLiveDjBroadcasting = false;
+    let lastLiveBroadcastingState = null;
     
     const coverMemoryCache = new Map();
     function setBoundedCache(key, value) {
@@ -1990,6 +2021,7 @@
     let fetchCoverTimeout = null;
     let syncIntervalId = null;
 
+    // Solo carga el iframe de chat cuando el usuario lo solicita
     function ensureChatLoaded() {
       if (!chatIframe.src || chatIframe.src === "about:blank" || chatIframe.src.endsWith("about:blank")) {
         const randomNum = Math.floor(Math.random() * 100000) + 1;
@@ -2217,9 +2249,13 @@
         btnDeckChat.classList.remove("chat-active-glow");
       });
 
+      // Solo actualiza elementos visuales si el estado del DJ realmente cambia
       function updatePeticionesDjState() {
         if (!peticionesMainHeader || !btnSendRequest) return;
         
+        if (lastLiveBroadcastingState === isLiveDjBroadcasting) return;
+        lastLiveBroadcastingState = isLiveDjBroadcasting;
+
         if (isLiveDjBroadcasting) {
           peticionesMainHeader.textContent = "Pide tu canción";
           peticionesMainHeader.style.color = "var(--neon-green)";
@@ -2543,12 +2579,12 @@
         let lookupKey = cleanDj.toLowerCase();
         if (lookupKey === "" || lookupKey === "nodj" || lookupKey.includes("no dj")) lookupKey = "no dj";
 
-        if (lookupKey === lastObservedDjRaw) return;
-        lastObservedDjRaw = lookupKey;
-
         const isNexusDj = (lookupKey === "no dj" || lookupKey === "nexusdj" || lookupKey === "nexus dj");
         isLiveDjBroadcasting = !isNexusDj;
         updatePeticionesDjState();
+
+        if (lookupKey === lastObservedDjRaw) return;
+        lastObservedDjRaw = lookupKey;
 
         let styledName = cleanDj;
         let imgPath = `djs/${encodeURIComponent(lookupKey)}.webp`;
@@ -2691,6 +2727,7 @@
       syncMetadataAPI();
 
       const canvas = document.getElementById("equalizerCanvas");
+      // Lienzo 2D estándar sincronizado para máxima estabilidad de controlador GPU
       const ctx = canvas ? canvas.getContext("2d", { alpha: true }) : null;
 
       const NUM_BARS = 28;
@@ -2822,9 +2859,9 @@
             eqAnimId = null;
           }
 
+          // Desconexión limpia sin invocar .load() destructivo
           audio.pause();
-          audio.removeAttribute("src");
-          audio.load();
+          audio.src = "";
 
           if (audioCtx && audioCtx.state === 'running') {
             try { await audioCtx.suspend(); } catch (_) {}
@@ -2855,6 +2892,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
+      // Desactivación de bucles gráficos al minimizar la pestaña
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           if (eqAnimId) {
