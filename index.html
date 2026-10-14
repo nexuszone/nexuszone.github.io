@@ -2021,6 +2021,13 @@
     let fetchCoverTimeout = null;
     let syncIntervalId = null;
 
+    // fetch con límite de tiempo: una petición colgada nunca queda viva acumulando memoria
+    function fetchWithTimeout(url, options = {}, ms = 10000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ms);
+      return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+    }
+
     // Solo carga el iframe de chat cuando el usuario lo solicita
     function ensureChatLoaded() {
       if (!chatIframe.src || chatIframe.src === "about:blank" || chatIframe.src.endsWith("about:blank")) {
@@ -2030,7 +2037,33 @@
       }
     }
 
+    // Libera el chat (iframe IRC, el elemento que más memoria acumula) si lleva
+    // mucho rato sin verse. Pon 0 para desactivar. Al reabrirlo se vuelve a cargar.
+    const CHAT_IDLE_UNLOAD_MS = 10 * 60 * 1000;
+    let chatHiddenSince = 0;
+    setInterval(() => {
+      if (!CHAT_IDLE_UNLOAD_MS) return;
+      const loaded = chatIframe.src && !chatIframe.src.endsWith("about:blank");
+      const visible = viewChat.classList.contains("active") &&
+        (window.innerWidth >= 900 || libraryPanel.classList.contains("drawer-open"));
+      if (!loaded || visible) { chatHiddenSince = 0; return; }
+      if (!chatHiddenSince) { chatHiddenSince = Date.now(); return; }
+      if (Date.now() - chatHiddenSince >= CHAT_IDLE_UNLOAD_MS) {
+        chatIframe.src = "about:blank";
+        chatHiddenSince = 0;
+      }
+    }, 60000);
+
     document.addEventListener("DOMContentLoaded", () => {
+      // El widget de streamerr puede ir añadiendo <script> al DOM en cada refresco.
+      // Aquí se eliminan los scripts añadidos después de la carga (ya ejecutados).
+      const knownScripts = new Set(document.scripts);
+      setInterval(() => {
+        document.querySelectorAll("script[src]").forEach((sc) => {
+          if (!knownScripts.has(sc)) sc.remove();
+        });
+      }, 60000);
+
       const randomNickNum = Math.floor(Math.random() * 100000) + 1;
       const initialPlaceholder = `NeXus_User${randomNickNum}`;
       if (reqNick) reqNick.placeholder = initialPlaceholder;
@@ -2315,7 +2348,7 @@
 
       async function fetchPeticiones() {
         try {
-          const res = await fetch(NPOINT_URL + "?nocache=" + Date.now());
+          const res = await fetchWithTimeout(NPOINT_URL + "?nocache=" + Date.now());
           if (res.ok) {
             const data = await res.json();
             let rawList = [];
@@ -2676,7 +2709,7 @@
           }
 
           try {
-            const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=1`);
+            const res = await fetchWithTimeout(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=1`);
             const data = await res.json();
             if (data.results && data.results.length > 0) {
               const item = data.results[0];
@@ -2705,15 +2738,21 @@
         }, 1200);
       }
 
+      let syncBusy = false;
       async function syncMetadataAPI() {
+        if (syncBusy || document.hidden) return;
+        syncBusy = true;
         try {
-          const res = await fetch(STATS_URL + "&t=" + Date.now());
+          const res = await fetchWithTimeout(STATS_URL + "&t=" + Date.now());
           if (res.ok) {
             const data = await res.json();
             if (data.songtitle) updateSongDisplay(data.songtitle);
             if (data.djusername) processDjUpdate(data.djusername);
           }
-        } catch (_) {}
+        } catch (_) {
+        } finally {
+          syncBusy = false;
+        }
       }
 
       const titleObserver = new MutationObserver(() => {
@@ -2861,7 +2900,8 @@
 
           // Desconexión limpia sin invocar .load() destructivo
           audio.pause();
-          audio.src = "";
+          audio.removeAttribute("src");
+          audio.load(); // corta la conexión del stream y libera el búfer
 
           if (audioCtx && audioCtx.state === 'running') {
             try { await audioCtx.suspend(); } catch (_) {}
@@ -2904,6 +2944,7 @@
           if (isPlaying && !eqAnimId) {
             eqAnimId = requestAnimationFrame(drawEqualizer);
           }
+          syncMetadataAPI();
           if (viewPeticiones && viewPeticiones.classList.contains("active")) {
             fetchPeticiones();
             startAutoRefreshTimer();
