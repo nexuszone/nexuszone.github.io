@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Widget original de SonicPanel restaurado -->
   <script id='sonic_js' data-port='8434' src='https://mars.streamerr.co/cp/widgets.js?r=847'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   
-  <!-- Google Search Console Verification -->
   <meta name="google-site-verification" content="c8pN2TqRLgrDKDmWXQ7dVM8DiPZEdvfQGKLznqnj2Eg" />
-
-  <!-- SEO & Google Indexing Meta Tags -->
   <title>Nexus Zone - Música sin límites | Radio Online</title>
   <meta name="description" content="Escucha Nexus Zone, radio online con música sin límites. DJs en vivo, chat en vivo, peticiones de tus canciones favoritas, éxitos actuales y del pasado. ¡Conéctate ahora!">
   <meta name="keywords" content="Nexus Zone, radio online, música, streaming, DJ, radio en vivo, música sin límites, nexuszone.github.io">
   <meta name="author" content="Castle">
 
-  <!-- Open Graph / Redes Sociales -->
   <meta property="og:title" content="Nexus Zone - Música sin límites | Radio Online">
   <meta property="og:description" content="Escucha Nexus Zone, radio online con música sin límites. DJs en vivo, chat en vivo, peticiones de tus canciones favoritas, éxitos actuales y del pasado. ¡Conéctate ahora!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://nexuszone.github.io/">
   <meta property="og:image" content="https://nexuszone.github.io/icon.svg">
 
-  <!-- PWA Manifest & Icons -->
   <link rel="manifest" href="https://nexuszone.github.io/manifest.json">
   <meta name="theme-color" content="#08090d">
   <meta name="mobile-web-app-capable" content="yes">
@@ -1723,12 +1719,14 @@
       <div class="deck-mid-section">
         <div class="deck-info-container">
           <div class="title-marquee-container" id="marqueeContainer">
+            <!-- Contenedor oculto que lee el script widgets.js de SonicPanel -->
             <div id='sonic_title' style="display: none;"></div>
             <div id='display_title' data-text="Cargando emisión...">Cargando emisión...</div>
           </div>
           <div class="meta-artist" id="trackArtist">NeXus ZonE</div>
           <div class="meta-dj-row">
             <span class="emit-label">Emitiendo:</span>
+            <!-- Contenedor oculto que lee el script widgets.js de SonicPanel -->
             <div id='sonic_dj' style="display: none;"></div>
             <span id='display_dj' data-text="NeXusDj">NeXusDj</span>
           </div>
@@ -2594,7 +2592,7 @@
             }
           });
         }
-        processDjUpdate(sonicDj.textContent.trim());
+        processDjUpdate(sonicDj ? sonicDj.textContent.trim() : "");
       }
       loadDjMap();
 
@@ -2652,17 +2650,19 @@
         coverImg.src = imgPath;
       }
 
+      // Observador con debounce para sonicDj sin duplicar eventos
       let djDebounceTimeout = null;
-      const djObserver = new MutationObserver(() => {
-        if (djDebounceTimeout) clearTimeout(djDebounceTimeout);
-        djDebounceTimeout = setTimeout(() => {
-          processDjUpdate(sonicDj.textContent.trim());
-          djDebounceTimeout = null;
-        }, 300);
-      });
-      djObserver.observe(sonicDj, { childList: true, subtree: true, characterData: true });
+      if (sonicDj) {
+        const djObserver = new MutationObserver(() => {
+          if (djDebounceTimeout) clearTimeout(djDebounceTimeout);
+          djDebounceTimeout = setTimeout(() => {
+            processDjUpdate(sonicDj.textContent.trim());
+            djDebounceTimeout = null;
+          }, 300);
+        });
+        djObserver.observe(sonicDj, { childList: true, subtree: true, characterData: true });
+      }
 
-      // Asigna la carátula sin almacenarla en memoria persistente
       function applyBackgroundCover(url) {
         if (!url) {
           playerBgArt.style.backgroundImage = 'none';
@@ -2740,6 +2740,21 @@
         }, 1200);
       }
 
+      // Observador con debounce para sonicTitle que alimenta el reproductor
+      let titleDebounceTimeout = null;
+      if (sonicTitle) {
+        const titleObserver = new MutationObserver(() => {
+          if (titleDebounceTimeout) clearTimeout(titleDebounceTimeout);
+          titleDebounceTimeout = setTimeout(() => {
+            const raw = sonicTitle.textContent.trim();
+            if (raw) updateSongDisplay(raw);
+            titleDebounceTimeout = null;
+          }, 300);
+        });
+        titleObserver.observe(sonicTitle, { childList: true, subtree: true, characterData: true });
+      }
+
+      // Sincronización JSON de respaldo cada 15s si el widget externo se desconecta
       async function syncMetadataAPI() {
         if (document.hidden) return;
         try {
@@ -2751,17 +2766,6 @@
           }
         } catch (_) {}
       }
-
-      let titleDebounceTimeout = null;
-      const titleObserver = new MutationObserver(() => {
-        if (titleDebounceTimeout) clearTimeout(titleDebounceTimeout);
-        titleDebounceTimeout = setTimeout(() => {
-          const raw = sonicTitle.textContent.trim();
-          if (raw) updateSongDisplay(raw);
-          titleDebounceTimeout = null;
-        }, 300);
-      });
-      titleObserver.observe(sonicTitle, { childList: true, subtree: true, characterData: true });
 
       if (syncIntervalId) clearInterval(syncIntervalId);
       syncIntervalId = setInterval(syncMetadataAPI, 15000);
@@ -2814,6 +2818,7 @@
         if (!isPlaying) renderIdleBars();
       }
 
+      // Inicialización Web Audio conectada al stream pero con gestión de desconexión
       function initWebAudioOnce() {
         if (!audioCtx) {
           try {
@@ -2847,6 +2852,7 @@
         }
       }
 
+      // Dibuja al ritmo de las frecuencias reales del flujo de audio
       function drawEqualizer() {
         if (!isPlaying || !analyser || !ctx || eqLogicalWidth <= 0 || document.hidden) return;
 
@@ -2900,6 +2906,7 @@
             eqAnimId = null;
           }
 
+          // Desconexión limpia sin invocar .load() destructivo
           audio.pause();
           audio.removeAttribute("src");
           audio.load();
@@ -2935,6 +2942,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
+      // Gestión de segundo plano: congela buffers cuando la pestaña está oculta
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           document.body.classList.add("tab-paused");
