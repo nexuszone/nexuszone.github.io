@@ -3,8 +3,8 @@ window.POEMA_SEMANA = {
   image: "djs/poema.webp",
 
   // Texto o autor que se muestra debajo
-  author: "Poema de la semana",
+  author: "_lupis_",
 
   // Fecha, semana o dedicatoria
-  date: "Amatista"
+  date: "17/10/2026"
 };
