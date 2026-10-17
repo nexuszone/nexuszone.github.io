@@ -1793,7 +1793,6 @@
 
       <div class="tab-view-container">
         <div class="view-content" id="viewChat">
-          <!-- El iframe inicia totalmente desconectado -->
           <iframe id="chatIframe" src="about:blank" class="chat-iframe" title="ChatZona IRC" loading="lazy"></iframe>
         </div>
         <div class="view-content active" id="viewStaff">
@@ -1907,7 +1906,7 @@
     const USER_PASS = "nexus2026";
     const DJ_PASS = "djs2026";
     const PETICION_TTL = 15 * 60 * 1000;
-    const CHAT_IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutos en ms
+    const CHAT_IDLE_TIMEOUT = 15 * 60 * 1000;
 
     const audio = document.getElementById("audioSource");
     const playerDeck = document.getElementById("playerDeck");
@@ -1994,8 +1993,6 @@
 
     let itunesAbortController = null;
     let npointAbortController = null;
-
-    // Control estricto de desconexión del Chat tras 15 minutos fuera
     let chatKillTimerId = null;
 
     function isChatCurrentlyActive() {
@@ -2006,7 +2003,6 @@
     }
 
     function connectChatIframe() {
-      // Cancela el temporizador de muerte si el usuario vuelve antes de los 15 minutos
       if (chatKillTimerId) {
         clearTimeout(chatKillTimerId);
         chatKillTimerId = null;
@@ -2021,28 +2017,18 @@
     }
 
     function planChatDisconnection() {
-      if (chatKillTimerId) return; // Ya hay una cuenta atrás en marcha
+      if (chatKillTimerId) return;
       
       const currentSrc = chatIframe.getAttribute("src");
       if (!currentSrc || currentSrc === "about:blank" || currentSrc === "") return;
 
       chatKillTimerId = setTimeout(() => {
         if (!isChatCurrentlyActive()) {
-          // Destruye totalmente el proceso del chat para liberar memoria y sockets
           chatIframe.src = "about:blank";
           chatIframe.removeAttribute("src");
         }
         chatKillTimerId = null;
       }, CHAT_IDLE_TIMEOUT);
-    }
-
-    const coverMemoryCache = new Map();
-    function setBoundedCache(key, value) {
-      if (coverMemoryCache.size >= 40) {
-        const firstKey = coverMemoryCache.keys().next().value;
-        coverMemoryCache.delete(firstKey);
-      }
-      coverMemoryCache.set(key, value);
     }
 
     let fetchCoverTimeout = null;
@@ -2191,7 +2177,6 @@
           viewChat.classList.add("active");
           btnDeckChat.classList.add("chat-active-glow");
         } else {
-          // Si abandona la pestaña de chat, empieza la cuenta atrás de 15 minutos
           planChatDisconnection();
           
           if (tabName === "poema") {
@@ -2672,12 +2657,18 @@
         if (djDebounceTimeout) clearTimeout(djDebounceTimeout);
         djDebounceTimeout = setTimeout(() => {
           processDjUpdate(sonicDj.textContent.trim());
+          djDebounceTimeout = null;
         }, 300);
       });
       djObserver.observe(sonicDj, { childList: true, subtree: true, characterData: true });
 
+      // Asigna la carátula sin almacenarla en memoria persistente
       function applyBackgroundCover(url) {
-        if (!url) return;
+        if (!url) {
+          playerBgArt.style.backgroundImage = 'none';
+          currentCoverUrl = "";
+          return;
+        }
         let cleanUrl = url.split('?')[0].trim();
         if (!cleanUrl || cleanUrl === currentCoverUrl) return;
 
@@ -2696,24 +2687,16 @@
       }
 
       function fetchAccurateCover(title, artist) {
-        if (fetchCoverTimeout) clearTimeout(fetchCoverTimeout);
+        if (fetchCoverTimeout) {
+          clearTimeout(fetchCoverTimeout);
+          fetchCoverTimeout = null;
+        }
         if (itunesAbortController) {
           itunesAbortController.abort();
+          itunesAbortController = null;
         }
 
         fetchCoverTimeout = setTimeout(async () => {
-          const cacheKey = `${artist} - ${title}`.toLowerCase();
-          if (coverMemoryCache.has(cacheKey)) {
-            const cached = coverMemoryCache.get(cacheKey);
-            if (cached && cached.cover) {
-              applyBackgroundCover(cached.cover);
-            }
-            if (cached && cached.artist && trackArtist.textContent === "NeXus ZonE") {
-              trackArtist.textContent = cached.artist;
-            }
-            return;
-          }
-
           const cleanArtist = cleanSearchText(artist);
           const cleanTitle = cleanSearchText(title);
           if (!cleanTitle || cleanTitle.length < 2) return;
@@ -2740,20 +2723,20 @@
 
               if (matches) {
                 const detectedArtist = item.artistName || "";
-                let hires = "";
                 if (item.artworkUrl100) {
-                  hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
+                  const hires = item.artworkUrl100.replace('100x100bb', '600x600bb');
                   applyBackgroundCover(hires);
                 }
-
-                setBoundedCache(cacheKey, { cover: hires, artist: detectedArtist });
 
                 if (detectedArtist && (trackArtist.textContent === "NeXus ZonE" || trackArtist.textContent === "Nexus Zone")) {
                   trackArtist.textContent = detectedArtist;
                 }
               }
             }
-          } catch (_) {}
+          } catch (_) {
+          } finally {
+            itunesAbortController = null;
+          }
         }, 1200);
       }
 
@@ -2775,6 +2758,7 @@
         titleDebounceTimeout = setTimeout(() => {
           const raw = sonicTitle.textContent.trim();
           if (raw) updateSongDisplay(raw);
+          titleDebounceTimeout = null;
         }, 300);
       });
       titleObserver.observe(sonicTitle, { childList: true, subtree: true, characterData: true });
@@ -2903,6 +2887,7 @@
         resizeThrottleId = requestAnimationFrame(() => {
           resizeCanvas();
           recalculateMarquee();
+          resizeThrottleId = null;
         });
       }, { passive: true });
       resizeCanvas();
@@ -2950,7 +2935,6 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
-      // Si la ventana pasa a segundo plano, se programa la muerte del chat tras 15 minutos
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           document.body.classList.add("tab-paused");
