@@ -94,7 +94,6 @@
       flex-direction: column;
     }
 
-    /* Optimización de memoria en segundo plano: pausa renderizado CSS al desenfocar pestaña */
     body.tab-paused * {
       animation-play-state: paused !important;
     }
@@ -289,8 +288,6 @@
       padding: 3px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       z-index: 2;
-      transform: translateZ(0);
-      contain: paint;
     }
 
     @media (min-width: 900px) {
@@ -305,9 +302,9 @@
     .cover-wrapper::before {
       content: '';
       position: absolute;
-      inset: -2px;
+      inset: -3px;
       border-radius: inherit;
-      padding: 2.5px;
+      padding: 3.5px;
       background: conic-gradient(
         from var(--border-angle),
         transparent 0%,
@@ -1796,6 +1793,7 @@
 
       <div class="tab-view-container">
         <div class="view-content" id="viewChat">
+          <!-- El iframe inicia totalmente desconectado -->
           <iframe id="chatIframe" src="about:blank" class="chat-iframe" title="ChatZona IRC" loading="lazy"></iframe>
         </div>
         <div class="view-content active" id="viewStaff">
@@ -1909,6 +1907,7 @@
     const USER_PASS = "nexus2026";
     const DJ_PASS = "djs2026";
     const PETICION_TTL = 15 * 60 * 1000;
+    const CHAT_IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutos en ms
 
     const audio = document.getElementById("audioSource");
     const playerDeck = document.getElementById("playerDeck");
@@ -1992,10 +1991,50 @@
     let cooldownTimerId = null;
     let isLiveDjBroadcasting = false;
     let lastLiveBroadcastingState = null;
-    
-    // Controlador de aborto para evitar acumulación de llamadas de red
+
     let itunesAbortController = null;
     let npointAbortController = null;
+
+    // Control estricto de desconexión del Chat tras 15 minutos fuera
+    let chatKillTimerId = null;
+
+    function isChatCurrentlyActive() {
+      const isDrawerOpen = libraryPanel.classList.contains("drawer-open");
+      const isChatVisible = viewChat.classList.contains("active");
+      const isWindowVisible = !document.hidden;
+      return isDrawerOpen && isChatVisible && isWindowVisible;
+    }
+
+    function connectChatIframe() {
+      // Cancela el temporizador de muerte si el usuario vuelve antes de los 15 minutos
+      if (chatKillTimerId) {
+        clearTimeout(chatKillTimerId);
+        chatKillTimerId = null;
+      }
+      
+      const currentSrc = chatIframe.getAttribute("src");
+      if (!currentSrc || currentSrc === "about:blank" || currentSrc === "") {
+        const randomNum = Math.floor(Math.random() * 100000) + 1;
+        const generatedNick = `NeXus_User${randomNum}`;
+        chatIframe.src = `https://chat.chatzona.org/index.html?nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone#nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone`;
+      }
+    }
+
+    function planChatDisconnection() {
+      if (chatKillTimerId) return; // Ya hay una cuenta atrás en marcha
+      
+      const currentSrc = chatIframe.getAttribute("src");
+      if (!currentSrc || currentSrc === "about:blank" || currentSrc === "") return;
+
+      chatKillTimerId = setTimeout(() => {
+        if (!isChatCurrentlyActive()) {
+          // Destruye totalmente el proceso del chat para liberar memoria y sockets
+          chatIframe.src = "about:blank";
+          chatIframe.removeAttribute("src");
+        }
+        chatKillTimerId = null;
+      }, CHAT_IDLE_TIMEOUT);
+    }
 
     const coverMemoryCache = new Map();
     function setBoundedCache(key, value) {
@@ -2008,14 +2047,6 @@
 
     let fetchCoverTimeout = null;
     let syncIntervalId = null;
-
-    function ensureChatLoaded() {
-      if (!chatIframe.src || chatIframe.src === "about:blank" || chatIframe.src.endsWith("about:blank")) {
-        const randomNum = Math.floor(Math.random() * 100000) + 1;
-        const generatedNick = `NeXus_User${randomNum}`;
-        chatIframe.src = `https://chat.chatzona.org/index.html?nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone#nick=${encodeURIComponent(generatedNick)}&channel=Nexus_Zone`;
-      }
-    }
 
     document.addEventListener("DOMContentLoaded", () => {
       const randomNickNum = Math.floor(Math.random() * 100000) + 1;
@@ -2045,7 +2076,6 @@
         } catch (_) {}
       }
 
-      // Delegación de eventos en staffListGrid para evitar recrear listeners en cada nodo
       staffListGrid.addEventListener("click", (e) => {
         const card = e.target.closest(".staff-card");
         if (!card) return;
@@ -2154,35 +2184,40 @@
 
         if (tabName === "chat") {
           stopAutoRefreshTimer();
-          ensureChatLoaded();
+          connectChatIframe();
           libraryPanel.classList.add("chat-mode-active");
           tabChat.style.display = "flex";
           tabChat.classList.add("active");
           viewChat.classList.add("active");
           btnDeckChat.classList.add("chat-active-glow");
-        } else if (tabName === "poema") {
-          stopAutoRefreshTimer();
-          libraryPanel.classList.remove("chat-mode-active");
-          tabChat.style.display = "none";
-          tabPoema.classList.add("active");
-          viewPoema.classList.add("active");
-          btnDeckChat.classList.remove("chat-active-glow");
-        } else if (tabName === "peticiones") {
-          libraryPanel.classList.remove("chat-mode-active");
-          tabChat.style.display = "none";
-          tabPeticiones.classList.add("active");
-          viewPeticiones.classList.add("active");
-          btnDeckChat.classList.remove("chat-active-glow");
-          fetchPeticiones();
-          updatePeticionesDjState();
-          startAutoRefreshTimer();
         } else {
-          stopAutoRefreshTimer();
-          libraryPanel.classList.remove("chat-mode-active");
-          tabChat.style.display = "none";
-          tabStaff.classList.add("active");
-          viewStaff.classList.add("active");
-          btnDeckChat.classList.remove("chat-active-glow");
+          // Si abandona la pestaña de chat, empieza la cuenta atrás de 15 minutos
+          planChatDisconnection();
+          
+          if (tabName === "poema") {
+            stopAutoRefreshTimer();
+            libraryPanel.classList.remove("chat-mode-active");
+            tabChat.style.display = "none";
+            tabPoema.classList.add("active");
+            viewPoema.classList.add("active");
+            btnDeckChat.classList.remove("chat-active-glow");
+          } else if (tabName === "peticiones") {
+            libraryPanel.classList.remove("chat-mode-active");
+            tabChat.style.display = "none";
+            tabPeticiones.classList.add("active");
+            viewPeticiones.classList.add("active");
+            btnDeckChat.classList.remove("chat-active-glow");
+            fetchPeticiones();
+            updatePeticionesDjState();
+            startAutoRefreshTimer();
+          } else {
+            stopAutoRefreshTimer();
+            libraryPanel.classList.remove("chat-mode-active");
+            tabChat.style.display = "none";
+            tabStaff.classList.add("active");
+            viewStaff.classList.add("active");
+            btnDeckChat.classList.remove("chat-active-glow");
+          }
         }
       }
 
@@ -2196,6 +2231,7 @@
             libraryPanel.classList.remove("drawer-open");
             libraryPanel.classList.remove("chat-mode-active");
             btnDeckChat.classList.remove("chat-active-glow");
+            planChatDisconnection();
           } else {
             activateTab("chat");
             libraryPanel.classList.add("drawer-open");
@@ -2205,6 +2241,7 @@
             activateTab("staff");
             libraryPanel.classList.remove("drawer-open");
             btnDeckChat.classList.remove("chat-active-glow");
+            planChatDisconnection();
           } else {
             activateTab("chat");
             libraryPanel.classList.add("drawer-open");
@@ -2228,6 +2265,7 @@
         libraryPanel.classList.remove("drawer-open");
         libraryPanel.classList.remove("chat-mode-active");
         btnDeckChat.classList.remove("chat-active-glow");
+        planChatDisconnection();
         activateTab("staff");
       });
 
@@ -2353,7 +2391,6 @@
         }
       }
 
-      // Delegación de eventos para borrar peticiones en modo DJ
       peticionesQueueList.addEventListener("click", (e) => {
         const btn = e.target.closest(".btn-delete-peticion");
         if (!btn) return;
@@ -2630,7 +2667,6 @@
         coverImg.src = imgPath;
       }
 
-      // Filtro para ignorar disparos repetitivos del MutationObserver
       let djDebounceTimeout = null;
       const djObserver = new MutationObserver(() => {
         if (djDebounceTimeout) clearTimeout(djDebounceTimeout);
@@ -2722,7 +2758,7 @@
       }
 
       async function syncMetadataAPI() {
-        if (document.hidden) return; // No saturar peticiones ni renderizados si la pestaña no es visible
+        if (document.hidden) return;
         try {
           const res = await fetch(STATS_URL + "&t=" + Date.now());
           if (res.ok) {
@@ -2879,7 +2915,6 @@
             eqAnimId = null;
           }
 
-          // Liberación estricta de buffers del decodificador multimedia
           audio.pause();
           audio.removeAttribute("src");
           audio.load();
@@ -2915,7 +2950,7 @@
 
       btnPlay.addEventListener("click", togglePlay);
 
-      // Gestión de segundo plano: congela animaciones CSS y detiene el loop de Canvas
+      // Si la ventana pasa a segundo plano, se programa la muerte del chat tras 15 minutos
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           document.body.classList.add("tab-paused");
@@ -2924,6 +2959,7 @@
             eqAnimId = null;
           }
           stopAutoRefreshTimer();
+          planChatDisconnection();
         } else {
           document.body.classList.remove("tab-paused");
           if (isPlaying && !eqAnimId) {
@@ -2932,6 +2968,9 @@
           if (viewPeticiones && viewPeticiones.classList.contains("active")) {
             fetchPeticiones();
             startAutoRefreshTimer();
+          }
+          if (isChatCurrentlyActive()) {
+            connectChatIframe();
           }
         }
       });
