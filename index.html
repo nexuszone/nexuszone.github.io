@@ -37,6 +37,7 @@
   
   <script src="./staff.js?v=1.1.65"></script>
   <script src="./poema.js?v=1.0.4"></script>
+  <script src="./banners.js?v=1.0.2"></script>
 
   <style>
     @property --border-angle {
@@ -299,20 +300,21 @@
       }
     }
 
+    /* Borde luminoso continuo sin recortes */
     .cover-wrapper::before {
       content: '';
       position: absolute;
-      inset: -3px;
+      inset: -4px;
       border-radius: inherit;
-      padding: 3.5px;
+      padding: 4px;
       background: conic-gradient(
         from var(--border-angle),
         transparent 0%,
-        var(--neon-purple) 20%,
-        transparent 38%,
+        var(--neon-purple) 25%,
+        transparent 45%,
         transparent 50%,
-        var(--neon-green) 70%,
-        transparent 88%,
+        var(--neon-green) 75%,
+        transparent 95%,
         transparent 100%
       );
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -338,9 +340,44 @@
       display: block;
     }
 
+    /* Superposición del banner publicitario */
+    .promo-banner-overlay {
+      position: absolute;
+      inset: 3px;
+      width: calc(100% - 6px);
+      height: calc(100% - 6px);
+      border-radius: calc(clamp(14px, 2.2vh, 22px) - 3px);
+      object-fit: cover;
+      object-position: center;
+      background: #08090d;
+      z-index: 5;
+      opacity: 0;
+      transform: scale(1.02);
+      filter: blur(4px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  filter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .promo-banner-overlay.banner-visible {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+
+    .promo-banner-overlay.banner-fading {
+      opacity: 0;
+      transform: scale(0.98);
+      filter: blur(2px);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     .is-playing .cover-wrapper {
       border-color: transparent;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 16px rgba(176, 38, 255, 0.35);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 18px rgba(176, 38, 255, 0.4);
     }
 
     .is-playing .cover-wrapper::before {
@@ -1026,9 +1063,7 @@
       filter: invert(0.92) hue-rotate(180deg) contrast(1.12);
     }
 
-    /* ========================================================
-       MODO CHAT: PANTALLA COMPLETA TOTAL + BOTÓN FLOTANTE
-       ======================================================== */
+    /* MODO CHAT: Pantalla completa y botón flotante ajustado */
     @media (max-width: 899px) {
       .library-panel.chat-mode-active {
         padding: 0 !important;
@@ -1038,7 +1073,6 @@
         height: 100dvh !important;
       }
 
-      /* Ubicado estratégicamente al 72% para librar nombre de sala y opciones de chat */
       .library-panel.chat-mode-active .drawer-mobile-header {
         position: absolute !important;
         top: calc(8px + env(safe-area-inset-top, 0px)) !important;
@@ -1053,12 +1087,10 @@
         pointer-events: none !important;
       }
 
-      /* Título e icono ocultos */
       .library-panel.chat-mode-active .drawer-title {
         display: none !important;
       }
 
-      /* Botón de cierre compacto con resplandor morado suave */
       .library-panel.chat-mode-active .btn-close-drawer {
         pointer-events: auto !important;
         background: rgba(10, 12, 17, 0.82) !important;
@@ -1084,7 +1116,6 @@
         box-shadow: 0 0 14px rgba(176, 38, 255, 0.65) !important;
       }
 
-      /* Pantalla completa sin bordes ni márgenes */
       .library-panel.chat-mode-active .tab-view-container {
         border: none !important;
         border-radius: 0 !important;
@@ -1793,7 +1824,7 @@
     <section class="player-deck" id="playerDeck">
       <div class="player-bg-art" id="playerBgArt"></div>
 
-      <div class="cover-wrapper">
+      <div class="cover-wrapper" id="coverWrapperContainer">
         <img src="djs/nexusdj.webp" id="coverImg" class="cover-img" alt="Foto del DJ">
       </div>
       
@@ -2110,6 +2141,90 @@
     let fetchCoverTimeout = null;
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Sistema de banners sin repeticiones consecutivas y sin fugas de memoria
+      function initPromoBanner() {
+        const cfg = window.BANNER_CONFIG;
+        if (!cfg || !cfg.enabled || !Array.isArray(cfg.banners) || cfg.banners.length === 0) return;
+
+        const coverWrapper = document.getElementById("coverWrapperContainer");
+        if (!coverWrapper) return;
+
+        const list = cfg.banners;
+        let selectedIndex = 0;
+
+        if (list.length > 1) {
+          const lastIdx = parseInt(sessionStorage.getItem("nexus_last_banner_idx"), 10);
+          const availableIndices = [];
+          for (let i = 0; i < list.length; i++) {
+            if (i !== lastIdx) availableIndices.push(i);
+          }
+          selectedIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+        }
+
+        sessionStorage.setItem("nexus_last_banner_idx", selectedIndex.toString());
+        const selectedBanner = list[selectedIndex];
+        if (!selectedBanner) return;
+
+        let displayTimer = null;
+        let removalTimer = null;
+        let isCleanedUp = false;
+
+        const bannerImg = document.createElement("img");
+        bannerImg.className = "promo-banner-overlay";
+        bannerImg.alt = "Publicidad / Evento";
+
+        function cleanup() {
+          if (isCleanedUp) return;
+          isCleanedUp = true;
+
+          if (displayTimer) {
+            clearTimeout(displayTimer);
+            displayTimer = null;
+          }
+          if (removalTimer) {
+            clearTimeout(removalTimer);
+            removalTimer = null;
+          }
+
+          bannerImg.onload = null;
+          bannerImg.onerror = null;
+
+          if (bannerImg.parentNode) {
+            bannerImg.remove();
+          }
+          bannerImg.src = "";
+        }
+
+        bannerImg.onerror = cleanup;
+
+        function startDisplay() {
+          if (isCleanedUp) return;
+          requestAnimationFrame(() => {
+            bannerImg.classList.add("banner-visible");
+          });
+
+          const duration = (cfg.durationSec || 8) * 1000;
+          displayTimer = setTimeout(() => {
+            bannerImg.classList.remove("banner-visible");
+            bannerImg.classList.add("banner-fading");
+            
+            removalTimer = setTimeout(cleanup, 850);
+          }, duration);
+        }
+
+        bannerImg.onload = () => {
+          if (!isCleanedUp) startDisplay();
+        };
+
+        coverWrapper.appendChild(bannerImg);
+        bannerImg.src = selectedBanner;
+
+        if (bannerImg.complete && bannerImg.naturalWidth > 0) {
+          startDisplay();
+        }
+      }
+      initPromoBanner();
+
       const randomNickNum = Math.floor(Math.random() * 100000) + 1;
       const initialPlaceholder = `NeXus_User${randomNickNum}`;
       if (reqNick) reqNick.placeholder = initialPlaceholder;
