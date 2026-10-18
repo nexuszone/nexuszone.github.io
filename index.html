@@ -124,7 +124,7 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       min-width: 0;
     }
 
@@ -176,6 +176,64 @@
     .title-zone {
       color: var(--neon-green);
       text-shadow: 0 0 10px var(--green-glow);
+    }
+
+    /* Contenedor del dúo temático Halloween */
+    .halloween-duo-container {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      height: clamp(34px, 4.4vh, 42px);
+      max-height: calc(clamp(46px, 5.8vh, 54px) - 8px);
+      user-select: none;
+    }
+
+    .witch-flying-svg {
+      width: auto;
+      height: 100%;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 5px rgba(176, 38, 255, 0.55));
+      animation: floatWitchDuo 3.6s ease-in-out infinite alternate;
+      transform-origin: center center;
+    }
+
+    @keyframes floatWitchDuo {
+      0% { transform: translateY(1.5px) rotate(-1.5deg); }
+      50% { transform: translateY(-1.5px) rotate(1.5deg) scale(1.02); }
+      100% { transform: translateY(1.5px) rotate(-1deg); }
+    }
+
+    .halloween-pumpkin-svg {
+      width: auto;
+      height: 90%;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 2px rgba(255, 110, 0, 0.3));
+      animation: pumpkinLaughPulse 3.2s ease-in-out infinite alternate;
+      transform-origin: center center;
+    }
+
+    @keyframes pumpkinLaughPulse {
+      0%, 100% { 
+        transform: scale(1); 
+        filter: drop-shadow(0 0 2px rgba(255, 110, 0, 0.3)); 
+      }
+      50% { 
+        transform: scale(1.03) rotate(1deg); 
+        filter: drop-shadow(0 0 4px rgba(255, 120, 0, 0.45)); 
+      }
+    }
+
+    .pumpkin-glow-cutouts polygon,
+    .pumpkin-glow-cutouts path {
+      filter: drop-shadow(0 0 1.5px rgba(255, 230, 0, 0.6));
+      animation: pumpkinFlameFlicker 2.2s infinite alternate ease-in-out;
+    }
+
+    @keyframes pumpkinFlameFlicker {
+      0% { fill: #ffe082; }
+      50% { fill: #fff176; }
+      100% { fill: #ffca28; }
     }
 
     .header-actions {
@@ -300,7 +358,6 @@
       }
     }
 
-    /* Borde luminoso continuo sin recortes */
     .cover-wrapper::before {
       content: '';
       position: absolute;
@@ -340,7 +397,6 @@
       display: block;
     }
 
-    /* Superposición del banner publicitario */
     .promo-banner-overlay {
       position: absolute;
       inset: 3px;
@@ -1806,7 +1862,44 @@
           <span class="title-nexus">NeXus</span>
           <span class="title-zone">ZonE</span>
         </div>
-        <span class="brand-slogan">Música sin limites</span>
+        <span class="brand-slogan">Música sin límites</span>
+      </div>
+
+      <!-- Dúo temático Halloween: Brujita volando + Calabaza riendo -->
+      <div class="halloween-duo-container">
+        <!-- Brujita en escoba -->
+        <svg class="witch-flying-svg" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Bruja volando en escoba">
+          <circle cx="46" cy="38" r="24" fill="rgba(255, 235, 120, 0.14)" stroke="rgba(255, 235, 120, 0.35)" stroke-width="1"/>
+          <path d="M14 62 L98 28" stroke="#d5b895" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M12 63 C18 61, 28 58, 36 55 C28 64, 25 72, 14 74 C18 69, 19 65, 12 63 Z" fill="#c89658" stroke="#5a3d1b" stroke-width="1.2"/>
+          <line x1="26" y1="58" x2="28" y2="62" stroke="#5a3d1b" stroke-width="2"/>
+          <path d="M44 38 C34 44, 28 48, 22 46 C32 40, 38 36, 48 34 Z" fill="#6a0dad"/>
+          <path d="M42 50 C46 43, 56 45, 66 41 C60 54, 52 57, 42 50 Z" fill="#0d0e15" stroke="#b026ff" stroke-width="1"/>
+          <path d="M52 38 Q58 42 66 39" stroke="#e2e6f0" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M54 26 C57 26, 61 28, 62 31 L67 33 L62 35 C62 37, 59 38, 56 38 C53 38, 51 36, 51 32 Z" fill="#e2e6f0"/>
+          <path d="M48 28 C42 32, 42 38, 36 41 C43 38, 48 36, 52 34 Z" fill="#00ff66"/>
+          <ellipse cx="56" cy="26" rx="14" ry="3.5" fill="#0d0e15" stroke="#b026ff" stroke-width="1.2" transform="rotate(-15 56 26)"/>
+          <path d="M48 24 C54 16, 58 10, 46 4 C60 7, 65 15, 62 21 Z" fill="#0d0e15" stroke="#b026ff" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M49 24 C53 23, 57 22, 61 21" stroke="#00ff66" stroke-width="2"/>
+          <rect x="54" y="21" width="3" height="3" fill="#ffd700" transform="rotate(-15 54 21)"/>
+        </svg>
+
+        <!-- Calabaza riendo tallada -->
+        <svg class="halloween-pumpkin-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Calabaza riendo">
+          <path d="M48 22 C49 13, 56 8, 63 4 C61 10, 56 17, 52 22 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.8" stroke-linejoin="round"/>
+          <ellipse cx="50" cy="58" rx="42" ry="32" fill="#e65100" stroke="#240a02" stroke-width="2.2"/>
+          <ellipse cx="37" cy="58" rx="27" ry="31" fill="#f57c00" stroke="#240a02" stroke-width="1.4"/>
+          <ellipse cx="63" cy="58" rx="27" ry="31" fill="#f57c00" stroke="#240a02" stroke-width="1.4"/>
+          <ellipse cx="50" cy="58" rx="17" ry="32" fill="#fb8c00" stroke="#240a02" stroke-width="1.2"/>
+          <g class="pumpkin-glow-cutouts">
+            <!-- Ojos rasgados en carcajada -->
+            <polygon points="30,46 40,51 28,53" fill="#fff59d" stroke="#240a02" stroke-width="1.6" stroke-linejoin="round"/>
+            <polygon points="70,46 72,53 60,51" fill="#fff59d" stroke="#240a02" stroke-width="1.6" stroke-linejoin="round"/>
+            <polygon points="50,53 46,60 54,60" fill="#fff59d" stroke="#240a02" stroke-width="1.4" stroke-linejoin="round"/>
+            <!-- Boca ancha sonriendo de oreja a oreja -->
+            <path d="M25,66 Q50,88 75,66 Q67,73 63,69 Q61,77 57,69 Q50,78 43,69 Q39,77 37,69 Q33,73 25,66 Z" fill="#fff59d" stroke="#240a02" stroke-width="1.6" stroke-linejoin="round"/>
+          </g>
+        </svg>
       </div>
     </div>
     
@@ -2141,7 +2234,7 @@
     let fetchCoverTimeout = null;
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Sistema de banners sin repeticiones consecutivas y sin fugas de memoria
+      // Sistema de banners sin repeticiones consecutivas y con ciclo de memoria cerrado
       function initPromoBanner() {
         const cfg = window.BANNER_CONFIG;
         if (!cfg || !cfg.enabled || !Array.isArray(cfg.banners) || cfg.banners.length === 0) return;
