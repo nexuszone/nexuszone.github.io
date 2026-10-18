@@ -1027,28 +1027,71 @@
     }
 
     /* ========================================================
-       MODO CHAT: PANTALLA COMPLETA TOTAL EN MÓVILES (Edge-to-Edge)
+       MODO CHAT: PANTALLA COMPLETA TOTAL + BOTÓN FLOTANTE
        ======================================================== */
     @media (max-width: 899px) {
       .library-panel.chat-mode-active {
         padding: 0 !important;
-        padding-top: env(safe-area-inset-top, 0px) !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
       }
 
+      /* Ubicado estratégicamente al 72% para librar nombre de sala y opciones de chat */
       .library-panel.chat-mode-active .drawer-mobile-header {
+        position: absolute !important;
+        top: calc(8px + env(safe-area-inset-top, 0px)) !important;
+        left: 72% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
         margin: 0 !important;
-        padding: 6px 12px !important;
-        background: #08090d;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        z-index: 120 !important;
+        pointer-events: none !important;
       }
 
+      /* Título e icono ocultos */
+      .library-panel.chat-mode-active .drawer-title {
+        display: none !important;
+      }
+
+      /* Botón de cierre compacto con resplandor morado suave */
+      .library-panel.chat-mode-active .btn-close-drawer {
+        pointer-events: auto !important;
+        background: rgba(10, 12, 17, 0.82) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border: 1px solid rgba(176, 38, 255, 0.45) !important;
+        box-shadow: 
+          0 3px 10px rgba(0, 0, 0, 0.7),
+          0 0 10px rgba(176, 38, 255, 0.35) !important;
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 13px !important;
+        color: #f1dcff !important;
+        text-shadow: 0 0 8px rgba(176, 38, 255, 0.75) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .library-panel.chat-mode-active .btn-close-drawer:active {
+        transform: scale(0.92);
+        border-color: var(--neon-purple) !important;
+        box-shadow: 0 0 14px rgba(176, 38, 255, 0.65) !important;
+      }
+
+      /* Pantalla completa sin bordes ni márgenes */
       .library-panel.chat-mode-active .tab-view-container {
         border: none !important;
         border-radius: 0 !important;
         margin: 0 !important;
         width: 100% !important;
         height: 100% !important;
+        padding-top: env(safe-area-inset-top, 0px);
         padding-bottom: env(safe-area-inset-bottom, 0px);
       }
 
@@ -2075,7 +2118,7 @@
         btnTogglePassword.addEventListener("click", () => {
           if (reqUserPass.type === "password") {
             reqUserPass.type = "text";
-            eyeIcon.innerHTML = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
+            eyeIcon.innerHTML = `<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>`;
           } else {
             reqUserPass.type = "password";
             eyeIcon.innerHTML = `<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>`;
