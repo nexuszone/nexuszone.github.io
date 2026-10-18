@@ -50,16 +50,6 @@ window.STAFF_MEMBERS = [
     "description": "Sesiones de música Rap y ritmos no tan sonados."
   },
   {
-    "name": "Smile-dj",
-    "image": "djs/smiledj.webp",
-    "role": "Dj",
-    "badge": "Dj",
-    "country": "España",
-    "flag": "es",
-    "schedule": "Siempre que puede por las tardes hora España",
-    "description": "Música variada"
-  },
-  {
     "name": "Caraxs",
     "image": "djs/caraxs.webp",
     "role": "Dj",
