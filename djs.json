@@ -27,6 +27,12 @@
     "country": "España",
     "flag": "es"
   },
+    "soytureina": {
+    "display": "soytureina",
+    "image": "djs/soytureina.webp",
+    "country": "Argentina",
+    "flag": "ar"
+  },
   "Cisne-Negro": {
     "display": "Cisne-Negro",
     "image": "djs/cisnenegro.webp",

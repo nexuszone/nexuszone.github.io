@@ -10,6 +10,16 @@ window.STAFF_MEMBERS = [
     "description": "Sesiones de música electrónica de los 2000s, dance, techno y eurodance."
   },
   {
+    "name": "soytureina",
+    "image": "djs/soytureina.webp",
+    "role": "Patrona & Dj",
+    "badge": "Patrona",
+    "country": "Argentina",
+    "flag": "ar",
+    "schedule": "Siempre que puede",
+    "description": "Música romantica, rock latino, pop y música urbana "
+  },
+  {
     "name": "Amatista",
     "image": "djs/amatista.webp",
     "role": "Admin & Dj",
